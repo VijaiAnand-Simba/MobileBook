@@ -5,6 +5,9 @@ on:
     - cron: '0 12 * * 1'  # Weekly on Monday at noon
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   fetch-devices:
     runs-on: ubuntu-latest
