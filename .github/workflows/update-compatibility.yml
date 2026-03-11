@@ -2,15 +2,14 @@ name: Update Compatibility List
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Weekly on Sunday
-  workflow_dispatch:      # Manual trigger
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
   push:
     paths:
-      - 'pdf/*.pdf'       # Trigger when PDF is updated
-
+      - 'pdf/*.pdf'
 
 permissions:
-   contents: write      
+   contents: write       
 
 jobs:
   update-data:
@@ -19,8 +18,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -36,28 +33,25 @@ jobs:
           echo "📄 Parsing PDF..."
           python scripts/parse_pdf.py pdf/compatibility.pdf
           
-      - name: Copy JSON to docs folder (GitHub Pages)
+      - name: Copy JSON directly to docs folder
         run: |
-          echo "📁 Creating docs/data directory..."
-          mkdir -p docs/data
+          echo "📋 Copying compatibility.json to docs/..."
+          cp data/compatibility.json docs/
           
-          echo "📋 Copying compatibility.json to docs/data/..."
-          cp data/compatibility.json docs/data/
-          
-          echo "📋 Copying new_devices.json to docs/data/..."
+          echo "📋 Copying new_devices.json to docs/..."
           if [ -f data/new_devices.json ]; then
-            cp data/new_devices.json docs/data/
+            cp data/new_devices.json docs/
           else
-            echo '{"last_updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","devices":[]}' > docs/data/new_devices.json
+            echo '{"last_updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","devices":[]}' > docs/new_devices.json
           fi
           
           echo "✅ Files copied successfully!"
           echo ""
-          echo "📊 File sizes:"
-          ls -lh docs/data/
+          echo "📊 Files in docs/:"
+          ls -lh docs/*.json
           echo ""
           echo "📱 Device count:"
-          grep -c '"name"' docs/data/compatibility.json || echo "0"
+          grep -c '"name"' docs/compatibility.json || echo "0"
           
       - name: Verify JSON is valid
         run: |
@@ -67,7 +61,7 @@ jobs:
           import sys
           
           try:
-              with open('docs/data/compatibility.json', 'r') as f:
+              with open('docs/compatibility.json', 'r') as f:
                   data = json.load(f)
               
               total = sum(
@@ -97,20 +91,12 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions Bot"
           
-          git add data/ docs/data/
+          git add data/ docs/compatibility.json docs/new_devices.json
           
           if git diff --staged --quiet; then
             echo "📝 No changes to commit"
           else
-            git commit -m "🤖 Auto-update: Compatibility data updated
-
-            - Updated compatibility.json
-            - Updated new_devices.json
-            - Synced to docs/data/ for GitHub Pages
-            
-            Triggered by: ${{ github.event_name }}"
-            
+            git commit -m "🤖 Auto-update: Compatibility data updated"
             git push origin main
-            
             echo "✅ Changes pushed successfully!"
           fi
