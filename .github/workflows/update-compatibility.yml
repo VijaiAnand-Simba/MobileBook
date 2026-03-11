@@ -6,7 +6,11 @@ on:
   workflow_dispatch:      # Manual trigger
   push:
     paths:
-      - 'pdf/*.pdf'       # Trigger when PDF is updated
+      - 'pdf/*.pdf' # Trigger when PDF is updated
+
+
+permissions:
+   contents: write
 
 jobs:
   update-data:
