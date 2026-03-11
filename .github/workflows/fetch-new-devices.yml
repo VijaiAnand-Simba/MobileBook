@@ -1,0 +1,36 @@
+name: Fetch New Market Devices
+
+on:
+  schedule:
+    - cron: '0 12 * * 1'  # Weekly on Monday at noon
+  workflow_dispatch:
+
+jobs:
+  fetch-devices:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+          
+      - name: Fetch new devices
+        env:
+          GSMARENA_API_KEY: ${{ secrets.GSMARENA_API_KEY }}
+        run: |
+          python scripts/fetch_devices.py
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/new_devices.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update new devices data [automated]" && git push)
