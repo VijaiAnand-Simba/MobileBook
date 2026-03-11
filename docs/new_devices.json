@@ -1,0 +1,29 @@
+{
+  "last_updated": "2026-03-11T13:56:38.090128",
+  "devices": [
+    {
+      "name": "iPhone 15 Pro Max",
+      "os": "iOS",
+      "release_date": "2023-09-22",
+      "os_version": "17.0"
+    },
+    {
+      "name": "iPhone 15 Pro",
+      "os": "iOS",
+      "release_date": "2023-09-22",
+      "os_version": "17.0"
+    },
+    {
+      "name": "iPhone 15 Plus",
+      "os": "iOS",
+      "release_date": "2023-09-22",
+      "os_version": "17.0"
+    },
+    {
+      "name": "iPhone 15",
+      "os": "iOS",
+      "release_date": "2023-09-22",
+      "os_version": "17.0"
+    }
+  ]
+}
