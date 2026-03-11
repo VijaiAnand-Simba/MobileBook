@@ -1,0 +1,55 @@
+{
+  "last_updated": "2024-01-15T10:00:00Z",
+  "android": {
+    "E3": [
+      {
+        "name": "Samsung Galaxy S23",
+        "os_version": "13.0",
+        "min_version": "13.0"
+      },
+      {
+        "name": "Google Pixel 7",
+        "os_version": "13.0",
+        "min_version": "13.0"
+      }
+    ],
+    "365": [
+      {
+        "name": "Samsung Galaxy S23 Ultra",
+        "os_version": "13.0",
+        "min_version": "13.0"
+      },
+      {
+        "name": "OnePlus 11",
+        "os_version": "13.0",
+        "min_version": "13.0"
+      }
+    ]
+  },
+  "ios": {
+    "E3": [
+      {
+        "name": "iPhone 14",
+        "os_version": "16.0",
+        "min_version": "16.0"
+      },
+      {
+        "name": "iPhone 13",
+        "os_version": "15.0",
+        "min_version": "15.0"
+      }
+    ],
+    "365": [
+      {
+        "name": "iPhone 14 Pro",
+        "os_version": "16.0",
+        "min_version": "16.0"
+      },
+      {
+        "name": "iPad Pro 12.9",
+        "os_version": "16.0",
+        "min_version": "16.0"
+      }
+    ]
+  }
+}
