@@ -9,6 +9,7 @@ let currentFilters = {
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 App starting...');
     initializeApp();
     setupEventListeners();
 });
@@ -17,20 +18,28 @@ async function initializeApp() {
     try {
         showLoading(true);
         
-        // Load compatibility data - UPDATED PATH (removed 'data/')
-        console.log('📥 Fetching compatibility data...');
-        const compatResponse = await fetch('compatibility.json');  // ← Changed!
+        // Load compatibility data
+        console.log('📥 Fetching compatibility data from: compatibility.json');
+        const compatResponse = await fetch('compatibility.json');
+        
+        console.log('📡 Response status:', compatResponse.status, compatResponse.statusText);
         
         if (!compatResponse.ok) {
-            throw new Error(`HTTP error! status: ${compatResponse.status}`);
+            throw new Error(`HTTP ${compatResponse.status}: Could not load compatibility.json`);
         }
         
         compatibilityData = await compatResponse.json();
         console.log('✅ Compatibility data loaded:', compatibilityData);
+        console.log('📊 Data structure check:', {
+            hasAndroid: !!compatibilityData.android,
+            hasIOS: !!compatibilityData.ios,
+            androidE3Count: compatibilityData.android?.E3?.length || 0,
+            iosE3Count: compatibilityData.ios?.E3?.length || 0
+        });
         
-        // Load new devices data - UPDATED PATH (removed 'data/')
-        console.log('📥 Fetching new devices data...');
-        const newDevicesResponse = await fetch('new_devices.json');  // ← Changed!
+        // Load new devices data
+        console.log('📥 Fetching new devices data from: new_devices.json');
+        const newDevicesResponse = await fetch('new_devices.json');
         
         if (newDevicesResponse.ok) {
             newDevicesData = await newDevicesResponse.json();
@@ -41,47 +50,72 @@ async function initializeApp() {
         }
         
         // Update UI
+        console.log('🎨 Updating UI...');
         updateLastUpdated();
+        updateCounts();
         renderCompatibleDevices();
         renderNewDevices();
-        updateCounts();
         
         // Hide loading
         showLoading(false);
         
-        console.log('✅ App initialized successfully');
+        console.log('✅ App initialized successfully!');
         
     } catch (error) {
         console.error('❌ Error loading data:', error);
         showError(`Failed to load device data: ${error.message}`);
+        showLoading(false);
+    }
+}
+
+function showLoading(show) {
+    const loading = document.getElementById('loading');
+    const searchResults = document.getElementById('searchResults');
+    const noResults = document.getElementById('noResults');
+    
+    if (loading) {
+        loading.style.display = show ? 'block' : 'none';
+    }
+    if (searchResults && !show) {
+        searchResults.style.display = 'block';
+    }
+    if (noResults && show) {
+        noResults.style.display = 'none';
     }
 }
 
 function setupEventListeners() {
+    console.log('🎧 Setting up event listeners...');
+    
     // Search input
     const searchInput = document.getElementById('deviceSearch');
     const clearBtn = document.getElementById('clearSearch');
     
-    searchInput.addEventListener('input', debounce((e) => {
-        currentFilters.search = e.target.value.toLowerCase();
-        clearBtn.style.display = e.target.value ? 'block' : 'none';
-        renderCompatibleDevices();
-    }, 300));
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce((e) => {
+            currentFilters.search = e.target.value.toLowerCase();
+            if (clearBtn) clearBtn.style.display = e.target.value ? 'block' : 'none';
+            console.log('🔍 Search:', currentFilters.search);
+            renderCompatibleDevices();
+        }, 300));
+    }
     
-    clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        currentFilters.search = '';
-        clearBtn.style.display = 'none';
-        renderCompatibleDevices();
-    });
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            currentFilters.search = '';
+            clearBtn.style.display = 'none';
+            renderCompatibleDevices();
+        });
+    }
     
     // OS filters
     document.querySelectorAll('[data-filter]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const filter = e.currentTarget.dataset.filter;
             currentFilters.os = filter;
+            console.log('📱 OS filter:', filter);
             
-            // Update active state
             document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
             
@@ -94,8 +128,8 @@ function setupEventListeners() {
         btn.addEventListener('click', (e) => {
             const product = e.currentTarget.dataset.product;
             currentFilters.product = product;
+            console.log('🏷️ Product filter:', product);
             
-            // Update active state
             document.querySelectorAll('[data-product]').forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
             
@@ -107,18 +141,19 @@ function setupEventListeners() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const tab = e.currentTarget.dataset.tab;
+            console.log('🗂️ Switching to tab:', tab);
             switchTab(tab);
         });
     });
+    
+    console.log('✅ Event listeners setup complete');
 }
 
 function switchTab(tab) {
-    // Update tab buttons
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
     });
     
-    // Update tab content
     document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.remove('active');
     });
@@ -131,10 +166,20 @@ function switchTab(tab) {
 }
 
 function renderCompatibleDevices() {
-    if (!compatibilityData) return;
+    console.log('🎨 Rendering compatible devices...');
+    
+    if (!compatibilityData) {
+        console.warn('⚠️ No compatibility data available yet');
+        return;
+    }
     
     const resultsContainer = document.getElementById('searchResults');
     const noResults = document.getElementById('noResults');
+    
+    if (!resultsContainer || !noResults) {
+        console.error('❌ Required DOM elements not found');
+        return;
+    }
     
     let devices = [];
     
@@ -143,7 +188,7 @@ function renderCompatibleDevices() {
         if (currentFilters.os === 'all' || currentFilters.os === os) {
             ['E3', '365'].forEach(product => {
                 if (currentFilters.product === 'all' || currentFilters.product === product) {
-                    const productDevices = compatibilityData[os][product] || [];
+                    const productDevices = compatibilityData[os]?.[product] || [];
                     productDevices.forEach(device => {
                         devices.push({
                             ...device,
@@ -156,39 +201,54 @@ function renderCompatibleDevices() {
         }
     });
     
+    console.log(`📊 Found ${devices.length} devices before search filter`);
+    
     // Apply search filter
     if (currentFilters.search) {
         devices = devices.filter(device => 
-            device.name.toLowerCase().includes(currentFilters.search)
+            device.name?.toLowerCase().includes(currentFilters.search) ||
+            device.manufacturer?.toLowerCase().includes(currentFilters.search) ||
+            device.model?.toLowerCase().includes(currentFilters.search)
         );
+        console.log(`🔍 ${devices.length} devices after search: "${currentFilters.search}"`);
     }
     
-    // Remove duplicates and group by device
+    // Group devices by name
     const groupedDevices = groupDevicesByName(devices);
+    console.log(`📦 ${groupedDevices.length} unique devices after grouping`);
     
     if (groupedDevices.length === 0) {
         resultsContainer.innerHTML = '';
+        resultsContainer.style.display = 'none';
         noResults.style.display = 'block';
+        console.log('📭 No devices to display');
         return;
     }
     
     noResults.style.display = 'none';
+    resultsContainer.style.display = 'grid';
     resultsContainer.innerHTML = groupedDevices.map(device => createDeviceCard(device)).join('');
+    console.log(`✅ Rendered ${groupedDevices.length} device cards`);
 }
 
 function groupDevicesByName(devices) {
     const grouped = {};
     
     devices.forEach(device => {
-        if (!grouped[device.name]) {
-            grouped[device.name] = {
+        const key = device.name;
+        if (!grouped[key]) {
+            grouped[key] = {
                 name: device.name,
+                manufacturer: device.manufacturer || 'Unknown',
+                model: device.model || device.name,
+                model_number: device.model_number || '',
                 os: device.os,
-                os_version: device.os_version,
+                os_version: device.os_version || '0',
+                rationally_qualified: device.rationally_qualified || false,
                 products: new Set()
             };
         }
-        grouped[device.name].products.add(device.product);
+        grouped[key].products.add(device.product);
     });
     
     return Object.values(grouped).map(device => ({
@@ -201,8 +261,6 @@ function createDeviceCard(device) {
     const osIcon = device.os === 'android' ? 'fab fa-android' : 'fab fa-apple';
     const osClass = device.os === 'android' ? 'android' : 'ios';
     const rqClass = device.rationally_qualified ? 'rationally-qualified' : '';
-    
-    // Get manufacturer icon
     const manufacturerIcon = getManufacturerIcon(device.manufacturer);
     
     return `
@@ -211,7 +269,7 @@ function createDeviceCard(device) {
                 <div>
                     <span class="manufacturer-badge">
                         <i class="${manufacturerIcon}"></i>
-                        ${device.manufacturer}
+                        ${device.manufacturer || 'Unknown'}
                     </span>
                     <h3 class="device-name">${device.name}</h3>
                     ${device.model_number ? `<div class="model-number">${device.model_number}</div>` : ''}
@@ -225,12 +283,12 @@ function createDeviceCard(device) {
             <div class="device-details">
                 <div class="detail-item">
                     <i class="fas fa-mobile-alt"></i>
-                    <span>OS: ${device.os === 'android' ? 'Android' : 'iOS'} ${device.os_version}+</span>
+                    <span>${device.os === 'android' ? 'Android' : 'iOS'} ${device.os_version}+</span>
                 </div>
-                ${device.model ? `
+                ${device.model && device.model !== device.name ? `
                 <div class="detail-item">
                     <i class="fas fa-tag"></i>
-                    <span>Model: ${device.model}</span>
+                    <span>${device.model}</span>
                 </div>
                 ` : ''}
             </div>
@@ -271,11 +329,21 @@ function getManufacturerIcon(manufacturer) {
 }
 
 function renderNewDevices() {
-    if (!newDevicesData) return;
+    if (!newDevicesData) {
+        console.warn('⚠️ No new devices data');
+        return;
+    }
     
     const container = document.getElementById('newDevicesResults');
     const noDevices = document.getElementById('noNewDevices');
+    
+    if (!container || !noDevices) {
+        console.error('❌ New devices containers not found');
+        return;
+    }
+    
     const devices = newDevicesData.devices || [];
+    console.log(`📱 Rendering ${devices.length} new devices`);
     
     if (devices.length === 0) {
         container.innerHTML = '';
@@ -319,36 +387,58 @@ function createNewDeviceCard(device) {
 function updateLastUpdated() {
     if (!compatibilityData) return;
     
-    const lastUpdated = new Date(compatibilityData.last_updated);
-    document.getElementById('lastUpdated').textContent = lastUpdated.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const lastUpdatedEl = document.getElementById('lastUpdated');
+    if (!lastUpdatedEl) return;
+    
+    try {
+        const lastUpdated = new Date(compatibilityData.last_updated);
+        lastUpdatedEl.textContent = lastUpdated.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    } catch (e) {
+        lastUpdatedEl.textContent = 'Unknown';
+    }
 }
 
 function updateCounts() {
-    if (!compatibilityData || !newDevicesData) return;
+    if (!compatibilityData) return;
     
-    // Count compatible devices
-    let compatibleCount = 0;
+    // Count unique devices
+    const allDevices = new Set();
     ['android', 'ios'].forEach(os => {
         ['E3', '365'].forEach(product => {
-            compatibleCount += (compatibilityData[os][product] || []).length;
+            const devices = compatibilityData[os]?.[product] || [];
+            devices.forEach(device => allDevices.add(device.name));
         });
     });
     
-    document.getElementById('compatibleCount').textContent = compatibleCount;
-    document.getElementById('newDevicesCount').textContent = newDevicesData.devices.length;
+    const compatibleCountEl = document.getElementById('compatibleCount');
+    const newDevicesCountEl = document.getElementById('newDevicesCount');
+    
+    if (compatibleCountEl) {
+        compatibleCountEl.textContent = allDevices.size;
+        console.log(`📊 Compatible devices count: ${allDevices.size}`);
+    }
+    
+    if (newDevicesCountEl && newDevicesData) {
+        newDevicesCountEl.textContent = newDevicesData.devices.length;
+        console.log(`📊 New devices count: ${newDevicesData.devices.length}`);
+    }
 }
 
 function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    } catch (e) {
+        return dateString;
+    }
 }
 
 function debounce(func, wait) {
@@ -365,10 +455,14 @@ function debounce(func, wait) {
 
 function showError(message) {
     const loading = document.getElementById('loading');
-    loading.innerHTML = `
-        <div style="color: var(--danger-color);">
-            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-            <h3>${message}</h3>
-        </div>
-    `;
+    if (loading) {
+        loading.innerHTML = `
+            <div style="color: var(--danger-color); text-align: center; padding: 2rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h3>${message}</h3>
+                <p style="margin-top: 1rem;">Please check the browser console (F12) for more details.</p>
+            </div>
+        `;
+        loading.style.display = 'block';
+    }
 }
