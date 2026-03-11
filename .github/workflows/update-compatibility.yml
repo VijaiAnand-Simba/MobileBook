@@ -2,12 +2,11 @@ name: Update Compatibility List
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Weekly on Sunday
-  workflow_dispatch:      # Manual trigger
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
   push:
     paths:
-      - 'pdf/*.pdf' # Trigger when PDF is updated
-
+      - 'pdf/*.pdf'
 
 permissions:
    contents: write
@@ -33,22 +32,30 @@ jobs:
         run: |
           python scripts/parse_pdf.py pdf/compatibility.pdf
           
-      - name: Verify JSON output
+      - name: 📋 Copy JSON to docs folder for GitHub Pages
         run: |
-          echo "✅ Checking generated JSON files..."
-          if [ -f data/compatibility.json ]; then
-            echo "✅ compatibility.json created"
-            cat data/compatibility.json | head -20
-          else
-            echo "❌ compatibility.json not found"
-            exit 1
-          fi
+          echo "📁 Creating docs/data directory..."
+          mkdir -p docs/data
+          
+          echo "📋 Copying JSON files..."
+          cp data/compatibility.json docs/data/
+          cp data/new_devices.json docs/data/ 2>/dev/null || echo '{"last_updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","devices":[]}' > docs/data/new_devices.json
+          
+          echo "✅ Files copied successfully!"
+          echo ""
+          echo "📊 File sizes:"
+          ls -lh docs/data/
+          
+      - name: Verify JSON structure
+        run: |
+          echo "📄 Verifying compatibility.json..."
+          python3 -c "import json; data=json.load(open('docs/data/compatibility.json')); print(f'✅ Valid JSON with {sum(len(v) for d in [data[\"android\"], data[\"ios\"]] for v in d.values())} devices')"
           
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add data/compatibility.json
+          git config --local user.name "GitHub Action Bot"
+          git add data/compatibility.json data/new_devices.json docs/data/
           git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Update compatibility data [automated]" && git push)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
