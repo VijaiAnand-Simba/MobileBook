@@ -6,10 +6,7 @@ on:
   workflow_dispatch:      # Manual trigger
   push:
     paths:
-      - 'pdf-source/**'
-
-permissions:
-    contents: write
+      - 'pdf/*.pdf'       # Trigger when PDF is updated
 
 jobs:
   update-data:
@@ -28,18 +25,26 @@ jobs:
         run: |
           pip install -r scripts/requirements.txt
           
-      - name: Download PDF from source
-        run: |
-          # Replace with your PDF URL
-          curl -o compatibility.pdf "${{ secrets.PDF_SOURCE_URL }}"
-          
       - name: Parse PDF and generate JSON
         run: |
-          python scripts/parse_pdf.py
+          python scripts/parse_pdf.py pdf/compatibility.pdf
+          
+      - name: Verify JSON output
+        run: |
+          echo "✅ Checking generated JSON files..."
+          if [ -f data/compatibility.json ]; then
+            echo "✅ compatibility.json created"
+            cat data/compatibility.json | head -20
+          else
+            echo "❌ compatibility.json not found"
+            exit 1
+          fi
           
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/compatibility.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update compatibility data [automated]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Update compatibility data [automated]" && git push)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
