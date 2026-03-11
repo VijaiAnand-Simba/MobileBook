@@ -1,0 +1,42 @@
+name: Update Compatibility List
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:      # Manual trigger
+  push:
+    paths:
+      - 'pdf-source/**'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+          
+      - name: Download PDF from source
+        run: |
+          # Replace with your PDF URL
+          curl -o compatibility.pdf "${{ secrets.PDF_SOURCE_URL }}"
+          
+      - name: Parse PDF and generate JSON
+        run: |
+          python scripts/parse_pdf.py
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/compatibility.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update compatibility data [automated]" && git push)
