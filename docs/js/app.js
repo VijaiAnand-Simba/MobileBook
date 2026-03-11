@@ -181,11 +181,22 @@ function groupDevicesByName(devices) {
 function createDeviceCard(device) {
     const osIcon = device.os === 'android' ? 'fab fa-android' : 'fab fa-apple';
     const osClass = device.os === 'android' ? 'android' : 'ios';
+    const rqClass = device.rationally_qualified ? 'rationally-qualified' : '';
+    
+    // Get manufacturer icon
+    const manufacturerIcon = getManufacturerIcon(device.manufacturer);
     
     return `
-        <div class="device-card">
+        <div class="device-card ${rqClass}">
             <div class="device-header">
-                <h3 class="device-name">${device.name}</h3>
+                <div>
+                    <span class="manufacturer-badge">
+                        <i class="${manufacturerIcon}"></i>
+                        ${device.manufacturer}
+                    </span>
+                    <h3 class="device-name">${device.name}</h3>
+                    ${device.model_number ? `<div class="model-number">${device.model_number}</div>` : ''}
+                </div>
                 <span class="os-badge ${osClass}">
                     <i class="${osIcon}"></i>
                     ${device.os === 'android' ? 'Android' : 'iOS'}
@@ -195,20 +206,49 @@ function createDeviceCard(device) {
             <div class="device-details">
                 <div class="detail-item">
                     <i class="fas fa-mobile-alt"></i>
-                    <span>OS Version: ${device.os_version}+</span>
+                    <span>OS: ${device.os === 'android' ? 'Android' : 'iOS'} ${device.os_version}+</span>
                 </div>
+                ${device.model ? `
+                <div class="detail-item">
+                    <i class="fas fa-tag"></i>
+                    <span>Model: ${device.model}</span>
+                </div>
+                ` : ''}
             </div>
             
             <div class="compatibility-badges">
                 ${device.products.map(product => `
                     <span class="product-badge">
                         <i class="fas fa-check"></i>
-                        ${product}
+                        Eversense ${product}
                     </span>
                 `).join('')}
             </div>
+            
+            ${device.rationally_qualified ? `
+                <div class="rq-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Rationally Qualified</span>
+                </div>
+            ` : ''}
         </div>
     `;
+}
+
+function getManufacturerIcon(manufacturer) {
+    const icons = {
+        'Apple': 'fab fa-apple',
+        'Google': 'fab fa-google',
+        'Samsung': 'fab fa-android',
+        'Motorola': 'fas fa-mobile-alt',
+        'OnePlus': 'fas fa-mobile',
+        'LG': 'fas fa-tv',
+        'HTC': 'fas fa-mobile-alt',
+        'Nokia': 'fas fa-mobile',
+        'HMD Global': 'fas fa-mobile'
+    };
+    
+    return icons[manufacturer] || 'fas fa-mobile-alt';
 }
 
 function renderNewDevices() {
