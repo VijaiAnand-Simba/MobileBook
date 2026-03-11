@@ -2,14 +2,15 @@ name: Update Compatibility List
 
 on:
   schedule:
-    - cron: '0 0 * * 0'
-  workflow_dispatch:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:      # Manual trigger
   push:
     paths:
-      - 'pdf/*.pdf'
+      - 'pdf/*.pdf'       # Trigger when PDF is updated
+
 
 permissions:
-   contents: write
+   contents: write      
 
 jobs:
   update-data:
@@ -18,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -30,32 +33,84 @@ jobs:
           
       - name: Parse PDF and generate JSON
         run: |
+          echo "📄 Parsing PDF..."
           python scripts/parse_pdf.py pdf/compatibility.pdf
           
-      - name: 📋 Copy JSON to docs folder for GitHub Pages
+      - name: Copy JSON to docs folder (GitHub Pages)
         run: |
           echo "📁 Creating docs/data directory..."
           mkdir -p docs/data
           
-          echo "📋 Copying JSON files..."
+          echo "📋 Copying compatibility.json to docs/data/..."
           cp data/compatibility.json docs/data/
-          cp data/new_devices.json docs/data/ 2>/dev/null || echo '{"last_updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","devices":[]}' > docs/data/new_devices.json
+          
+          echo "📋 Copying new_devices.json to docs/data/..."
+          if [ -f data/new_devices.json ]; then
+            cp data/new_devices.json docs/data/
+          else
+            echo '{"last_updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","devices":[]}' > docs/data/new_devices.json
+          fi
           
           echo "✅ Files copied successfully!"
           echo ""
           echo "📊 File sizes:"
           ls -lh docs/data/
+          echo ""
+          echo "📱 Device count:"
+          grep -c '"name"' docs/data/compatibility.json || echo "0"
           
-      - name: Verify JSON structure
+      - name: Verify JSON is valid
         run: |
-          echo "📄 Verifying compatibility.json..."
-          python3 -c "import json; data=json.load(open('docs/data/compatibility.json')); print(f'✅ Valid JSON with {sum(len(v) for d in [data[\"android\"], data[\"ios\"]] for v in d.values())} devices')"
+          echo "🔍 Verifying JSON structure..."
+          python3 << 'EOF'
+          import json
+          import sys
+          
+          try:
+              with open('docs/data/compatibility.json', 'r') as f:
+                  data = json.load(f)
+              
+              total = sum(
+                  len(devices) 
+                  for os_data in [data['android'], data['ios']]
+                  for devices in os_data.values()
+              )
+              
+              print(f"✅ Valid JSON")
+              print(f"📊 Total devices: {total}")
+              print(f"   📱 iOS E3: {len(data['ios']['E3'])}")
+              print(f"   📱 iOS 365: {len(data['ios']['365'])}")
+              print(f"   🤖 Android E3: {len(data['android']['E3'])}")
+              print(f"   🤖 Android 365: {len(data['android']['365'])}")
+              
+              if total == 0:
+                  print("⚠️  Warning: No devices found!")
+                  sys.exit(1)
+                  
+          except Exception as e:
+              print(f"❌ Error: {e}")
+              sys.exit(1)
+          EOF
           
       - name: Commit and push changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
-          git add data/compatibility.json data/new_devices.json docs/data/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Update compatibility data [automated]" && git push)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          
+          git add data/ docs/data/
+          
+          if git diff --staged --quiet; then
+            echo "📝 No changes to commit"
+          else
+            git commit -m "🤖 Auto-update: Compatibility data updated
+
+            - Updated compatibility.json
+            - Updated new_devices.json
+            - Synced to docs/data/ for GitHub Pages
+            
+            Triggered by: ${{ github.event_name }}"
+            
+            git push origin main
+            
+            echo "✅ Changes pushed successfully!"
+          fi
