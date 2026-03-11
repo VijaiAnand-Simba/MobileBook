@@ -489,6 +489,25 @@ body {
     gap: 0.375rem;
 }
 
+
+.rq-info {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 3px solid var(--warning-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--warning-color);
+    font-weight: 500;
+}
+
+.rq-info i {
+    font-size: 1rem;
+}
+
 /* New Devices Grid */
 .new-devices-grid {
     display: grid;
