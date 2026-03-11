@@ -15,13 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initializeApp() {
     try {
-        // Load compatibility data
-        const compatResponse = await fetch('../data/compatibility.json');
-        compatibilityData = await compatResponse.json();
+        showLoading(true);
         
-        // Load new devices data
-        const newDevicesResponse = await fetch('../data/new_devices.json');
-        newDevicesData = await newDevicesResponse.json();
+        // Load compatibility data - UPDATED PATH (removed 'data/')
+        console.log('📥 Fetching compatibility data...');
+        const compatResponse = await fetch('compatibility.json');  // ← Changed!
+        
+        if (!compatResponse.ok) {
+            throw new Error(`HTTP error! status: ${compatResponse.status}`);
+        }
+        
+        compatibilityData = await compatResponse.json();
+        console.log('✅ Compatibility data loaded:', compatibilityData);
+        
+        // Load new devices data - UPDATED PATH (removed 'data/')
+        console.log('📥 Fetching new devices data...');
+        const newDevicesResponse = await fetch('new_devices.json');  // ← Changed!
+        
+        if (newDevicesResponse.ok) {
+            newDevicesData = await newDevicesResponse.json();
+            console.log('✅ New devices data loaded:', newDevicesData);
+        } else {
+            console.warn('⚠️ New devices data not found, using empty array');
+            newDevicesData = { last_updated: new Date().toISOString(), devices: [] };
+        }
         
         // Update UI
         updateLastUpdated();
@@ -30,11 +47,13 @@ async function initializeApp() {
         updateCounts();
         
         // Hide loading
-        document.getElementById('loading').style.display = 'none';
+        showLoading(false);
+        
+        console.log('✅ App initialized successfully');
         
     } catch (error) {
-        console.error('Error loading data:', error);
-        showError('Failed to load device data. Please try again later.');
+        console.error('❌ Error loading data:', error);
+        showError(`Failed to load device data: ${error.message}`);
     }
 }
 
