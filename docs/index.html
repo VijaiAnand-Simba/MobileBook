@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGM Device Compatibility Checker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    CGM Compatibility Checker
+                </h1>
+                <p class="tagline">Find compatible devices for your CGM system</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    id="deviceSearch" 
+                    placeholder="Search for your device (e.g., iPhone 14, Samsung Galaxy S23...)"
+                    autocomplete="off"
+                >
+                <button id="clearSearch" class="clear-btn" style="display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Operating System:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="android">
+                            <i class="fab fa-android"></i> Android
+                        </button>
+                        <button class="filter-btn" data-filter="ios">
+                            <i class="fab fa-apple"></i> iOS
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Product Line:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-product="all">All</button>
+                        <button class="filter-btn" data-product="E3">E3</button>
+                        <button class="filter-btn" data-product="365">365</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs-section">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="compatible">
+                    <i class="fas fa-check-circle"></i>
+                    Compatible Devices
+                    <span class="badge" id="compatibleCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="new-devices">
+                    <i class="fas fa-mobile-alt"></i>
+                    New Market Devices
+                    <span class="badge badge-warning" id="newDevicesCount">0</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Compatible Devices Tab -->
+            <div id="compatibleTab" class="tab-content active">
+                <div class="results-header">
+                    <h2>Compatible Devices</h2>
+                    <p class="last-updated">Last updated: <span id="lastUpdated">Loading...</span></p>
+                </div>
+                
+                <div id="searchResults" class="search-results">
+                    <!-- Results will be inserted here -->
+                </div>
+                
+                <div id="noResults" class="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>No devices found</h3>
+                    <p>Try adjusting your search or filters</p>
+                </div>
+                
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading compatibility data...</p>
+                </div>
+            </div>
+
+            <!-- New Devices Tab -->
+            <div id="newDevicesTab" class="tab-content">
+                <div class="results-header">
+                    <h2>Recently Launched Devices</h2>
+                    <p class="info-text">
+                        <i class="fas fa-info-circle"></i>
+                        These devices are newly available in the market but not yet listed in the official compatibility list.
+                    </p>
+                </div>
+                
+                <div id="newDevicesResults" class="new-devices-grid">
+                    <!-- New devices will be inserted here -->
+                </div>
+                
+                <div id="noNewDevices" class="no-results" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>All caught up!</h3>
+                    <p>All recent devices are already in the compatibility list</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 CGM Compatibility Checker. Data updated automatically.</p>
+            <p class="disclaimer">
+                <i class="fas fa-exclamation-triangle"></i>
+                Always verify compatibility with your healthcare provider before use.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
