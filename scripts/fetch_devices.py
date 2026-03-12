@@ -11,9 +11,6 @@ from typing import List, Dict
 import sys
 
 
-DEVICE_API = "https://api-mobilespecs.azharimm.dev/v2/latest"
-
-
 def fetch_new_devices():
     print("🔍 Fetching new devices from market...")
 
@@ -102,47 +99,66 @@ def fetch_new_devices():
     return new_devices
 
 
-def fetch_market_devices() -> List[Dict]:
+def fetch_market_devices():
+    """Fetch latest devices from GSMArena."""
+
     devices = []
 
     try:
-        print("🌍 Fetching devices from public API...")
+        print("🌍 Fetching devices from GSMArena...")
 
-        r = requests.get(DEVICE_API, timeout=20)
-        r.raise_for_status()
-        
-        data = r.json()
-        
-        # DEBUG: Show API response structure
-        print(f"   API response keys: {data.keys() if isinstance(data, dict) else 'Not a dict'}")
+        url = "https://www.gsmarena.com/makers.php3"
+        r = requests.get(url, timeout=20)
 
-        api_data = data.get("data", [])
-        print(f"   Found {len(api_data)} devices in response")
+        if r.status_code != 200:
+            print("⚠️ Failed to fetch makers list")
+            return devices
 
-        for item in api_data:
-            name = item.get("phone_name", "")
-            slug = item.get("slug", "")
+        # Simple fallback list of popular brands
+        brands = [
+            "samsung-phones-9",
+            "apple-phones-48",
+            "xiaomi-phones-80",
+            "oneplus-phones-95",
+            "google-phones-107",
+            "motorola-phones-4"
+        ]
 
-            if not name:  # Skip empty names
-                continue
+        for brand in brands:
 
-            os = "Android"
+            brand_url = f"https://www.gsmarena.com/{brand}.php"
 
-            if "iphone" in name.lower() or "ipad" in name.lower():
-                os = "iOS"
+            try:
+                res = requests.get(brand_url, timeout=20)
 
-            devices.append({
-                "name": name,
-                "model": slug,
-                "os": os,
-                "os_version": "",
-                "release_date": datetime.now().strftime("%Y-%m-%d")
-            })
+                if res.status_code != 200:
+                    continue
 
-    except requests.exceptions.RequestException as e:
-        print(f"⚠️ API request failed: {e}")
+                from bs4 import BeautifulSoup
+
+                soup = BeautifulSoup(res.text, "html.parser")
+
+                phones = soup.select(".makers li")
+
+                for p in phones[:10]:  # only latest models
+
+                    name = p.find("span").text.strip()
+
+                    devices.append({
+                        "name": name,
+                        "model": name,
+                        "os": "Android" if "iPhone" not in name else "iOS",
+                        "os_version": "",
+                        "release_date": datetime.now().strftime("%Y-%m-%d")
+                    })
+
+            except Exception as e:
+                print("⚠️ brand fetch failed:", brand, e)
+
     except Exception as e:
-        print(f"⚠️ API fetch failed: {e}")
+        print("⚠️ Device fetch failed:", e)
+
+    print(f"🌐 Collected {len(devices)} devices")
 
     return devices
 
