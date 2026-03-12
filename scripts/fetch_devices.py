@@ -1,175 +1,224 @@
 #!/usr/bin/env python3
 """
 Fetch newly launched mobile devices and compare with compatibility list.
-Uses public device APIs instead of static lists.
 """
 
 import json
+import os
 import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Set
 import sys
 
 
-def fetch_new_devices():
-    print("🔍 Fetching new devices from market...")
+BRANDS = [
+    ("samsung",  "https://www.gsmarena.com/samsung-phones-9.php"),
+    ("apple",    "https://www.gsmarena.com/apple-phones-48.php"),
+    ("xiaomi",   "https://www.gsmarena.com/xiaomi-phones-80.php"),
+    ("oneplus",  "https://www.gsmarena.com/oneplus-phones-95.php"),
+    ("google",   "https://www.gsmarena.com/google-phones-107.php"),
+    ("motorola", "https://www.gsmarena.com/motorola-phones-4.php"),
+    ("sony",     "https://www.gsmarena.com/sony-phones-7.php"),
+    ("oppo",     "https://www.gsmarena.com/oppo-phones-82.php"),
+]
 
-    # Load compatibility list with better error handling
-    compatibility = {'android': {'E3': [], '365': []}, 'ios': {'E3': [], '365': []}}
-    
-    try:
-        with open('docs/compatibility.json', 'r') as f:
-            loaded = json.load(f)
-            # Validate structure
-            if isinstance(loaded, dict) and 'android' in loaded and 'ios' in loaded:
-                compatibility = loaded
-            else:
-                print("⚠️ compatibility.json has invalid structure, using defaults")
-    except FileNotFoundError:
-        print("⚠️ compatibility.json not found, using defaults")
-    except json.JSONDecodeError as e:
-        print(f"⚠️ compatibility.json is not valid JSON: {e}")
-    except Exception as e:
-        print(f"⚠️ Error loading compatibility.json: {e}")
-
-    compatible_devices = set()
-
-    # Safely iterate with .get() to handle missing keys
-    for os_type in ['android', 'ios']:
-        os_data = compatibility.get(os_type, {})
-        for product_line in os_data.values():
-            if isinstance(product_line, list):
-                for device in product_line:
-                    if isinstance(device, dict):
-                        name = device.get('name', '').lower()
-                        if name:
-                            compatible_devices.add(name)
-                            parts = name.split(maxsplit=1)
-                            if len(parts) > 1:
-                                compatible_devices.add(parts[1])
-
-    print(f"📋 Loaded {len(compatible_devices)} compatible device names/variants")
-    
-    # DEBUG: Show sample of compatible devices
-    if compatible_devices:
-        print(f"   Sample: {list(compatible_devices)[:5]}")
-
-    new_devices = {
-        "last_updated": datetime.now().isoformat(),
-        "devices": []
-    }
-
-    market_devices = fetch_market_devices()
-    
-    # DEBUG: Show what we got from API
-    print(f"🌐 API returned {len(market_devices)} devices")
-    if market_devices:
-        print(f"   First device: {market_devices[0]}")
-
-    for device in market_devices:
-        name = device["name"].lower()
-        model = device.get("model", "").lower()
-
-        is_compatible = name in compatible_devices or model in compatible_devices
-        
-        # DEBUG: Show first few comparisons
-        if len(new_devices["devices"]) < 3 and not is_compatible:
-            print(f"   ✨ New: {device['name'][:50]} (not in compatibility list)")
-
-        if not is_compatible:
-            new_devices["devices"].append(device)
-
-    new_devices["devices"] = remove_duplicates(new_devices["devices"])
-
-    new_devices["devices"].sort(
-        key=lambda x: x["release_date"], reverse=True
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
     )
-
-    save_results(new_devices)
-
-    print(f"\n✅ Found {len(new_devices['devices'])} new devices")
-
-    if new_devices["devices"]:
-        print("\n📱 New devices:")
-        for d in new_devices["devices"][:10]:
-            print(f"   • {d['name']} ({d['os']} {d.get('os_version', 'N/A')})")
-    else:
-        print("\n💡 No new devices found. All API devices match compatibility list.")
-
-    return new_devices
+}
 
 
-def fetch_market_devices():
-    """Fetch latest devices from GSMArena."""
+def load_compatibility() -> Set[str]:
+    """
+    Load compatible device names from compatibility.json.
+
+    Handles structure:
+    {
+      "products": {
+        "E3": {
+          "android": [{"name": "...", "model": "...", ...}],
+          "ios":     [{"name": "...", "model": "...", ...}]
+        },
+        "365": { ... }
+      }
+    }
+    """
+
+    compatible = set()
+
+    try:
+        with open("docs/compatibility.json", "r") as f:
+            data = json.load(f)
+
+        entries = []
+
+        # ── Structure: {"products": {"E3": {"android": [...], "ios": [...]}, ...}}
+        if "products" in data and isinstance(data["products"], dict):
+            for product_name, product_data in data["products"].items():
+                if not isinstance(product_data, dict):
+                    continue
+                for os_key in ["android", "ios"]:
+                    device_list = product_data.get(os_key, [])
+                    if isinstance(device_list, list):
+                        entries.extend(device_list)
+                        print(f"   📦 {product_name}/{os_key}: {len(device_list)} devices")
+
+        # ── Structure: {"android": {...}, "ios": {...}}  (flat)
+        elif "android" in data or "ios" in data:
+            for os_key in ["android", "ios"]:
+                os_block = data.get(os_key, {})
+                if isinstance(os_block, dict):
+                    for product_list in os_block.values():
+                        if isinstance(product_list, list):
+                            entries.extend(product_list)
+                elif isinstance(os_block, list):
+                    entries.extend(os_block)
+
+        # ── Structure: {"devices": [...]}
+        elif "devices" in data and isinstance(data["devices"], list):
+            entries.extend(data["devices"])
+
+        # ── Structure: plain list
+        elif isinstance(data, list):
+            entries = data
+
+        else:
+            print("⚠️ Unrecognised compatibility.json structure")
+
+        # ── Extract names and model numbers
+        for entry in entries:
+            if isinstance(entry, dict):
+                # Full name  e.g. "Google Pixel 7"
+                name = entry.get("name", "").strip().lower()
+                # Model      e.g. "Pixel 7"
+                model = entry.get("model", "").strip().lower()
+                # Model number e.g. "GVU6C"
+                model_number = entry.get("model_number", "").strip().lower()
+
+                for value in [name, model, model_number]:
+                    if value:
+                        compatible.add(value)
+                        # Partial match: "pixel 7" from "google pixel 7"
+                        parts = value.split(maxsplit=1)
+                        if len(parts) > 1:
+                            compatible.add(parts[1])
+
+            elif isinstance(entry, str):
+                name = entry.strip().lower()
+                if name:
+                    compatible.add(name)
+
+        print(f"\n📋 Loaded {len(compatible)} compatible device identifiers")
+
+        if compatible:
+            sample = sorted(list(compatible))[:8]
+            print(f"   Sample: {sample}")
+
+    except FileNotFoundError:
+        print("⚠️ compatibility.json not found — all market devices treated as new")
+    except json.JSONDecodeError as e:
+        print(f"⚠️ compatibility.json is invalid JSON: {e}")
+    except Exception as e:
+        print(f"⚠️ Unexpected error reading compatibility.json: {e}")
+        import traceback
+        traceback.print_exc()
+
+    return compatible
+
+
+def fetch_brand_devices(brand_name: str, url: str) -> List[Dict]:
+    """Fetch latest devices for a single brand from GSMArena."""
 
     devices = []
 
     try:
-        print("🌍 Fetching devices from GSMArena...")
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
 
-        url = "https://www.gsmarena.com/makers.php3"
-        r = requests.get(url, timeout=20)
+        soup = BeautifulSoup(r.text, "lxml")
+        items = soup.select(".makers li")
 
-        if r.status_code != 200:
-            print("⚠️ Failed to fetch makers list")
+        if not items:
+            print(f"   ⚠️ No items found for {brand_name} (selector may have changed)")
             return devices
 
-        # Simple fallback list of popular brands
-        brands = [
-            "samsung-phones-9",
-            "apple-phones-48",
-            "xiaomi-phones-80",
-            "oneplus-phones-95",
-            "google-phones-107",
-            "motorola-phones-4"
-        ]
+        for item in items[:15]:
+            span = item.find("span")
+            if not span:
+                continue
 
-        for brand in brands:
+            name = span.get_text(strip=True)
+            if not name:
+                continue
 
-            brand_url = f"https://www.gsmarena.com/{brand}.php"
+            os_type = "iOS" if ("iPhone" in name or "iPad" in name) else "Android"
 
-            try:
-                res = requests.get(brand_url, timeout=20)
+            devices.append({
+                "name":         name,
+                "brand":        brand_name,
+                "model":        name.lower().replace(" ", "-"),
+                "os":           os_type,
+                "os_version":   "",
+                "release_date": datetime.now().strftime("%Y-%m-%d"),
+                "source":       "gsmarena"
+            })
 
-                if res.status_code != 200:
-                    continue
+        print(f"   ✅ {brand_name}: {len(devices)} devices fetched")
 
-                from bs4 import BeautifulSoup
-
-                soup = BeautifulSoup(res.text, "html.parser")
-
-                phones = soup.select(".makers li")
-
-                for p in phones[:10]:  # only latest models
-
-                    name = p.find("span").text.strip()
-
-                    devices.append({
-                        "name": name,
-                        "model": name,
-                        "os": "Android" if "iPhone" not in name else "iOS",
-                        "os_version": "",
-                        "release_date": datetime.now().strftime("%Y-%m-%d")
-                    })
-
-            except Exception as e:
-                print("⚠️ brand fetch failed:", brand, e)
-
+    except requests.exceptions.HTTPError as e:
+        print(f"   ⚠️ HTTP error for {brand_name}: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"   ⚠️ Network error for {brand_name}: {e}")
     except Exception as e:
-        print("⚠️ Device fetch failed:", e)
-
-    print(f"🌐 Collected {len(devices)} devices")
+        print(f"   ⚠️ Parse error for {brand_name}: {e}")
 
     return devices
 
 
+def fetch_market_devices() -> List[Dict]:
+    """Fetch devices from all configured brands."""
+
+    print("\n🌍 Fetching devices from GSMArena...")
+    all_devices = []
+
+    for brand_name, url in BRANDS:
+        devices = fetch_brand_devices(brand_name, url)
+        all_devices.extend(devices)
+
+    print(f"\n🌐 Collected {len(all_devices)} devices total")
+    return all_devices
+
+
+def is_new_device(device: Dict, compatible: Set[str]) -> bool:
+    """
+    Return True if this market device is NOT in the compatibility list.
+    Checks name, model slug, and partial name.
+    """
+
+    checks = [
+        device.get("name",  "").strip().lower(),
+        device.get("model", "").strip().lower(),
+    ]
+
+    # Also check partial name  e.g. "galaxy s25" from "samsung galaxy s25"
+    full_name = device.get("name", "").strip().lower()
+    parts = full_name.split(maxsplit=1)
+    if len(parts) > 1:
+        checks.append(parts[1])
+
+    return not any(c in compatible for c in checks if c)
+
+
 def remove_duplicates(devices: List[Dict]) -> List[Dict]:
-    seen = set()
+    seen   = set()
     result = []
 
     for device in devices:
         key = device["name"].lower()
-
         if key not in seen:
             seen.add(key)
             result.append(device)
@@ -177,28 +226,55 @@ def remove_duplicates(devices: List[Dict]) -> List[Dict]:
     return result
 
 
-def save_results(data):
-    import os
-    
-    # Ensure directories exist
+def save_results(data: Dict):
     os.makedirs("data", exist_ok=True)
     os.makedirs("docs", exist_ok=True)
-    
-    with open("data/new_devices.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
 
-    with open("docs/new_devices.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    for path in ["data/new_devices.json", "docs/new_devices.json"]:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+    print("💾 Saved → data/new_devices.json & docs/new_devices.json")
+
+
+def fetch_new_devices():
+    print("🔍 Starting device fetch...\n")
+
+    compatible    = load_compatibility()
+    market_devices = fetch_market_devices()
+
+    new_list = [d for d in market_devices if is_new_device(d, compatible)]
+    new_list  = remove_duplicates(new_list)
+    new_list.sort(key=lambda x: x["release_date"], reverse=True)
+
+    result = {
+        "last_updated": datetime.now().isoformat(),
+        "total":        len(new_list),
+        "devices":      new_list
+    }
+
+    save_results(result)
+
+    print(f"\n✅ {len(new_list)} new (unrecognised) devices found")
+
+    if new_list:
+        print("\n📱 New devices (first 10):")
+        for d in new_list[:10]:
+            print(f"   • {d['name']} [{d['brand']}] ({d['os']})")
+    else:
+        print("💡 All market devices already exist in the compatibility list.")
+
+    return result
 
 
 if __name__ == "__main__":
     try:
         fetch_new_devices()
-        print("\n✅ Device list updated successfully")
+        print("\n✅ Done")
         sys.exit(0)
 
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n❌ Fatal error: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
