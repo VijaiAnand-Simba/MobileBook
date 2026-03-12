@@ -9,7 +9,7 @@ on:
       - 'pdf/*.pdf'
 
 permissions:
-   contents: write       
+  contents: write
 
 jobs:
   update-data:
@@ -28,32 +28,17 @@ jobs:
         run: |
           pip install -r scripts/requirements.txt
           
-      - name: Parse PDF and generate JSON
+      - name: Parse PDF (all 6 tables)
         run: |
-          echo "📄 Parsing PDF..."
+          echo "📄 Parsing all 6 tables from PDF..."
           python scripts/parse_pdf.py pdf/compatibility.pdf
           
-      - name: Copy JSON directly to docs folder
+      - name: Copy JSON to docs
         run: |
-          echo "📋 Copying compatibility.json to docs/..."
           cp data/compatibility.json docs/
+          echo "✅ Copied to docs folder"
           
-          echo "📋 Copying new_devices.json to docs/..."
-          if [ -f data/new_devices.json ]; then
-            cp data/new_devices.json docs/
-          else
-            echo '{"last_updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","devices":[]}' > docs/new_devices.json
-          fi
-          
-          echo "✅ Files copied successfully!"
-          echo ""
-          echo "📊 Files in docs/:"
-          ls -lh docs/*.json
-          echo ""
-          echo "📱 Device count:"
-          grep -c '"name"' docs/compatibility.json || echo "0"
-          
-      - name: Verify JSON is valid
+      - name: Verify JSON structure
         run: |
           echo "🔍 Verifying JSON structure..."
           python3 << 'EOF'
@@ -64,18 +49,21 @@ jobs:
               with open('docs/compatibility.json', 'r') as f:
                   data = json.load(f)
               
-              total = sum(
-                  len(devices) 
-                  for os_data in [data['android'], data['ios']]
-                  for devices in os_data.values()
-              )
+              # New structure: products -> product_name -> os_type
+              if 'products' not in data:
+                  print("❌ Error: 'products' key not found in JSON")
+                  sys.exit(1)
               
-              print(f"✅ Valid JSON")
+              total = 0
+              for product in ['E3', '365', 'NOW']:
+                  if product in data['products']:
+                      ios_count = len(data['products'][product].get('ios', []))
+                      android_count = len(data['products'][product].get('android', []))
+                      total += ios_count + android_count
+                      print(f"   {product}: iOS={ios_count}, Android={android_count}")
+              
+              print(f"\n✅ Valid JSON")
               print(f"📊 Total devices: {total}")
-              print(f"   📱 iOS E3: {len(data['ios']['E3'])}")
-              print(f"   📱 iOS 365: {len(data['ios']['365'])}")
-              print(f"   🤖 Android E3: {len(data['android']['E3'])}")
-              print(f"   🤖 Android 365: {len(data['android']['365'])}")
               
               if total == 0:
                   print("⚠️  Warning: No devices found!")
@@ -83,20 +71,16 @@ jobs:
                   
           except Exception as e:
               print(f"❌ Error: {e}")
+              import traceback
+              traceback.print_exc()
               sys.exit(1)
           EOF
           
-      - name: Commit and push changes
+      - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions Bot"
-          
-          git add data/ docs/compatibility.json docs/new_devices.json
-          
-          if git diff --staged --quiet; then
-            echo "📝 No changes to commit"
-          else
-            git commit -m "🤖 Auto-update: Compatibility data updated"
-            git push origin main
-            echo "✅ Changes pushed successfully!"
-          fi
+          git add data/compatibility.json docs/compatibility.json
+          git diff --staged --quiet || (git commit -m "🤖 Update compatibility data (all 6 tables)" && git push)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
