@@ -249,12 +249,24 @@ def parse_ios_line_simple(line: str, product: str) -> Optional[Dict[str, Any]]:
 
 
 def parse_android_line_simple(line: str, product: str) -> Optional[Dict[str, Any]]:
-    """Parse Android device line (4 columns)."""
+    """
+    Parse Android device line (4 columns).
+    
+    Format:
+    - Manufacturer | Model Name | Model Number (Reference) | Rationally qualified
+    - Example: "Google Pixel 2 XL Pixel 2 XL No (G011C)"
+    - Example: "Google Pixel 4 Pixel 4 Yes"
+    
+    The "Rationally qualified" column can be:
+    - "Yes" (rationally qualified)
+    - "No (MODEL_NUM)" (not rationally qualified, with model number in parentheses)
+    """
     
     # Known manufacturers
     manufacturers = [
         'Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 
-        'HMD Global', 'Lively', 'TCL', 'Xiaomi', 'Sony', 'Huawei', 'Oppo', 'Vivo'
+        'HMD Global', 'Lively', 'TCL', 'Xiaomi', 'Sony', 'Huawei', 'Oppo', 
+        'Vivo', 'Asus', 'ZTE', 'Lenovo', 'Realme'
     ]
     
     # Find which manufacturer this line starts with
@@ -270,34 +282,59 @@ def parse_android_line_simple(line: str, product: str) -> Optional[Dict[str, Any
     # Remove manufacturer from line
     remaining = line[len(manufacturer):].strip()
     
-    # Split on multiple spaces
+    # Split on multiple spaces (2+ spaces typically separate columns)
     parts = re.split(r'\s{2,}', remaining)
     
     if len(parts) < 1:
         return None
     
+    # Extract columns
     model_name = parts[0].strip()
-    model_number_text = parts[1].strip() if len(parts) > 1 else ""
-    rq_text = parts[2].strip() if len(parts) > 2 else ""
+    model_number_column = parts[1].strip() if len(parts) > 1 else ""
+    rq_column = parts[2].strip() if len(parts) > 2 else ""
     
-    # Parse model number
+    # If we only have 2 parts, the second one might be the RQ column
+    if len(parts) == 2:
+        if model_number_column.lower() in ['yes', 'no'] or 'no (' in model_number_column.lower():
+            rq_column = model_number_column
+            model_number_column = ""
+    
+    # Initialize
     model_number = ""
-    if model_number_text:
-        # Check for "No (XXXXX)" pattern
-        no_match = re.search(r'No\s*\(([^)]+)\)', model_number_text)
-        yes_match = re.search(r'Yes', model_number_text, re.IGNORECASE)
-        
-        if no_match:
-            model_number = no_match.group(1)
-        elif not yes_match and model_number_text.lower() != model_name.lower():
-            model_number = model_number_text
+    rationally_qualified = False
     
-    # Determine if rationally qualified
-    rationally_qualified = (
-        rq_text.lower() == 'yes' or
-        'yes' in model_number_text.lower() or
-        'rationally qualified' in line.lower()
-    )
+    # Parse RQ column first (highest priority)
+    if rq_column:
+        rq_lower = rq_column.lower()
+        
+        if rq_lower == 'yes':
+            rationally_qualified = True
+        elif rq_lower.startswith('no'):
+            # Extract model number from "No (XXXXX)" pattern
+            no_match = re.search(r'No\s*\(([^)]+)\)', rq_column, re.IGNORECASE)
+            if no_match:
+                model_number = no_match.group(1).strip()
+            rationally_qualified = False
+        elif 'yes' in rq_lower:
+            rationally_qualified = True
+    
+    # Parse model number column (if RQ didn't contain model number)
+    if not model_number and model_number_column:
+        col_lower = model_number_column.lower()
+        
+        # Check if this column contains RQ info instead
+        if col_lower == 'yes':
+            rationally_qualified = True
+        elif col_lower.startswith('no'):
+            # Extract model number from "No (XXXXX)"
+            no_match = re.search(r'No\s*\(([^)]+)\)', model_number_column, re.IGNORECASE)
+            if no_match:
+                model_number = no_match.group(1).strip()
+            rationally_qualified = False
+        else:
+            # It's an actual model number (not same as model name)
+            if col_lower != model_name.lower():
+                model_number = model_number_column
     
     # Build device name
     device_name = f"{manufacturer} {model_name}"
