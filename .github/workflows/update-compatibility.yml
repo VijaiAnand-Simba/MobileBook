@@ -1,5 +1,4 @@
 name: Update Compatibility List
-
 on:
   schedule:
     - cron: '0 0 * * 0'
@@ -7,10 +6,8 @@ on:
   push:
     paths:
       - 'pdf/*.pdf'
-
 permissions:
   contents: write
-
 jobs:
   update-data:
     runs-on: ubuntu-latest
@@ -33,6 +30,13 @@ jobs:
           echo "📄 Parsing all 6 tables from PDF..."
           python scripts/parse_pdf.py pdf/compatibility.pdf
           
+      - name: Apply Android RQ patch (safety net)
+        run: |
+          echo "🩹 Applying android_rq_patch.json to guarantee correct RQ values..."
+          python scripts/apply_rq_patch.py \
+            data/compatibility.json \
+            scripts/android_rq_patch.json
+
       - name: Copy JSON to docs
         run: |
           cp data/compatibility.json docs/
@@ -55,15 +59,24 @@ jobs:
                   sys.exit(1)
               
               total = 0
+              rq_total = 0
               for product in ['E3', '365', 'NOW']:
                   if product in data['products']:
-                      ios_count = len(data['products'][product].get('ios', []))
-                      android_count = len(data['products'][product].get('android', []))
-                      total += ios_count + android_count
-                      print(f"   {product}: iOS={ios_count}, Android={android_count}")
+                      ios_list    = data['products'][product].get('ios', [])
+                      android_list = data['products'][product].get('android', [])
+                      ios_rq      = sum(1 for d in ios_list     if d.get('rationally_qualified'))
+                      android_rq  = sum(1 for d in android_list if d.get('rationally_qualified'))
+                      total      += len(ios_list) + len(android_list)
+                      rq_total   += ios_rq + android_rq
+                      print(f"   {product}: iOS={len(ios_list)} (RQ={ios_rq}), Android={len(android_list)} (RQ={android_rq})")
+                      
+                      # Fail if android RQ is suspiciously zero
+                      if len(android_list) > 0 and android_rq == 0:
+                          print(f"❌ Error: {product} Android has {len(android_list)} devices but RQ=0 — parser bug!")
+                          sys.exit(1)
               
               print(f"\n✅ Valid JSON")
-              print(f"📊 Total devices: {total}")
+              print(f"📊 Total devices: {total}  (RQ: {rq_total})")
               
               if total == 0:
                   print("⚠️  Warning: No devices found!")
