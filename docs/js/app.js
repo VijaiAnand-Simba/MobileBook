@@ -18,7 +18,6 @@ async function initializeApp() {
     try {
         showLoading(true);
         
-        // Load compatibility data
         console.log('📥 Fetching compatibility data from: compatibility.json');
         const compatResponse = await fetch('compatibility.json');
         
@@ -31,19 +30,10 @@ async function initializeApp() {
         compatibilityData = await compatResponse.json();
         console.log('✅ Compatibility data loaded:', compatibilityData);
         
-        // Check structure
         if (!compatibilityData.products) {
             throw new Error('Invalid JSON structure: missing "products" key');
         }
         
-        console.log('📊 Data structure check:', {
-            hasProducts: !!compatibilityData.products,
-            hasE3: !!compatibilityData.products.E3,
-            has365: !!compatibilityData.products['365'],
-            hasNOW: !!compatibilityData.products.NOW
-        });
-        
-        // Load new devices data
         console.log('📥 Fetching new devices data from: new_devices.json');
         const newDevicesResponse = await fetch('new_devices.json');
         
@@ -55,14 +45,12 @@ async function initializeApp() {
             newDevicesData = { last_updated: new Date().toISOString(), devices: [] };
         }
         
-        // Update UI
         console.log('🎨 Updating UI...');
         updateLastUpdated();
         updateCounts();
         renderCompatibleDevices();
         renderNewDevices();
         
-        // Hide loading
         showLoading(false);
         
         console.log('✅ App initialized successfully!');
@@ -93,7 +81,6 @@ function showLoading(show) {
 function setupEventListeners() {
     console.log('🎧 Setting up event listeners...');
     
-    // Search input
     const searchInput = document.getElementById('deviceSearch');
     const clearBtn = document.getElementById('clearSearch');
     
@@ -115,7 +102,6 @@ function setupEventListeners() {
         });
     }
     
-    // OS filters
     document.querySelectorAll('[data-filter]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const filter = e.currentTarget.dataset.filter;
@@ -129,7 +115,6 @@ function setupEventListeners() {
         });
     });
     
-    // Product filters
     document.querySelectorAll('[data-product]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const product = e.currentTarget.dataset.product;
@@ -143,7 +128,6 @@ function setupEventListeners() {
         });
     });
     
-    // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const tab = e.currentTarget.dataset.tab;
@@ -189,24 +173,18 @@ function renderCompatibleDevices() {
     
     let devices = [];
     
-    // NEW STRUCTURE: Iterate through products -> E3/365/NOW -> ios/android
     const products = compatibilityData.products;
     
-    // Collect devices based on filters
     for (const [productName, productData] of Object.entries(products)) {
-        // Filter by product (E3, 365, NOW)
         if (currentFilters.product !== 'all' && currentFilters.product !== productName) {
             continue;
         }
         
-        // Iterate through OS types
         for (const [osType, deviceList] of Object.entries(productData)) {
-            // Filter by OS
             if (currentFilters.os !== 'all' && currentFilters.os !== osType) {
                 continue;
             }
             
-            // Add devices
             deviceList.forEach(device => {
                 devices.push({
                     ...device,
@@ -219,7 +197,6 @@ function renderCompatibleDevices() {
     
     console.log(`📊 Found ${devices.length} devices before search filter`);
     
-    // Apply search filter
     if (currentFilters.search) {
         devices = devices.filter(device => 
             device.name?.toLowerCase().includes(currentFilters.search) ||
@@ -229,7 +206,6 @@ function renderCompatibleDevices() {
         console.log(`🔍 ${devices.length} devices after search: "${currentFilters.search}"`);
     }
     
-    // Group devices by name
     const groupedDevices = groupDevicesByName(devices);
     console.log(`📦 ${groupedDevices.length} unique devices after grouping`);
     
@@ -259,7 +235,6 @@ function groupDevicesByName(devices) {
                 model: device.model || device.name,
                 model_number: device.model_number || '',
                 os: device.os,
-                os_version: device.os_version || '0',
                 rationally_qualified: device.rationally_qualified || false,
                 products: new Set()
             };
@@ -294,19 +269,6 @@ function createDeviceCard(device) {
                     <i class="${osIcon}"></i>
                     ${device.os === 'android' ? 'Android' : 'iOS'}
                 </span>
-            </div>
-            
-            <div class="device-details">
-                <div class="detail-item">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>${device.os === 'android' ? 'Android' : 'iOS'} ${device.os_version}+</span>
-                </div>
-                ${device.model && device.model !== device.name ? `
-                <div class="detail-item">
-                    <i class="fas fa-tag"></i>
-                    <span>${device.model}</span>
-                </div>
-                ` : ''}
             </div>
             
             <div class="compatibility-badges">
@@ -391,8 +353,8 @@ function createNewDeviceCard(device) {
                     Released: ${formatDate(device.release_date)}
                 </span>
                 <span>
-                    <i class="fas fa-code-branch"></i>
-                    OS: ${device.os} ${device.os_version}
+                    <i class="fas fa-mobile-alt"></i>
+                    OS: ${device.os}
                 </span>
                 <span style="color: var(--warning-color); font-weight: 600;">
                     <i class="fas fa-exclamation-circle"></i>
@@ -424,7 +386,6 @@ function updateLastUpdated() {
 function updateCounts() {
     if (!compatibilityData || !compatibilityData.products) return;
     
-    // Count unique devices across all products
     const allDevices = new Set();
     
     for (const productData of Object.values(compatibilityData.products)) {
