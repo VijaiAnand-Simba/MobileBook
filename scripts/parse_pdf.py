@@ -252,14 +252,11 @@ def parse_android_line_simple(line: str, product: str) -> Optional[Dict[str, Any
     """
     Parse Android device line (4 columns).
     
-    Format:
-    - Manufacturer | Model Name | Model Number (Reference) | Rationally qualified
-    - Example: "Google Pixel 2 XL Pixel 2 XL No (G011C)"
-    - Example: "Google Pixel 4 Pixel 4 Yes"
+    Strategy: Parse from RIGHT to LEFT since the RQ column has a clear pattern.
     
-    The "Rationally qualified" column can be:
-    - "Yes" (rationally qualified)
-    - "No (MODEL_NUM)" (not rationally qualified, with model number in parentheses)
+    Format: Manufacturer | Model Name | Model Number (optional) | RQ (Yes or No (XXX))
+    Example: "Google Pixel 2 XL Pixel 2 XL No (G011C)"
+    Example: "Google Pixel 4 Pixel 4 Yes"
     """
     
     # Known manufacturers
@@ -282,59 +279,69 @@ def parse_android_line_simple(line: str, product: str) -> Optional[Dict[str, Any
     # Remove manufacturer from line
     remaining = line[len(manufacturer):].strip()
     
-    # Split on multiple spaces (2+ spaces typically separate columns)
+    # Step 1: Extract RQ column from the END (Yes or No (XXX))
+    # Match "Yes" or "No (something)" at the end of the line
+    rq_pattern = r'\s+(Yes|No\s*\([^)]+\))\s*$'
+    rq_match = re.search(rq_pattern, remaining, re.IGNORECASE)
+    
+    rationally_qualified = False
+    model_number = ""
+    
+    if rq_match:
+        rq_text = rq_match.group(1).strip()
+        # Remove the RQ column from remaining text
+        remaining = remaining[:rq_match.start()].strip()
+        
+        # Parse RQ value
+        if rq_text.lower() == 'yes':
+            rationally_qualified = True
+        else:
+            # Extract model number from "No (G011C)"
+            no_match = re.search(r'No\s*\(([^)]+)\)', rq_text, re.IGNORECASE)
+            if no_match:
+                model_number = no_match.group(1).strip()
+    
+    # Step 2: What's left is "Model Name" possibly repeated or "Model Name Model_Ref"
+    # Common pattern: "Pixel 2 XL Pixel 2 XL" (model name repeated)
+    
+    # Try to split on 2+ spaces first (in case there are any)
     parts = re.split(r'\s{2,}', remaining)
     
-    if len(parts) < 1:
-        return None
-    
-    # Extract columns
-    model_name = parts[0].strip()
-    model_number_column = parts[1].strip() if len(parts) > 1 else ""
-    rq_column = parts[2].strip() if len(parts) > 2 else ""
-    
-    # If we only have 2 parts, the second one might be the RQ column
-    if len(parts) == 2:
-        if model_number_column.lower() in ['yes', 'no'] or 'no (' in model_number_column.lower():
-            rq_column = model_number_column
-            model_number_column = ""
-    
-    # Initialize
-    model_number = ""
-    rationally_qualified = False
-    
-    # Parse RQ column first (highest priority)
-    if rq_column:
-        rq_lower = rq_column.lower()
+    if len(parts) >= 2:
+        # Clear column separation exists
+        model_name = parts[0].strip()
+        # parts[1] could be a model reference, but we prioritize model_number from RQ
+        if not model_number and parts[1] and parts[1].lower() != model_name.lower():
+            model_number = parts[1].strip()
+    else:
+        # No clear separation - model name might be repeated with single spaces
+        # Try to detect if first half equals second half
+        words = remaining.split()
+        model_name = None
         
-        if rq_lower == 'yes':
-            rationally_qualified = True
-        elif rq_lower.startswith('no'):
-            # Extract model number from "No (XXXXX)" pattern
-            no_match = re.search(r'No\s*\(([^)]+)\)', rq_column, re.IGNORECASE)
-            if no_match:
-                model_number = no_match.group(1).strip()
-            rationally_qualified = False
-        elif 'yes' in rq_lower:
-            rationally_qualified = True
-    
-    # Parse model number column (if RQ didn't contain model number)
-    if not model_number and model_number_column:
-        col_lower = model_number_column.lower()
+        # Try splitting in half
+        mid = len(words) // 2
+        if mid > 0:
+            first_half = ' '.join(words[:mid])
+            second_half = ' '.join(words[mid:mid*2])
+            
+            if first_half == second_half:
+                # Model name is repeated exactly
+                model_name = first_half
+            else:
+                # Try finding the split point where duplication starts
+                for i in range(1, len(words)):
+                    first_part = ' '.join(words[:i])
+                    rest = ' '.join(words[i:])
+                    
+                    # Check if rest starts with first_part
+                    if rest.startswith(first_part):
+                        model_name = first_part
+                        break
         
-        # Check if this column contains RQ info instead
-        if col_lower == 'yes':
-            rationally_qualified = True
-        elif col_lower.startswith('no'):
-            # Extract model number from "No (XXXXX)"
-            no_match = re.search(r'No\s*\(([^)]+)\)', model_number_column, re.IGNORECASE)
-            if no_match:
-                model_number = no_match.group(1).strip()
-            rationally_qualified = False
-        else:
-            # It's an actual model number (not same as model name)
-            if col_lower != model_name.lower():
-                model_number = model_number_column
+        # If still no model name found, use the entire remaining text
+        if not model_name:
+            model_name = remaining
     
     # Build device name
     device_name = f"{manufacturer} {model_name}"
