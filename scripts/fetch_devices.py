@@ -51,7 +51,11 @@ def fetch_new_devices():
                             if len(parts) > 1:
                                 compatible_devices.add(parts[1])
 
-    print(f"📋 Found {len(compatible_devices)} compatible devices")
+    print(f"📋 Loaded {len(compatible_devices)} compatible device names/variants")
+    
+    # DEBUG: Show sample of compatible devices
+    if compatible_devices:
+        print(f"   Sample: {list(compatible_devices)[:5]}")
 
     new_devices = {
         "last_updated": datetime.now().isoformat(),
@@ -59,12 +63,23 @@ def fetch_new_devices():
     }
 
     market_devices = fetch_market_devices()
+    
+    # DEBUG: Show what we got from API
+    print(f"🌐 API returned {len(market_devices)} devices")
+    if market_devices:
+        print(f"   First device: {market_devices[0]}")
 
     for device in market_devices:
         name = device["name"].lower()
         model = device.get("model", "").lower()
 
-        if name not in compatible_devices and model not in compatible_devices:
+        is_compatible = name in compatible_devices or model in compatible_devices
+        
+        # DEBUG: Show first few comparisons
+        if len(new_devices["devices"]) < 3 and not is_compatible:
+            print(f"   ✨ New: {device['name'][:50]} (not in compatibility list)")
+
+        if not is_compatible:
             new_devices["devices"].append(device)
 
     new_devices["devices"] = remove_duplicates(new_devices["devices"])
@@ -79,8 +94,10 @@ def fetch_new_devices():
 
     if new_devices["devices"]:
         print("\n📱 New devices:")
-        for d in new_devices["devices"][:5]:
-            print(f" • {d['name']} ({d['os']} {d['os_version']})")
+        for d in new_devices["devices"][:10]:
+            print(f"   • {d['name']} ({d['os']} {d.get('os_version', 'N/A')})")
+    else:
+        print("\n💡 No new devices found. All API devices match compatibility list.")
 
     return new_devices
 
@@ -92,11 +109,22 @@ def fetch_market_devices() -> List[Dict]:
         print("🌍 Fetching devices from public API...")
 
         r = requests.get(DEVICE_API, timeout=20)
+        r.raise_for_status()
+        
         data = r.json()
+        
+        # DEBUG: Show API response structure
+        print(f"   API response keys: {data.keys() if isinstance(data, dict) else 'Not a dict'}")
 
-        for item in data.get("data", []):
+        api_data = data.get("data", [])
+        print(f"   Found {len(api_data)} devices in response")
+
+        for item in api_data:
             name = item.get("phone_name", "")
             slug = item.get("slug", "")
+
+            if not name:  # Skip empty names
+                continue
 
             os = "Android"
 
@@ -111,8 +139,10 @@ def fetch_market_devices() -> List[Dict]:
                 "release_date": datetime.now().strftime("%Y-%m-%d")
             })
 
+    except requests.exceptions.RequestException as e:
+        print(f"⚠️ API request failed: {e}")
     except Exception as e:
-        print("⚠️ API fetch failed:", e)
+        print(f"⚠️ API fetch failed: {e}")
 
     return devices
 
@@ -132,6 +162,12 @@ def remove_duplicates(devices: List[Dict]) -> List[Dict]:
 
 
 def save_results(data):
+    import os
+    
+    # Ensure directories exist
+    os.makedirs("data", exist_ok=True)
+    os.makedirs("docs", exist_ok=True)
+    
     with open("data/new_devices.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
@@ -146,5 +182,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     except Exception as e:
-        print("\n❌ Error:", e)
+        print(f"\n❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
