@@ -30,11 +30,17 @@ async function initializeApp() {
         
         compatibilityData = await compatResponse.json();
         console.log('✅ Compatibility data loaded:', compatibilityData);
+        
+        // Check structure
+        if (!compatibilityData.products) {
+            throw new Error('Invalid JSON structure: missing "products" key');
+        }
+        
         console.log('📊 Data structure check:', {
-            hasAndroid: !!compatibilityData.android,
-            hasIOS: !!compatibilityData.ios,
-            androidE3Count: compatibilityData.android?.E3?.length || 0,
-            iosE3Count: compatibilityData.ios?.E3?.length || 0
+            hasProducts: !!compatibilityData.products,
+            hasE3: !!compatibilityData.products.E3,
+            has365: !!compatibilityData.products['365'],
+            hasNOW: !!compatibilityData.products.NOW
         });
         
         // Load new devices data
@@ -168,7 +174,7 @@ function switchTab(tab) {
 function renderCompatibleDevices() {
     console.log('🎨 Rendering compatible devices...');
     
-    if (!compatibilityData) {
+    if (!compatibilityData || !compatibilityData.products) {
         console.warn('⚠️ No compatibility data available yet');
         return;
     }
@@ -183,23 +189,33 @@ function renderCompatibleDevices() {
     
     let devices = [];
     
+    // NEW STRUCTURE: Iterate through products -> E3/365/NOW -> ios/android
+    const products = compatibilityData.products;
+    
     // Collect devices based on filters
-    ['android', 'ios'].forEach(os => {
-        if (currentFilters.os === 'all' || currentFilters.os === os) {
-            ['E3', '365'].forEach(product => {
-                if (currentFilters.product === 'all' || currentFilters.product === product) {
-                    const productDevices = compatibilityData[os]?.[product] || [];
-                    productDevices.forEach(device => {
-                        devices.push({
-                            ...device,
-                            os,
-                            product
-                        });
-                    });
-                }
+    for (const [productName, productData] of Object.entries(products)) {
+        // Filter by product (E3, 365, NOW)
+        if (currentFilters.product !== 'all' && currentFilters.product !== productName) {
+            continue;
+        }
+        
+        // Iterate through OS types
+        for (const [osType, deviceList] of Object.entries(productData)) {
+            // Filter by OS
+            if (currentFilters.os !== 'all' && currentFilters.os !== osType) {
+                continue;
+            }
+            
+            // Add devices
+            deviceList.forEach(device => {
+                devices.push({
+                    ...device,
+                    os: osType,
+                    product: productName
+                });
             });
         }
-    });
+    }
     
     console.log(`📊 Found ${devices.length} devices before search filter`);
     
@@ -297,7 +313,7 @@ function createDeviceCard(device) {
                 ${device.products.map(product => `
                     <span class="product-badge">
                         <i class="fas fa-check"></i>
-                        Eversense ${product}
+                        ${product}
                     </span>
                 `).join('')}
             </div>
@@ -322,7 +338,10 @@ function getManufacturerIcon(manufacturer) {
         'LG': 'fas fa-tv',
         'HTC': 'fas fa-mobile-alt',
         'Nokia': 'fas fa-mobile',
-        'HMD Global': 'fas fa-mobile'
+        'HMD Global': 'fas fa-mobile',
+        'Sony': 'fas fa-mobile-alt',
+        'Xiaomi': 'fas fa-mobile',
+        'Lively': 'fas fa-mobile'
     };
     
     return icons[manufacturer] || 'fas fa-mobile-alt';
@@ -403,16 +422,16 @@ function updateLastUpdated() {
 }
 
 function updateCounts() {
-    if (!compatibilityData) return;
+    if (!compatibilityData || !compatibilityData.products) return;
     
-    // Count unique devices
+    // Count unique devices across all products
     const allDevices = new Set();
-    ['android', 'ios'].forEach(os => {
-        ['E3', '365'].forEach(product => {
-            const devices = compatibilityData[os]?.[product] || [];
-            devices.forEach(device => allDevices.add(device.name));
-        });
-    });
+    
+    for (const productData of Object.values(compatibilityData.products)) {
+        for (const deviceList of Object.values(productData)) {
+            deviceList.forEach(device => allDevices.add(device.name));
+        }
+    }
     
     const compatibleCountEl = document.getElementById('compatibleCount');
     const newDevicesCountEl = document.getElementById('newDevicesCount');
