@@ -14,65 +14,48 @@ import sys
 DEVICE_API = "https://api-mobilespecs.azharimm.dev/v2/latest"
 
 
-def fetch_new_devices():
+name: Fetch New Market Devices
 
-    print("🔍 Fetching new devices from market...")
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
 
-    # Load compatibility list
-    try:
-        with open('docs/compatibility.json', 'r') as f:
-            compatibility = json.load(f)
-    except FileNotFoundError:
-        print("⚠️ compatibility.json not found")
-        compatibility = {'android': {'E3': [], '365': []}, 'ios': {'E3': [], '365': []}}
+permissions:
+  contents: write
 
-    compatible_devices = set()
+jobs:
+  fetch-devices:
+    runs-on: ubuntu-latest
 
-    for os_data in [compatibility['android'], compatibility['ios']]:
-        for product_line in os_data.values():
-            for device in product_line:
-                name = device['name'].lower()
-                compatible_devices.add(name)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-                parts = name.split(maxsplit=1)
-                if len(parts) > 1:
-                    compatible_devices.add(parts[1])
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    print(f"📋 Found {len(compatible_devices)} compatible devices")
+      - name: Install dependencies
+        run: |
+          pip install requests
 
-    new_devices = {
-        "last_updated": datetime.now().isoformat(),
-        "devices": []
-    }
+      - name: Run device fetch script
+        run: |
+          python scripts/fetch_devices.py
 
-    market_devices = fetch_market_devices()
+      - name: Commit updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
 
-    for device in market_devices:
+          git add data/new_devices.json docs/new_devices.json
 
-        name = device["name"].lower()
-        model = device.get("model", "").lower()
-
-        if name not in compatible_devices and model not in compatible_devices:
-            new_devices["devices"].append(device)
-
-    new_devices["devices"] = remove_duplicates(new_devices["devices"])
-
-    new_devices["devices"].sort(
-        key=lambda x: x["release_date"], reverse=True
-    )
-
-    save_results(new_devices)
-
-    print(f"\n✅ Found {len(new_devices['devices'])} new devices")
-
-    if new_devices["devices"]:
-        print("\n📱 New devices:")
-        for d in new_devices["devices"][:5]:
-            print(f" • {d['name']} ({d['os']} {d['os_version']})")
-
-    return new_devices
-
-
+          if ! git diff --staged --quiet; then
+            git commit -m "Update new devices data [automated]"
+            git push
+          fi
 def fetch_market_devices() -> List[Dict]:
 
     devices = []
