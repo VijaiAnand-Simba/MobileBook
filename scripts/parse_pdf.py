@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Parse Eversense compatibility PDF using proper table extraction.
-Handles different column structures for iOS (3 cols) and Android (4 cols).
+Parse Eversense compatibility PDF using line-by-line extraction.
+More robust than table extraction for complex PDFs.
 """
 
 import pdfplumber
@@ -43,88 +43,109 @@ def parse_eversense_pdf(pdf_path: str) -> Dict[str, Any]:
         }
     }
     
-    # Table mapping
+    # Table configurations
     table_configs = {
-        3: {"product": "E3", "os": "ios", "columns": 3},
-        4: {"product": "E3", "os": "android", "columns": 4},
-        5: {"product": "365", "os": "ios", "columns": 3},
-        6: {"product": "365", "os": "android", "columns": 4},
-        7: {"product": "NOW", "os": "ios", "columns": 3},
-        8: {"product": "NOW", "os": "android", "columns": 4}
+        3: {"product": "E3", "os": "ios", "name": "E3 iOS MMA"},
+        4: {"product": "E3", "os": "android", "name": "E3 Android MMA"},
+        5: {"product": "365", "os": "ios", "name": "365 iOS MMA"},
+        6: {"product": "365", "os": "android", "name": "365 Android MMA"},
+        7: {"product": "NOW", "os": "ios", "name": "NOW iOS App"},
+        8: {"product": "NOW", "os": "android", "name": "NOW Android App"}
     }
     
     current_table_num = None
-    current_config = None
     in_table = False
+    table_header_seen = False
     
     with pdfplumber.open(pdf_path) as pdf:
         print(f"📑 Total pages: {len(pdf.pages)}\n")
         
         for page_num, page in enumerate(pdf.pages, 1):
-            # Extract text to find table markers
             text = page.extract_text()
             if not text:
                 continue
             
-            # Extract document metadata
-            if 'Revision:' in text:
-                revision_match = re.search(r'Revision:\s*(\d+)', text)
-                if revision_match:
-                    compatibility_data["document_info"]["revision"] = revision_match.group(1)
+            lines = text.split('\n')
             
-            if 'Effective Date:' in text:
-                date_match = re.search(r'Effective Date:\s*(\d{1,2}\s+\w+\s+\d{4})', text)
-                if date_match:
-                    compatibility_data["document_info"]["effective_date"] = date_match.group(1).strip()
-            
-            # Detect table start
-            for table_num, config in table_configs.items():
-                pattern = f"Table {table_num}"
-                if pattern in text:
-                    current_table_num = table_num
-                    current_config = config
-                    in_table = True
-                    print(f"{'📱' if config['os'] == 'ios' else '🤖'} Found Table {table_num} - {config['product']} {config['os'].upper()} (Page {page_num})")
-                    break
-            
-            # Extract tables from page
-            if in_table and current_config:
-                tables = page.extract_tables()
+            # Extract metadata
+            for line in lines:
+                if 'Revision:' in line:
+                    revision_match = re.search(r'Revision:\s*(\d+)', line)
+                    if revision_match and not compatibility_data["document_info"]["revision"]:
+                        compatibility_data["document_info"]["revision"] = revision_match.group(1)
                 
-                for table in tables:
-                    if not table or len(table) < 2:
-                        continue
-                    
-                    # Process table rows
-                    devices_found = parse_table(table, current_config)
-                    
-                    if devices_found:
-                        product = current_config['product']
-                        os_type = current_config['os']
-                        
-                        for device in devices_found:
-                            # Avoid duplicates
-                            existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
-                            if device['name'] not in existing_names:
-                                compatibility_data["products"][product][os_type].append(device)
+                if 'Effective Date:' in line:
+                    date_match = re.search(r'Effective Date:\s*(\d{1,2}\s+\w+\s+\d{4})', line)
+                    if date_match and not compatibility_data["document_info"]["effective_date"]:
+                        compatibility_data["document_info"]["effective_date"] = date_match.group(1).strip()
             
-            # Check if we've moved to next table
-            next_table_text = f"Table {current_table_num + 1}" if current_table_num else None
-            if next_table_text and next_table_text in text:
-                if current_config:
-                    product = current_config['product']
-                    os_type = current_config['os']
-                    count = len(compatibility_data["products"][product][os_type])
-                    print(f"   ✅ Collected {count} devices\n")
-                in_table = False
-    
-    # Final counts
-    for table_num, config in table_configs.items():
-        product = config['product']
-        os_type = config['os']
-        count = len(compatibility_data["products"][product][os_type])
-        if count > 0:
-            print(f"Table {table_num} ({config['product']} {config['os'].upper()}): {count} devices")
+            # Process each line
+            for line in lines:
+                line_stripped = line.strip()
+                
+                # Skip empty lines
+                if not line_stripped:
+                    continue
+                
+                # Skip confidential markers
+                if any(skip in line_stripped for skip in ['Confidential', 'Property of Senseonics', 'Document #:', 'Title:', 'Pages:']):
+                    continue
+                
+                # Detect table start
+                table_detected = False
+                for tnum in range(3, 9):
+                    if f"Table {tnum}" in line_stripped:
+                        # End previous table
+                        if current_table_num and in_table:
+                            config = table_configs[current_table_num]
+                            count = len(compatibility_data["products"][config["product"]][config["os"]])
+                            print(f"   ✅ Table {current_table_num}: {count} devices\n")
+                        
+                        # Start new table
+                        current_table_num = tnum
+                        in_table = True
+                        table_header_seen = False
+                        config = table_configs[tnum]
+                        print(f"{'📱' if config['os'] == 'ios' else '🤖'} Found Table {tnum} - {config['name']} (Page {page_num})")
+                        table_detected = True
+                        break
+                
+                if table_detected:
+                    continue
+                
+                # Skip table headers
+                if 'Device Manufacturer' in line_stripped or 'Device Model' in line_stripped:
+                    table_header_seen = True
+                    continue
+                
+                # Only process if we're in a table and past the header
+                if not in_table or not table_header_seen or not current_table_num:
+                    continue
+                
+                # Skip revision history entries (specific pattern)
+                if re.match(r'^\d+\s+[A-Z][a-z]+\s+[A-Z][a-z]+', line_stripped):
+                    # This looks like "34 Alekya Bethi" - revision history
+                    if 'Updated' in line_stripped or 'Added' in line_stripped or 'Removed' in line_stripped:
+                        continue
+                
+                # Parse the device line
+                config = table_configs[current_table_num]
+                device = parse_device_line_simple(line_stripped, config["os"], config["product"])
+                
+                if device:
+                    product = config["product"]
+                    os_type = config["os"]
+                    
+                    # Avoid duplicates
+                    existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
+                    if device['name'] not in existing_names:
+                        compatibility_data["products"][product][os_type].append(device)
+        
+        # End last table
+        if current_table_num and in_table:
+            config = table_configs[current_table_num]
+            count = len(compatibility_data["products"][config["product"]][config["os"]])
+            print(f"   ✅ Table {current_table_num}: {count} devices\n")
     
     # Save to JSON
     os.makedirs('data', exist_ok=True)
@@ -157,133 +178,131 @@ def parse_eversense_pdf(pdf_path: str) -> Dict[str, Any]:
     return compatibility_data
 
 
-def parse_table(table: List[List[str]], config: Dict) -> List[Dict[str, Any]]:
-    """Parse a table based on its configuration."""
+def parse_device_line_simple(line: str, os_type: str, product: str) -> Optional[Dict[str, Any]]:
+    """
+    Parse a device line using simple text splitting.
+    More reliable than table extraction.
+    """
     
-    devices = []
-    os_type = config['os']
-    product = config['product']
-    expected_cols = config['columns']
+    # Skip lines that are too short
+    if len(line) < 5:
+        return None
     
-    # Skip header row(s)
-    data_rows = []
-    for row in table:
-        # Clean the row
-        cleaned_row = [cell.strip() if cell else '' for cell in row]
-        
-        # Skip empty rows
-        if not any(cleaned_row):
-            continue
-        
-        # Skip header rows
-        if any(header in ' '.join(cleaned_row).lower() for header in ['device manufacturer', 'device model', 'model number', 'rationally qualified']):
-            continue
-        
-        # Skip rows with confidential markers
-        if any(skip in ' '.join(cleaned_row) for skip in ['Confidential', 'Property of Senseonics', 'Document #']):
-            continue
-        
-        data_rows.append(cleaned_row)
+    # iOS format: Manufacturer | Model | Model Number (3 columns, space-separated)
+    if os_type == 'ios':
+        return parse_ios_line_simple(line, product)
+    else:
+        # Android format: Manufacturer | Model Name | Model Number | RQ (4 columns)
+        return parse_android_line_simple(line, product)
+
+
+def parse_ios_line_simple(line: str, product: str) -> Optional[Dict[str, Any]]:
+    """Parse iOS device line (3 columns)."""
     
-    # Parse each data row
-    for row in data_rows:
-        if os_type == 'ios':
-            device = parse_ios_row(row, product)
+    # Must start with "Apple"
+    if not line.startswith('Apple'):
+        return None
+    
+    # Remove "Apple" and process the rest
+    remaining = line[5:].strip()
+    
+    # Split on multiple spaces (usually 2+ spaces separate columns)
+    parts = re.split(r'\s{2,}', remaining)
+    
+    if len(parts) < 2:
+        # Try splitting on common model number patterns
+        # Format: "iPhone 14 Pro MPXT3LL/A"
+        match = re.match(r'(.+?)\s+([A-Z0-9]{5,}(?:LL/A)?|Rationally\s+Qualified)$', remaining)
+        if match:
+            device_model = match.group(1).strip()
+            model_number = match.group(2).strip()
         else:
-            device = parse_android_row(row, product)
-        
-        if device:
-            devices.append(device)
+            # No clear model number, everything is the device model
+            device_model = remaining
+            model_number = ""
+    else:
+        device_model = parts[0].strip()
+        model_number = parts[1].strip() if len(parts) > 1 else ""
     
-    return devices
-
-
-def parse_ios_row(row: List[str], product: str) -> Optional[Dict[str, Any]]:
-    """
-    Parse iOS table row (3 columns).
-    Format: Device Manufacturer | Device Model | Model Number
-    """
+    # Clean device model (remove size info)
+    device_model_clean = re.sub(r'\s*\(\d+\s*mm\)', '', device_model).strip()
+    device_model_clean = re.sub(r'\s*\([^)]*\)', '', device_model_clean).strip()
     
-    if len(row) < 2:
-        return None
+    # Check if rationally qualified
+    rationally_qualified = 'rationally qualified' in line.lower()
     
-    manufacturer = row[0].strip() if len(row) > 0 else ''
-    device_model = row[1].strip() if len(row) > 1 else ''
-    model_number = row[2].strip() if len(row) > 2 else ''
+    # Build device name
+    device_name = f"Apple {device_model_clean}"
     
-    # Skip if no manufacturer or model
-    if not manufacturer or not device_model:
-        return None
-    
-    # Skip if manufacturer is not Apple
-    if 'apple' not in manufacturer.lower():
-        return None
-    
-    # Clean up device model (remove size info like "(40 mm)")
-    device_model_clean = re.sub(r'\s*\([^)]*\)', '', device_model).strip()
-    
-    # Create full device name
-    device_name = f"{manufacturer} {device_model_clean}"
-    
-    # Determine if rationally qualified
-    rationally_qualified = (
-        'rationally qualified' in model_number.lower() or
-        'rationally qualified' in device_model.lower()
-    )
-    
-    # Extract iOS version
+    # Get OS version
     os_version = extract_ios_version(device_model_clean)
     
     return {
         "name": device_name,
-        "manufacturer": manufacturer,
+        "manufacturer": "Apple",
         "model": device_model_clean,
-        "model_number": model_number if model_number and model_number != 'Rationally Qualified' else '',
+        "model_number": model_number if model_number and 'Rationally' not in model_number else '',
         "os_version": os_version,
         "rationally_qualified": rationally_qualified,
         "product": product
     }
 
 
-def parse_android_row(row: List[str], product: str) -> Optional[Dict[str, Any]]:
-    """
-    Parse Android table row (4 columns).
-    Format: Device Manufacturer | Device Model Name | Device Model Number (Reference) | Rationally qualified
-    """
+def parse_android_line_simple(line: str, product: str) -> Optional[Dict[str, Any]]:
+    """Parse Android device line (4 columns)."""
     
-    if len(row) < 2:
+    # Known manufacturers
+    manufacturers = [
+        'Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 
+        'HMD Global', 'Lively', 'TCL', 'Xiaomi', 'Sony', 'Huawei', 'Oppo', 'Vivo'
+    ]
+    
+    # Find which manufacturer this line starts with
+    manufacturer = None
+    for mfr in manufacturers:
+        if line.startswith(mfr):
+            manufacturer = mfr
+            break
+    
+    if not manufacturer:
         return None
     
-    manufacturer = row[0].strip() if len(row) > 0 else ''
-    model_name = row[1].strip() if len(row) > 1 else ''
-    model_number_ref = row[2].strip() if len(row) > 2 else ''
-    rationally_qualified_text = row[3].strip() if len(row) > 3 else ''
+    # Remove manufacturer from line
+    remaining = line[len(manufacturer):].strip()
     
-    # Skip if no manufacturer or model name
-    if not manufacturer or not model_name:
+    # Split on multiple spaces
+    parts = re.split(r'\s{2,}', remaining)
+    
+    if len(parts) < 1:
         return None
     
-    # Create full device name
-    device_name = f"{manufacturer} {model_name}"
+    model_name = parts[0].strip()
+    model_number_text = parts[1].strip() if len(parts) > 1 else ""
+    rq_text = parts[2].strip() if len(parts) > 2 else ""
     
     # Parse model number
-    # Sometimes it's just the model name repeated, sometimes it's "No (XXXXX)" or "Yes"
-    model_number = ''
-    if model_number_ref and model_number_ref.lower() != model_name.lower():
-        # Extract from "No (XXX)" or "Yes" format
-        no_match = re.search(r'No\s*\(([^)]+)\)', model_number_ref)
+    model_number = ""
+    if model_number_text:
+        # Check for "No (XXXXX)" pattern
+        no_match = re.search(r'No\s*\(([^)]+)\)', model_number_text)
+        yes_match = re.search(r'Yes', model_number_text, re.IGNORECASE)
+        
         if no_match:
             model_number = no_match.group(1)
-        elif model_number_ref not in ['Yes', 'No']:
-            model_number = model_number_ref
+        elif not yes_match and model_number_text.lower() != model_name.lower():
+            model_number = model_number_text
     
     # Determine if rationally qualified
     rationally_qualified = (
-        rationally_qualified_text.lower() == 'yes' or
-        'yes' in model_number_ref.lower()
+        rq_text.lower() == 'yes' or
+        'yes' in model_number_text.lower() or
+        'rationally qualified' in line.lower()
     )
     
-    # Extract Android version
+    # Build device name
+    device_name = f"{manufacturer} {model_name}"
+    
+    # Get Android version
     os_version = extract_android_version(model_name)
     
     return {
@@ -298,8 +317,7 @@ def parse_android_row(row: List[str], product: str) -> Optional[Dict[str, Any]]:
 
 
 def extract_ios_version(model_name: str) -> str:
-    """Extract or infer iOS version from device model."""
-    
+    """Extract iOS version from device model."""
     model_lower = model_name.lower()
     
     # iPhone versions
@@ -317,7 +335,7 @@ def extract_ios_version(model_name: str) -> str:
         return '14.0'
     elif 'iphone 11' in model_lower:
         return '13.0'
-    elif 'iphone xs' in model_lower or 'iphone xr' in model_lower or 'iphone x ' in model_lower:
+    elif 'iphone xs' in model_lower or 'iphone xr' in model_lower or 'iphone x' in model_lower:
         return '12.0'
     elif 'iphone 8' in model_lower:
         return '11.0'
@@ -325,13 +343,13 @@ def extract_ios_version(model_name: str) -> str:
         return '10.0'
     elif 'iphone 6' in model_lower:
         return '9.0'
-    elif 'iphone se 3' in model_lower or 'se 3rd' in model_lower:
+    elif 'se 3' in model_lower or 'se (3' in model_lower:
         return '15.0'
-    elif 'iphone se 2' in model_lower or 'se 2nd' in model_lower:
+    elif 'se 2' in model_lower or 'se (2' in model_lower:
         return '13.0'
     
     # Watch versions
-    elif 'watch series 11' in model_lower or 'watch series11' in model_lower:
+    elif 'watch series 11' in model_lower:
         return '11.0'
     elif 'watch series 10' in model_lower:
         return '10.0'
@@ -355,6 +373,8 @@ def extract_ios_version(model_name: str) -> str:
         return '10.0'
     elif 'watch se' in model_lower:
         return '7.0'
+    elif 'watch hermes' in model_lower or 'watch nike' in model_lower:
+        return '7.0'
     
     # iPad and iPod
     elif 'ipad' in model_lower:
@@ -366,8 +386,7 @@ def extract_ios_version(model_name: str) -> str:
 
 
 def extract_android_version(model_name: str) -> str:
-    """Extract or infer Android version from device model."""
-    
+    """Extract Android version from device model."""
     model_lower = model_name.lower()
     
     # Google Pixel
@@ -381,10 +400,8 @@ def extract_android_version(model_name: str) -> str:
         return '12.0'
     elif 'pixel 5' in model_lower or 'pixel 4' in model_lower:
         return '11.0'
-    elif 'pixel' in model_lower:
-        return '10.0'
     
-    # Samsung Galaxy S series
+    # Samsung S series
     elif 's25' in model_lower or 's24' in model_lower:
         return '14.0'
     elif 's23' in model_lower or 's22' in model_lower:
@@ -392,18 +409,6 @@ def extract_android_version(model_name: str) -> str:
     elif 's21' in model_lower or 's20' in model_lower:
         return '11.0'
     elif 's10' in model_lower or 's9' in model_lower:
-        return '10.0'
-    
-    # Samsung Galaxy A series (year-based)
-    elif 'a56' in model_lower or 'a55' in model_lower or 'a54' in model_lower:
-        return '14.0'
-    elif 'a5' in model_lower or 'a3' in model_lower or 'a2' in model_lower:
-        return '12.0'
-    
-    # Samsung Note series
-    elif 'note20' in model_lower or 'note 20' in model_lower:
-        return '11.0'
-    elif 'note10' in model_lower or 'note 10' in model_lower:
         return '10.0'
     
     # Year indicators
@@ -418,21 +423,16 @@ def extract_android_version(model_name: str) -> str:
     elif '2021' in model_lower:
         return '11.0'
     
+    # Samsung A series
+    elif re.search(r'a5[456]', model_lower):
+        return '14.0'
+    elif re.search(r'a[23456]', model_lower):
+        return '12.0'
+    
     # OnePlus
     elif 'oneplus 13' in model_lower or 'oneplus 12' in model_lower:
         return '14.0'
-    elif 'oneplus' in model_lower:
-        return '12.0'
     
-    # Motorola with years
-    elif 'edge 2025' in model_lower or 'g 2025' in model_lower:
-        return '15.0'
-    elif 'edge 2024' in model_lower or 'g 2024' in model_lower:
-        return '14.0'
-    elif 'motorola' in model_lower:
-        return '12.0'
-    
-    # Default
     return '10.0'
 
 
