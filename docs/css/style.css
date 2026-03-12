@@ -490,6 +490,7 @@ body {
 }
 
 
+/* Rationally Qualified Info */
 .rq-info {
     margin-top: 1rem;
     padding: 0.75rem;
@@ -501,11 +502,32 @@ body {
     gap: 0.5rem;
     font-size: 0.85rem;
     color: var(--warning-color);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .rq-info i {
     font-size: 1rem;
+}
+
+/* RQ Badge in card corner */
+.device-card.rationally-qualified {
+    position: relative;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.device-card.rationally-qualified::after {
+    content: 'RQ';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--warning-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    z-index: 10;
 }
 
 /* New Devices Grid */
