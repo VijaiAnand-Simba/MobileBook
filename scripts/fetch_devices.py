@@ -14,50 +14,78 @@ import sys
 DEVICE_API = "https://api-mobilespecs.azharimm.dev/v2/latest"
 
 
-name: Fetch New Market Devices
+def fetch_new_devices():
+    print("🔍 Fetching new devices from market...")
 
-on:
-  schedule:
-    - cron: '0 12 * * 1'
-  workflow_dispatch:
+    # Load compatibility list with better error handling
+    compatibility = {'android': {'E3': [], '365': []}, 'ios': {'E3': [], '365': []}}
+    
+    try:
+        with open('docs/compatibility.json', 'r') as f:
+            loaded = json.load(f)
+            # Validate structure
+            if isinstance(loaded, dict) and 'android' in loaded and 'ios' in loaded:
+                compatibility = loaded
+            else:
+                print("⚠️ compatibility.json has invalid structure, using defaults")
+    except FileNotFoundError:
+        print("⚠️ compatibility.json not found, using defaults")
+    except json.JSONDecodeError as e:
+        print(f"⚠️ compatibility.json is not valid JSON: {e}")
+    except Exception as e:
+        print(f"⚠️ Error loading compatibility.json: {e}")
 
-permissions:
-  contents: write
+    compatible_devices = set()
 
-jobs:
-  fetch-devices:
-    runs-on: ubuntu-latest
+    # Safely iterate with .get() to handle missing keys
+    for os_type in ['android', 'ios']:
+        os_data = compatibility.get(os_type, {})
+        for product_line in os_data.values():
+            if isinstance(product_line, list):
+                for device in product_line:
+                    if isinstance(device, dict):
+                        name = device.get('name', '').lower()
+                        if name:
+                            compatible_devices.add(name)
+                            parts = name.split(maxsplit=1)
+                            if len(parts) > 1:
+                                compatible_devices.add(parts[1])
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    print(f"📋 Found {len(compatible_devices)} compatible devices")
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    new_devices = {
+        "last_updated": datetime.now().isoformat(),
+        "devices": []
+    }
 
-      - name: Install dependencies
-        run: |
-          pip install requests
+    market_devices = fetch_market_devices()
 
-      - name: Run device fetch script
-        run: |
-          python scripts/fetch_devices.py
+    for device in market_devices:
+        name = device["name"].lower()
+        model = device.get("model", "").lower()
 
-      - name: Commit updates
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "github-actions"
+        if name not in compatible_devices and model not in compatible_devices:
+            new_devices["devices"].append(device)
 
-          git add data/new_devices.json docs/new_devices.json
+    new_devices["devices"] = remove_duplicates(new_devices["devices"])
 
-          if ! git diff --staged --quiet; then
-            git commit -m "Update new devices data [automated]"
-            git push
-          fi
+    new_devices["devices"].sort(
+        key=lambda x: x["release_date"], reverse=True
+    )
+
+    save_results(new_devices)
+
+    print(f"\n✅ Found {len(new_devices['devices'])} new devices")
+
+    if new_devices["devices"]:
+        print("\n📱 New devices:")
+        for d in new_devices["devices"][:5]:
+            print(f" • {d['name']} ({d['os']} {d['os_version']})")
+
+    return new_devices
+
+
 def fetch_market_devices() -> List[Dict]:
-
     devices = []
 
     try:
@@ -67,7 +95,6 @@ def fetch_market_devices() -> List[Dict]:
         data = r.json()
 
         for item in data.get("data", []):
-
             name = item.get("phone_name", "")
             slug = item.get("slug", "")
 
@@ -91,12 +118,10 @@ def fetch_market_devices() -> List[Dict]:
 
 
 def remove_duplicates(devices: List[Dict]) -> List[Dict]:
-
     seen = set()
     result = []
 
     for device in devices:
-
         key = device["name"].lower()
 
         if key not in seen:
@@ -107,7 +132,6 @@ def remove_duplicates(devices: List[Dict]) -> List[Dict]:
 
 
 def save_results(data):
-
     with open("data/new_devices.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
@@ -116,13 +140,11 @@ def save_results(data):
 
 
 if __name__ == "__main__":
-
     try:
         fetch_new_devices()
         print("\n✅ Device list updated successfully")
         sys.exit(0)
 
     except Exception as e:
-
         print("\n❌ Error:", e)
         sys.exit(1)
