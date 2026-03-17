@@ -1,9 +1,11 @@
 // Global state
 let compatibilityData = null;
 let newDevicesData = null;
+let searchEngine = null;
 let currentFilters = {
     os: 'all',
     product: 'all',
+    region: 'all',
     search: ''
 };
 
@@ -33,6 +35,9 @@ async function initializeApp() {
         if (!compatibilityData.products) {
             throw new Error('Invalid JSON structure: missing "products" key');
         }
+        
+        // Initialize search engine
+        searchEngine = new DeviceSearchEngine();
         
         console.log('📥 Fetching new devices data from: new_devices.json');
         const newDevicesResponse = await fetch('new_devices.json');
@@ -102,6 +107,7 @@ function setupEventListeners() {
         });
     }
     
+    // OS filter
     document.querySelectorAll('[data-filter]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const filter = e.currentTarget.dataset.filter;
@@ -115,6 +121,7 @@ function setupEventListeners() {
         });
     });
     
+    // Product filter
     document.querySelectorAll('[data-product]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const product = e.currentTarget.dataset.product;
@@ -128,6 +135,21 @@ function setupEventListeners() {
         });
     });
     
+    // Region filter
+    document.querySelectorAll('[data-region]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const region = e.currentTarget.dataset.region;
+            currentFilters.region = region;
+            console.log('🌍 Region filter:', region);
+            
+            document.querySelectorAll('[data-region]').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            
+            renderCompatibleDevices();
+        });
+    });
+    
+    // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const tab = e.currentTarget.dataset.tab;
@@ -175,6 +197,7 @@ function renderCompatibleDevices() {
     
     const products = compatibilityData.products;
     
+    // Collect all devices
     for (const [productName, productData] of Object.entries(products)) {
         if (currentFilters.product !== 'all' && currentFilters.product !== productName) {
             continue;
@@ -186,6 +209,11 @@ function renderCompatibleDevices() {
             }
             
             deviceList.forEach(device => {
+                // Apply region filter
+                if (currentFilters.region !== 'all' && device.region !== currentFilters.region) {
+                    return;
+                }
+                
                 devices.push({
                     ...device,
                     os: osType,
@@ -197,11 +225,13 @@ function renderCompatibleDevices() {
     
     console.log(`📊 Found ${devices.length} devices before search filter`);
     
-    if (currentFilters.search) {
-        devices = devices.filter(device => 
-            device.name?.toLowerCase().includes(currentFilters.search) ||
-            device.manufacturer?.toLowerCase().includes(currentFilters.search) ||
-            device.model?.toLowerCase().includes(currentFilters.search)
+    // Apply search filter
+    if (currentFilters.search && searchEngine) {
+        const groupedForSearch = groupDevicesByName(devices);
+        searchEngine.buildIndex(groupedForSearch);
+        const searchResults = searchEngine.search(currentFilters.search);
+        devices = searchResults.flatMap(result => 
+            devices.filter(d => d.name === result.name)
         );
         console.log(`🔍 ${devices.length} devices after search: "${currentFilters.search}"`);
     }
@@ -235,11 +265,18 @@ function groupDevicesByName(devices) {
                 model: device.model || device.name,
                 model_number: device.model_number || '',
                 os: device.os,
+                os_version: device.os_version || '',
                 rationally_qualified: device.rationally_qualified || false,
+                region: device.region || 'US',
                 products: new Set()
             };
         }
         grouped[key].products.add(device.product);
+        
+        // If device is in both regions, mark it
+        if (device.region && device.region !== grouped[key].region) {
+            grouped[key].region = 'BOTH';
+        }
     });
     
     return Object.values(grouped).map(device => ({
@@ -254,6 +291,19 @@ function createDeviceCard(device) {
     const rqClass = device.rationally_qualified ? 'rationally-qualified' : '';
     const manufacturerIcon = getManufacturerIcon(device.manufacturer);
     
+    // Region badge
+    let regionBadgeHTML = '';
+    if (device.region === 'BOTH') {
+        regionBadgeHTML = `
+            <span class="region-badge us" title="Available in US">US</span>
+            <span class="region-badge ous" title="Available Outside US">OUS</span>
+        `;
+    } else if (device.region === 'OUS') {
+        regionBadgeHTML = `<span class="region-badge ous" title="Outside US">OUS</span>`;
+    } else if (device.region === 'US') {
+        regionBadgeHTML = `<span class="region-badge us" title="United States">US</span>`;
+    }
+    
     return `
         <div class="device-card ${rqClass}">
             <div class="device-header">
@@ -262,13 +312,36 @@ function createDeviceCard(device) {
                         <i class="${manufacturerIcon}"></i>
                         ${device.manufacturer || 'Unknown'}
                     </span>
-                    <h3 class="device-name">${device.name}</h3>
+                    <h3 class="device-name">
+                        ${device.name}
+                        ${device.rationally_qualified ? '<span class="rq-badge">RQ</span>' : ''}
+                    </h3>
                     ${device.model_number ? `<div class="model-number">${device.model_number}</div>` : ''}
                 </div>
-                <span class="os-badge ${osClass}">
-                    <i class="${osIcon}"></i>
-                    ${device.os === 'android' ? 'Android' : 'iOS'}
-                </span>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">
+                    <span class="os-badge ${osClass}">
+                        <i class="${osIcon}"></i>
+                        ${device.os === 'android' ? 'Android' : 'iOS'}
+                    </span>
+                    <div style="display: flex; gap: 0.25rem;">
+                        ${regionBadgeHTML}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="device-details">
+                ${device.model ? `
+                    <span class="detail-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        ${device.model}
+                    </span>
+                ` : ''}
+                ${device.os_version ? `
+                    <span class="detail-item">
+                        <i class="fas fa-code-branch"></i>
+                        v${device.os_version}+
+                    </span>
+                ` : ''}
             </div>
             
             <div class="compatibility-badges">
@@ -283,7 +356,7 @@ function createDeviceCard(device) {
             ${device.rationally_qualified ? `
                 <div class="rq-info">
                     <i class="fas fa-info-circle"></i>
-                    <span>Rationally Qualified</span>
+                    <span>Rationally Qualified Device</span>
                 </div>
             ` : ''}
         </div>
@@ -376,7 +449,9 @@ function updateLastUpdated() {
         lastUpdatedEl.textContent = lastUpdated.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     } catch (e) {
         lastUpdatedEl.textContent = 'Unknown';
@@ -387,10 +462,16 @@ function updateCounts() {
     if (!compatibilityData || !compatibilityData.products) return;
     
     const allDevices = new Set();
+    let usCount = 0;
+    let ousCount = 0;
     
     for (const productData of Object.values(compatibilityData.products)) {
         for (const deviceList of Object.values(productData)) {
-            deviceList.forEach(device => allDevices.add(device.name));
+            deviceList.forEach(device => {
+                allDevices.add(device.name);
+                if (device.region === 'US') usCount++;
+                else if (device.region === 'OUS') ousCount++;
+            });
         }
     }
     
@@ -399,7 +480,7 @@ function updateCounts() {
     
     if (compatibleCountEl) {
         compatibleCountEl.textContent = allDevices.size;
-        console.log(`📊 Compatible devices count: ${allDevices.size}`);
+        console.log(`📊 Compatible devices count: ${allDevices.size} (US: ${usCount}, OUS: ${ousCount})`);
     }
     
     if (newDevicesCountEl && newDevicesData) {
@@ -441,6 +522,9 @@ function showError(message) {
                 <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
                 <h3>${message}</h3>
                 <p style="margin-top: 1rem;">Please check the browser console (F12) for more details.</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    Make sure compatibility.json is in the same directory as this page.
+                </p>
             </div>
         `;
         loading.style.display = 'block';
