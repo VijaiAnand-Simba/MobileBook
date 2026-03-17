@@ -155,12 +155,25 @@ def fetch_brand_devices(brand_name: str, url: str) -> List[Dict]:
             if not name:
                 continue
 
-            os_type = "iOS" if ("iPhone" in name or "iPad" in name) else "Android"
+            # Normalize brand name for display
+            brand_display = brand_name.capitalize()
+            
+            # Check if brand name is already in the device name
+            brand_variations = [brand_display.lower(), brand_name.lower()]
+            has_brand = any(variation in name.lower() for variation in brand_variations)
+            
+            # Prepend brand name if not already present
+            if not has_brand:
+                full_name = f"{brand_display} {name}"
+            else:
+                full_name = name
+
+            os_type = "iOS" if ("iPhone" in name or "iPad" in name or "Watch" in name) else "Android"
 
             devices.append({
-                "name":         name,
+                "name":         full_name,  # ← Changed: Now includes brand
                 "brand":        brand_name,
-                "model":        name.lower().replace(" ", "-"),
+                "model":        name,       # ← Keep original name as model
                 "os":           os_type,
                 "os_version":   "",
                 "release_date": datetime.now().strftime("%Y-%m-%d"),
