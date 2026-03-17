@@ -28,10 +28,10 @@ jobs:
         run: |
           pip install -r scripts/requirements.txt
           
-      - name: Parse PDF (all 6 tables)
+      - name: Parse PDFs (US + OUS)
         run: |
-          echo "📄 Parsing all 6 tables from PDF..."
-          python scripts/parse_pdf.py pdf/compatibility.pdf
+          echo "📄 Parsing US and OUS PDFs..."
+          python scripts/parse_pdf.py
           
       - name: Copy JSON to docs
         run: |
@@ -49,20 +49,25 @@ jobs:
               with open('docs/compatibility.json', 'r') as f:
                   data = json.load(f)
               
-              # New structure: products -> product_name -> os_type
               if 'products' not in data:
                   print("❌ Error: 'products' key not found in JSON")
                   sys.exit(1)
               
               total = 0
+              us_count = 0
+              ous_count = 0
+              
               for product in ['E3', '365', 'NOW']:
                   if product in data['products']:
-                      ios_count = len(data['products'][product].get('ios', []))
-                      android_count = len(data['products'][product].get('android', []))
-                      total += ios_count + android_count
-                      print(f"   {product}: iOS={ios_count}, Android={android_count}")
+                      for os_type in ['ios', 'android']:
+                          devices = data['products'][product].get(os_type, [])
+                          total += len(devices)
+                          us_count += sum(1 for d in devices if d.get('region') == 'US')
+                          ous_count += sum(1 for d in devices if d.get('region') == 'OUS')
               
               print(f"\n✅ Valid JSON")
+              print(f"🌍 US Devices: {us_count}")
+              print(f"🌎 OUS Devices: {ous_count}")
               print(f"📊 Total devices: {total}")
               
               if total == 0:
@@ -81,6 +86,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions Bot"
           git add data/compatibility.json docs/compatibility.json
-          git diff --staged --quiet || (git commit -m "🤖 Update compatibility data (all 6 tables)" && git push)
+          git diff --staged --quiet || (git commit -m "🤖 Update compatibility data (US + OUS)" && git push)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
