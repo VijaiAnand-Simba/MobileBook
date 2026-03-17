@@ -1,9 +1,12 @@
 {
-  "last_updated": "2026-03-15T01:54:41.966697",
-  "document_info": {
-    "revision": "50",
-    "effective_date": "21 Nov 2025",
-    "source_file": "compatibility.pdf"
+  "last_updated": "2026-03-17T06:11:21.024008",
+  "regions": {
+    "US": {
+      "revision": "50",
+      "effective_date": "21 Nov 2025",
+      "source_file": "compatibility_us.pdf"
+    },
+    "OUS": {}
   },
   "products": {
     "E3": {
@@ -15,7 +18,8 @@
           "model_number": "G011C",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 3",
@@ -24,7 +28,8 @@
           "model_number": "G013A",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 3 XL",
@@ -33,7 +38,8 @@
           "model_number": "GA00475-US",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 4",
@@ -42,7 +48,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 4 XL",
@@ -51,7 +58,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 5",
@@ -60,7 +68,8 @@
           "model_number": "GD1YQ",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6",
@@ -69,7 +78,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6a",
@@ -78,7 +88,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6 Pro",
@@ -87,7 +98,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7",
@@ -96,7 +108,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7a",
@@ -105,7 +118,8 @@
           "model_number": "GWKK3",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7 Pro",
@@ -114,7 +128,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8",
@@ -123,7 +138,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8a",
@@ -132,7 +148,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8 Pro",
@@ -141,7 +158,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9",
@@ -150,7 +168,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9a",
@@ -159,7 +178,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9 Pro XL",
@@ -168,7 +188,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10",
@@ -177,7 +198,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10 Pro",
@@ -186,7 +208,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10 Pro XL",
@@ -195,7 +218,8 @@
           "model_number": "GUL82",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia G300 N1374DL",
@@ -204,7 +228,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia G50",
@@ -213,7 +238,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia X100",
@@ -222,7 +248,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia XR20",
@@ -231,7 +258,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "HTC Desire 21 Pro",
@@ -240,7 +268,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "LG G6 LG-AS993, LG-H87, LG-LS993,",
@@ -249,7 +278,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "LG M-G600, LGUS997, VS988",
@@ -258,7 +288,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "LG G8 ThinQ LM-G820",
@@ -267,7 +298,8 @@
           "model_number": "LM-G820QM",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "LG V35 ThinQ LM-V350",
@@ -276,7 +308,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "LG V40 ThinQ LM-V405, LM-V409N",
@@ -285,7 +318,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Lively Jitterbug Smart 3 5007S",
@@ -294,7 +328,8 @@
           "model_number": "5007S",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Lively Jitterbug Smart 4 T608G",
@@ -303,7 +338,8 @@
           "model_number": "T608G",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 50 Pro edge 50 pro",
@@ -312,7 +348,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 5G edge 5G UW",
@@ -321,16 +358,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 2022 edge (2022)",
           "manufacturer": "Motorola",
           "model": "Edge 2022 edge (2022)",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Motorola Edge edge 2024",
@@ -339,7 +378,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 2025 edge 2025",
@@ -348,7 +388,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Edge Plus 2023 edge plus 2023",
@@ -357,7 +398,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto E4 Plus E (4) Plus",
@@ -366,7 +408,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G6 Play g(6) play",
@@ -375,7 +418,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G54 5G XT2343-3, g54 5G, g73 5G",
@@ -384,7 +428,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G64 g64 5G",
@@ -393,7 +438,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G7 Power g(7) power",
@@ -402,7 +448,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Power g power",
@@ -411,16 +458,18 @@
           "model_number": "XT2165-5",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 2021 g power (2021)",
           "manufacturer": "Motorola",
           "model": "G Power 2021 g power (2021)",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 5G 2024 g power 5G - 2024",
@@ -429,7 +478,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 2025 g power - 2025",
@@ -438,7 +488,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 5G 2023 g power 5G - 2023",
@@ -447,7 +498,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Play 2023 g play",
@@ -456,7 +508,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Play (2024) g play - 2024",
@@ -465,7 +518,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G04s g04s",
@@ -474,7 +528,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto One 5G Ace one 5G ace",
@@ -483,7 +538,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G 5G 2023 g 5G - 2023",
@@ -492,7 +548,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G 5G 2024 g 5G - 2024",
@@ -501,7 +558,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G 2025 g - 2025",
@@ -510,16 +568,18 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2022 g stylus 5G (2022)",
           "manufacturer": "Motorola",
           "model": "G Stylus 5G 2022 g stylus 5G (2022)",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2023 g stylus 5G - 2023",
@@ -528,7 +588,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 2023 g stylus (2023)",
@@ -537,7 +598,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2024 g stylus 5G - 2024",
@@ -546,7 +608,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Stylus (2025) g stylus - 2025",
@@ -555,7 +618,8 @@
           "model_number": "XT2517-1",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus Ace 3 PJE110",
@@ -564,7 +628,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus Ace 3V PJF110",
@@ -573,25 +638,28 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 5T A5010",
           "manufacturer": "OnePlus",
           "model": "5T A5010",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 6T A6010, A6013",
           "manufacturer": "OnePlus",
           "model": "6T A6010, A6013",
           "model_number": "A6010",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 7 Pro GM19",
@@ -600,7 +668,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 9 Pro 5G LE212",
@@ -609,7 +678,8 @@
           "model_number": "LE2125",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 10 Pro 5G NE221",
@@ -618,7 +688,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 12R CPH25, CPH26",
@@ -627,7 +698,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 13 PJZ110, CPH26",
@@ -636,7 +708,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus 13R CPH264, CPH2691",
@@ -645,7 +718,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord CE4 CPH2613",
@@ -654,7 +728,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord N30 SE CPH2605",
@@ -663,7 +738,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord N30 5G CPH251",
@@ -672,7 +748,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A03s SM-A037, SM-S134DL",
@@ -681,7 +758,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A12 SM-A125, SM-S127",
@@ -690,7 +768,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A13 SM-A135.SM-A137",
@@ -699,7 +778,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A14 5G SM-A146, SM-S146",
@@ -708,7 +788,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A15 5G SM- A156, SM-S156",
@@ -717,7 +798,8 @@
           "model_number": "SM-A156M/DSN",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A16 SM-A165",
@@ -726,7 +808,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A16 5G SM-A166, SM-S166",
@@ -735,16 +818,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A23 SM-A235",
           "manufacturer": "Samsung",
           "model": "Galaxy A23 SM-A235",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A23 5G SM-A233, SM-A236, SM-S236, SM-",
@@ -753,169 +838,188 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A25 5G SC-53F, SCG33, SM-A253, SM-",
           "manufacturer": "Samsung",
           "model": "Galaxy A25 5G SC-53F, SCG33, SM-A253, SM-",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A26 5G SM-A266, SM-S266",
           "manufacturer": "Samsung",
           "model": "Galaxy A26 5G SM-A266, SM-S266",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A32 SM-A325",
           "manufacturer": "Samsung",
           "model": "Galaxy A32 SM-A325",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A33 SM-A336",
           "manufacturer": "Samsung",
           "model": "Galaxy A33 SM-A336",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A34 SM-A346",
           "manufacturer": "Samsung",
           "model": "Galaxy A34 SM-A346",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A35 SM-A356, SM-S356",
           "manufacturer": "Samsung",
           "model": "Galaxy A35 SM-A356, SM-S356",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A36 5G SC-54F, SM-A366, SM-S366",
           "manufacturer": "Samsung",
           "model": "Galaxy A36 5G SC-54F, SM-A366, SM-S366",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A42 SM-A426, SM-S426",
           "manufacturer": "Samsung",
           "model": "Galaxy A42 SM-A426, SM-S426",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A50 SM-A505, SM-S506",
           "manufacturer": "Samsung",
           "model": "Galaxy A50 SM-A505, SM-S506",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A51 SM-A515, SM-S515",
           "manufacturer": "Samsung",
           "model": "Galaxy A51 SM-A515, SM-S515",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A51 5G SC-54A, SCG07, SM-A516",
           "manufacturer": "Samsung",
           "model": "Galaxy A51 5G SC-54A, SCG07, SM-A516",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52 SM-A525",
           "manufacturer": "Samsung",
           "model": "Galaxy A52 SM-A525",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52 5G SM-A526, SC-53B",
           "manufacturer": "Samsung",
           "model": "Galaxy A52 5G SM-A526, SC-53B",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52s 5G SM-A528",
           "manufacturer": "Samsung",
           "model": "Galaxy A52s 5G SM-A528",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A53 5G SM-A536, SM-S536, SC-53C,",
           "manufacturer": "Samsung",
           "model": "Galaxy A53 5G SM-A536, SM-S536, SC-53C,",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A54 5G SM-A546, SM-S546, SC-53D,",
           "manufacturer": "Samsung",
           "model": "Galaxy A54 5G SM-A546, SM-S546, SC-53D,",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A55 SC-53E, SCG27, SM-A556",
           "manufacturer": "Samsung",
           "model": "Galaxy A55 SC-53E, SCG27, SM-A556",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A56 5G SM-A566",
           "manufacturer": "Samsung",
           "model": "Galaxy A56 5G SM-A566",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A71 SM-A715",
@@ -924,7 +1028,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A73 5G SM-A736",
@@ -933,7 +1038,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note8 SM-N950, SC-01K, SCV37",
@@ -942,7 +1048,8 @@
           "model_number": "SM-N950U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note9 SM-N960, SC-01L, SCV40",
@@ -951,7 +1058,8 @@
           "model_number": "SM-N960U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note10 SM-N970, SM-N971",
@@ -960,7 +1068,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note10+ SC-01M, SCV45, SM-N975",
@@ -969,7 +1078,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 SM-N980",
@@ -978,7 +1088,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 5G SM-N981",
@@ -987,7 +1098,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 Ultra SM-N985",
@@ -996,7 +1108,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 Ultra 5G SM-N986, SC-53A, SCG06",
@@ -1005,7 +1118,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S8+ SM-G955, SC-03J, SCV35",
@@ -1014,7 +1128,8 @@
           "model_number": "SM-G955",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S9 SM-G960, SC-02K, SCV38",
@@ -1023,7 +1138,8 @@
           "model_number": "SM-G960U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S9+ SM-G965, SC-03K, SCV39",
@@ -1032,7 +1148,8 @@
           "model_number": "SM-G965U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S10 SM-G973, SC-03L, SCV41",
@@ -1041,7 +1158,8 @@
           "model_number": "SM-G973U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S10+ SM-G975, SC-04L, SCV42",
@@ -1050,7 +1168,8 @@
           "model_number": "SM-G975U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S10e SM-G970",
@@ -1059,7 +1178,8 @@
           "model_number": "SM-G970UI",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 SM-G980",
@@ -1068,7 +1188,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20+ SM-G985",
@@ -1077,7 +1198,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 FE SM-G780",
@@ -1086,7 +1208,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 FE 5G SM-G781",
@@ -1095,7 +1218,8 @@
           "model_number": "SM-G781U1/DS",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 5G SM-G981, SC-51A, SC51Aa, SCG01",
@@ -1104,7 +1228,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20+ 5G SM-G986, SC-52A, SCG02",
@@ -1113,7 +1238,8 @@
           "model_number": "SM-G986U1",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 Ultra 5G SM-G988, SCG03",
@@ -1122,7 +1248,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 SM-G990",
@@ -1131,7 +1258,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 5G SM-G991, SC-51B, SCG09",
@@ -1140,7 +1268,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21+ 5G SM-G996, SCG10",
@@ -1149,7 +1278,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 Ultra 5G SM-G998, SC-52B",
@@ -1158,7 +1288,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 FE 5G SM-G990",
@@ -1167,7 +1298,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22 SM-S901, SC-51C, SCG13",
@@ -1176,7 +1308,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22+ SM-S906",
@@ -1185,7 +1318,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22 Ultra SM-S908, SC-52C, SCG14",
@@ -1194,7 +1328,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 SM-S911, SC-51D, SCG19",
@@ -1203,7 +1338,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23+ SM-S916",
@@ -1212,7 +1348,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 Ultra SM-S918, SC-52D, SCG20",
@@ -1221,7 +1358,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 FE SM-S711, SCG24",
@@ -1230,7 +1368,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 SM-S921, SC-51E, SCG25",
@@ -1239,7 +1378,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 Ultra SM-S928, SC-52E, SCG26",
@@ -1248,7 +1388,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24+ SM-S926",
@@ -1257,7 +1398,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 FE SCG30, SM-S721",
@@ -1266,7 +1408,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 SM-S931, SCG31, SC-51",
@@ -1275,7 +1418,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Plus SM-S936",
@@ -1284,7 +1428,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Ultra SM-S938, SC-52F, SCG32",
@@ -1293,7 +1438,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 FE SM-S731B",
@@ -1302,7 +1448,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Edge SM-S937",
@@ -1311,7 +1458,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy XCover 4S SM-G398",
@@ -1320,7 +1468,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 10 I31, I41",
@@ -1329,7 +1478,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 10 Plus I32, I42",
@@ -1338,7 +1488,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 5 III A103SO, SO-53B, SOG05, XQ-BQ",
@@ -1347,7 +1498,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Sony Xperia PRO XQ-AQ, XQ-BE",
@@ -1356,7 +1508,8 @@
           "model_number": "XQ-BE62",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 10 III A102SO, SO-52B, SOG04, XQ-",
@@ -1365,25 +1518,28 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 1 VII SO-51F, A501SO, SOG15, XQ-FS",
           "manufacturer": "Sony",
           "model": "Xperia 1 VII SO-51F, A501SO, SOG15, XQ-FS",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Turbo 3 24069RA21C",
           "manufacturer": "Xiaomi",
           "model": "Redmi Turbo 3 24069RA21C",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 10C 220333Q",
@@ -1392,7 +1548,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 14C 2409BRN2C, 2411DRN47I",
@@ -1401,7 +1558,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 24117RN76, 24094RAD4",
@@ -1410,16 +1568,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 Pro 24090RA29, 24116RACCG",
           "manufacturer": "Xiaomi",
           "model": "Redmi Note 14 Pro 24090RA29, 24116RACCG",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 Pro+ 24115RA8E",
@@ -1428,7 +1588,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Civi 4 (Pro) 24053PY09C",
@@ -1437,7 +1598,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco X6 Neo 2312FRAFDI (reference)",
@@ -1446,7 +1608,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Mi 10 T M2007J3S",
@@ -1455,16 +1618,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi 13 T Pro 23078PND5G, A301XM",
           "manufacturer": "Xiaomi",
           "model": "13 T Pro 23078PND5G, A301XM",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 10 M2101K7, M2103K1",
@@ -1473,25 +1638,28 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 13 Pro 5G XIG05, 2312CRA, 2312DRA50",
           "manufacturer": "Xiaomi",
           "model": "Redmi Note 13 Pro 5G XIG05, 2312CRA, 2312DRA50",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 15C 4G 25078RA3",
           "manufacturer": "Xiaomi",
           "model": "Redmi 15C 4G 25078RA3",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco C61 2312BPC51",
@@ -1500,7 +1668,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         }
       ],
       "ios": [
@@ -1509,27 +1678,30 @@
           "manufacturer": "Apple",
           "model": "iPhone 6S",
           "model_number": "A1688",
-          "os_version": "9.0",
+          "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 7",
           "manufacturer": "Apple",
           "model": "iPhone 7",
           "model_number": "A1660",
-          "os_version": "10.0",
+          "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 7 Plus",
           "manufacturer": "Apple",
           "model": "iPhone 7 Plus",
           "model_number": "A1661",
-          "os_version": "10.0",
+          "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 8",
@@ -1538,7 +1710,8 @@
           "model_number": "A1863",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 8 Plus",
@@ -1547,7 +1720,8 @@
           "model_number": "A1864",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone X",
@@ -1556,7 +1730,8 @@
           "model_number": "A1865",
           "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XS",
@@ -1565,7 +1740,8 @@
           "model_number": "MT962LL/A",
           "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XS Max",
@@ -1574,7 +1750,8 @@
           "model_number": "A1921",
           "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XR",
@@ -1583,7 +1760,8 @@
           "model_number": "A1984",
           "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11",
@@ -1592,7 +1770,8 @@
           "model_number": "A2111",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11 Pro",
@@ -1601,7 +1780,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11 Pro Max",
@@ -1610,7 +1790,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12",
@@ -1619,7 +1800,8 @@
           "model_number": "MGH63LL/A",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Pro",
@@ -1628,7 +1810,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Pro Max",
@@ -1637,7 +1820,8 @@
           "model_number": "MGCF3LL/A",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Mini",
@@ -1646,7 +1830,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13",
@@ -1655,7 +1840,8 @@
           "model_number": "MLML3LL/A",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Pro",
@@ -1664,7 +1850,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Pro Max",
@@ -1673,7 +1860,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Mini",
@@ -1682,7 +1870,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14",
@@ -1691,7 +1880,8 @@
           "model_number": "",
           "os_version": "16.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Plus",
@@ -1700,7 +1890,8 @@
           "model_number": "",
           "os_version": "16.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Pro",
@@ -1709,7 +1900,8 @@
           "model_number": "MPXT3LL/A",
           "os_version": "16.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Pro Max",
@@ -1718,7 +1910,8 @@
           "model_number": "MQ8R3LL/A",
           "os_version": "16.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15",
@@ -1727,7 +1920,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Plus",
@@ -1736,7 +1930,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Pro",
@@ -1745,7 +1940,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Pro Max",
@@ -1754,7 +1950,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16",
@@ -1763,7 +1960,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Plus",
@@ -1772,7 +1970,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Pro",
@@ -1781,7 +1980,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Pro Max",
@@ -1790,7 +1990,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16e",
@@ -1799,7 +2000,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17",
@@ -1808,7 +2010,8 @@
           "model_number": "MG464LL/A",
           "os_version": "19.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17 Pro",
@@ -1817,7 +2020,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17 Pro Max",
@@ -1826,7 +2030,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone Air",
@@ -1835,7 +2040,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone SE 2nd Generation",
@@ -1844,7 +2050,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPhone SE 3rd Generation",
@@ -1853,43 +2060,48 @@
           "model_number": "A2783",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 4",
           "manufacturer": "Apple",
           "model": "Watch Series 4",
           "model_number": "MU642LL/A",
-          "os_version": "5.0",
+          "os_version": "9.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 5",
           "manufacturer": "Apple",
           "model": "Watch Series 5",
           "model_number": "",
-          "os_version": "6.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 6",
           "manufacturer": "Apple",
           "model": "Watch Series 6",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 7",
           "manufacturer": "Apple",
           "model": "Watch Series 7",
           "model_number": "",
-          "os_version": "8.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 8",
@@ -1898,25 +2110,28 @@
           "model_number": "",
           "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 11",
           "manufacturer": "Apple",
           "model": "Watch Series 11",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch SE",
           "manufacturer": "Apple",
           "model": "Watch SE",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch SE 3 MEPJ4LW/A",
@@ -1925,7 +2140,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Ultra",
@@ -1934,34 +2150,38 @@
           "model_number": "A2622",
           "os_version": "9.0",
           "rationally_qualified": false,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Ultra 3",
           "manufacturer": "Apple",
           "model": "Watch Ultra 3",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Hermes",
           "manufacturer": "Apple",
           "model": "Watch Hermes",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple Watch Nike",
           "manufacturer": "Apple",
           "model": "Watch Nike",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         },
         {
           "name": "Apple iPod Touch Gen 7*",
@@ -1970,7 +2190,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "E3"
+          "product": "E3",
+          "region": "US"
         }
       ]
     },
@@ -1983,7 +2204,8 @@
           "model_number": "GD1YQ",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6",
@@ -1992,7 +2214,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6a",
@@ -2001,7 +2224,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6 Pro",
@@ -2010,7 +2234,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7",
@@ -2019,7 +2244,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7a",
@@ -2028,7 +2254,8 @@
           "model_number": "GWKK3",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7 Pro",
@@ -2037,7 +2264,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8",
@@ -2046,7 +2274,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8a",
@@ -2055,7 +2284,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8 Pro",
@@ -2064,7 +2294,8 @@
           "model_number": "G1MNW",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9",
@@ -2073,7 +2304,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9a",
@@ -2082,7 +2314,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9 Pro",
@@ -2091,7 +2324,8 @@
           "model_number": "GA05924-US",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9 Pro XL",
@@ -2100,7 +2334,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10",
@@ -2109,7 +2344,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10 Pro",
@@ -2118,7 +2354,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10 Pro XL",
@@ -2127,7 +2364,8 @@
           "model_number": "GUL82",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia G300 N1374DL",
@@ -2136,7 +2374,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia G50",
@@ -2145,7 +2384,8 @@
           "model_number": "TA-1390",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia X100",
@@ -2154,7 +2394,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia XR20",
@@ -2163,7 +2404,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "HTC Desire 21 Pro",
@@ -2172,7 +2414,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "LG V35 ThinQ LM-V350",
@@ -2181,7 +2424,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "LG V40 ThinQ LM-V405, LM-V409N",
@@ -2190,7 +2434,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 5G edge 5G UW",
@@ -2199,7 +2444,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 50 Pro edge 50 pro",
@@ -2208,16 +2454,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 2022 edge (2022)",
           "manufacturer": "Motorola",
           "model": "Edge 2022 edge (2022)",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Motorola Edge edge 2024",
@@ -2226,7 +2474,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 2025 edge 2025",
@@ -2235,7 +2484,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Edge Plus 2023 edge plus 2023",
@@ -2244,7 +2494,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G54 5G XT2343-3, g54 5G, g73 5G",
@@ -2253,7 +2504,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G64 g64 5G",
@@ -2262,7 +2514,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Power g power",
@@ -2271,16 +2524,18 @@
           "model_number": "XT2165-5",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 2021 g power (2021)",
           "manufacturer": "Motorola",
           "model": "G Power 2021 g power (2021)",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 5G 2024 g power 5G - 2024",
@@ -2289,7 +2544,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 2025 g power - 2025",
@@ -2298,7 +2554,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 5G 2023 g power 5G - 2023",
@@ -2307,7 +2564,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Play 2023 g play",
@@ -2316,7 +2574,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Play (2024) g play - 2024",
@@ -2325,7 +2584,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G04s g04s",
@@ -2334,7 +2594,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto One 5G Ace one 5G ace",
@@ -2343,7 +2604,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Stylus (2025) g stylus - 2025",
@@ -2352,16 +2614,18 @@
           "model_number": "XT2517-1",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2022 g stylus 5G (2022)",
           "manufacturer": "Motorola",
           "model": "G Stylus 5G 2022 g stylus 5G (2022)",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2023 g stylus 5G - 2023",
@@ -2370,7 +2634,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 2023 g stylus (2023)",
@@ -2379,7 +2644,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2024 g stylus 5G - 2024",
@@ -2388,7 +2654,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G 5G 2023 g 5G - 2023",
@@ -2397,7 +2664,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G 5G 2024 g 5G - 2024",
@@ -2406,7 +2674,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Motorola G 2025 g - 2025",
@@ -2415,7 +2684,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus Ace 3 PJE110",
@@ -2424,7 +2694,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus Ace 3V PJF110",
@@ -2433,7 +2704,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus 7 Pro GM191, GM1925",
@@ -2442,7 +2714,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus 9 Pro 5G LE212",
@@ -2451,7 +2724,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus 10 Pro 5G NE221",
@@ -2460,7 +2734,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus 12R CPH2585, CPH2609, CPH2611",
@@ -2469,7 +2744,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus 13 PJZ110, CPH26",
@@ -2478,7 +2754,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus 13R CPH264, CPH2691",
@@ -2487,7 +2764,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord CE4 CPH2613",
@@ -2496,7 +2774,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord N30 CPH251",
@@ -2505,7 +2784,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord N30 SE CPH2605",
@@ -2514,7 +2794,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A03s SM-A037, SM-S134DL",
@@ -2523,7 +2804,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A12 SM-A125, SM-A127",
@@ -2532,7 +2814,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A13 SM-A135, SM-A137",
@@ -2541,7 +2824,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A14 5G SM-A146, SM-S146",
@@ -2550,7 +2834,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A15 5G SM- A156, SM-S156",
@@ -2559,7 +2844,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A16 SM-A165",
@@ -2568,7 +2854,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A16 5G SM-A166, SM-S166",
@@ -2577,16 +2864,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A23 SM-A235",
           "manufacturer": "Samsung",
           "model": "Galaxy A23 SM-A235",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A23 5G SM-A233, SM-A236, SM-S236, SM-",
@@ -2595,169 +2884,188 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A25 5G SC-53F, SCG33, SM-A253, SM-",
           "manufacturer": "Samsung",
           "model": "Galaxy A25 5G SC-53F, SCG33, SM-A253, SM-",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A26 5G SM-A266, SM-S266",
           "manufacturer": "Samsung",
           "model": "Galaxy A26 5G SM-A266, SM-S266",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A32 SM-A325",
           "manufacturer": "Samsung",
           "model": "Galaxy A32 SM-A325",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A33 SM-A336",
           "manufacturer": "Samsung",
           "model": "Galaxy A33 SM-A336",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A34 SM-A346",
           "manufacturer": "Samsung",
           "model": "Galaxy A34 SM-A346",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A35 SM-A356, SM-S356",
           "manufacturer": "Samsung",
           "model": "Galaxy A35 SM-A356, SM-S356",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A36 5G SC-54F, SM-A366, SM-S366",
           "manufacturer": "Samsung",
           "model": "Galaxy A36 5G SC-54F, SM-A366, SM-S366",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A42 SM-A426, SM-S426",
           "manufacturer": "Samsung",
           "model": "Galaxy A42 SM-A426, SM-S426",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A50 SM-A505, SM-S506",
           "manufacturer": "Samsung",
           "model": "Galaxy A50 SM-A505, SM-S506",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A51 SM-A515, SM-S515",
           "manufacturer": "Samsung",
           "model": "Galaxy A51 SM-A515, SM-S515",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A51 5G SC-54A, SCG07, SM-A516",
           "manufacturer": "Samsung",
           "model": "Galaxy A51 5G SC-54A, SCG07, SM-A516",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52 SM-A525",
           "manufacturer": "Samsung",
           "model": "Galaxy A52 SM-A525",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52 5G SM-A526, SC-53B",
           "manufacturer": "Samsung",
           "model": "Galaxy A52 5G SM-A526, SC-53B",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52s 5G SM-A528",
           "manufacturer": "Samsung",
           "model": "Galaxy A52s 5G SM-A528",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A53 5G SM-A536, SM-S536, SC-53C,",
           "manufacturer": "Samsung",
           "model": "Galaxy A53 5G SM-A536, SM-S536, SC-53C,",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A54 5G SM-A546, SM-S546, SC-53D,",
           "manufacturer": "Samsung",
           "model": "Galaxy A54 5G SM-A546, SM-S546, SC-53D,",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A55 SC-53E, SCG27, SM-A556",
           "manufacturer": "Samsung",
           "model": "Galaxy A55 SC-53E, SCG27, SM-A556",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A56 5G SM-A566",
           "manufacturer": "Samsung",
           "model": "Galaxy A56 5G SM-A566",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A71 SM-A715",
@@ -2766,7 +3074,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A73 5G SM-A736",
@@ -2775,7 +3084,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note 9 SM-N960, SC-01L, SCV40",
@@ -2784,7 +3094,8 @@
           "model_number": "SM-N960UI",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note10 SM-N970, SM-N971",
@@ -2793,7 +3104,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note10+ SM-N975, SM-N976, SC-01M,",
@@ -2802,7 +3114,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 SM-N980",
@@ -2811,7 +3124,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 5G SM-N981",
@@ -2820,7 +3134,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 Ultra SM-N985",
@@ -2829,7 +3144,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 Ultra 5G SM-N986, SC-53A, SCG06",
@@ -2838,7 +3154,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G960, SC-02K, SCV38",
@@ -2847,7 +3164,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G973F, SCV41, SC-03L",
@@ -2856,7 +3174,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G975, SCV42, SC-04L",
@@ -2865,7 +3184,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G970",
@@ -2874,7 +3194,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 SM-G980",
@@ -2883,7 +3204,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20+ SM-G985",
@@ -2892,7 +3214,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 FE SM-G780",
@@ -2901,7 +3224,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 FE 5G SM-G781",
@@ -2910,7 +3234,8 @@
           "model_number": "SM-G781U1/DS",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 5G SM-G981, SC-51A, SC51Aa, SCG01",
@@ -2919,7 +3244,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 Plus 5G SM-G986, SC-52A, SCG02",
@@ -2928,7 +3254,8 @@
           "model_number": "SM-G986U1",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 Ultra 5G SM-G988, SCG03",
@@ -2937,7 +3264,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 SM-G991, SC-51B, SCG09",
@@ -2946,7 +3274,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21+ 5G SM-G996, SCG10",
@@ -2955,7 +3284,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 Ultra 5G SM-G998, SC-52B",
@@ -2964,7 +3294,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 FE 5G SM-G990",
@@ -2973,7 +3304,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22 SM-S901, SC-51C, SCG13",
@@ -2982,7 +3314,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22+ SM-S906",
@@ -2991,7 +3324,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22 Ultra SM-S908, SC-52C, SCG14",
@@ -3000,7 +3334,8 @@
           "model_number": "SM-S908UI",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 SM-S911, SC-51D, SCG19",
@@ -3009,7 +3344,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23+ SM-S916",
@@ -3018,7 +3354,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 Ultra SM-S918, SC-52D, SCG20",
@@ -3027,7 +3364,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 FE SM-S711, SCG24",
@@ -3036,7 +3374,8 @@
           "model_number": "SM-S711U",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 SM-S921, SC-51E, SCG25",
@@ -3045,7 +3384,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 Ultra SM-S928, SC-52E, SCG26",
@@ -3054,7 +3394,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24+ SM-S926",
@@ -3063,7 +3404,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 FE SCG30, SM-S721",
@@ -3072,7 +3414,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 SM-S931, SC-51F, SCG31",
@@ -3081,7 +3424,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Plus SM-S936",
@@ -3090,7 +3434,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Ultra SM-S938, SC-52F, SCG32",
@@ -3099,7 +3444,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 FE SM-S731B",
@@ -3108,7 +3454,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Edge SM-S937",
@@ -3117,7 +3464,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 5 III A103SO, SO-53B, SOG05, XQ-BQ",
@@ -3126,7 +3474,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Sony Xperia PRO XQ-AQ, XQ-BE",
@@ -3135,7 +3484,8 @@
           "model_number": "XQ-BE62",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 10 III A102SO, SO-52B, SOG04, XQ-",
@@ -3144,16 +3494,18 @@
           "model_number": "XQ-BT52",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 1 VII SO-51F, A501SO, SOG15, XQ-FS",
           "manufacturer": "Sony",
           "model": "Xperia 1 VII SO-51F, A501SO, SOG15, XQ-FS",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 10C 220333Q",
@@ -3162,16 +3514,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Turbo 3 24069RA21C",
           "manufacturer": "Xiaomi",
           "model": "Redmi Turbo 3 24069RA21C",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 14C 2409BRN2C, 2411DRN47I",
@@ -3180,7 +3534,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 24117RN76, 24094RAD4",
@@ -3189,16 +3544,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 Pro 24090RA29, 24116RACCG",
           "manufacturer": "Xiaomi",
           "model": "Redmi Note 14 Pro 24090RA29, 24116RACCG",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 Pro+ 24115RA8E",
@@ -3207,7 +3564,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Civi 4 (Pro) 24053PY09C",
@@ -3216,7 +3574,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco X6 Neo 2312FRAFDI (reference)",
@@ -3225,7 +3584,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Mi 10 T M2007J3S",
@@ -3234,16 +3594,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi 13 T Pro 23078PND5G, , A301XM",
           "manufacturer": "Xiaomi",
           "model": "13 T Pro 23078PND5G, , A301XM",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 10 M2101K7, M2103K1",
@@ -3252,25 +3614,28 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 13 Pro 5G XIG05, 2312CRA, 2312DRA50",
           "manufacturer": "Xiaomi",
           "model": "Redmi Note 13 Pro 5G XIG05, 2312CRA, 2312DRA50",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 15C 4G 25078RA3",
           "manufacturer": "Xiaomi",
           "model": "Redmi 15C 4G 25078RA3",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco C61 2312BPC51",
@@ -3279,7 +3644,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Lively Jitterbug Smart 3 5007S",
@@ -3288,7 +3654,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Lively Jitterbug Smart 4 T608G",
@@ -3297,7 +3664,8 @@
           "model_number": "T608G",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         }
       ],
       "ios": [
@@ -3308,7 +3676,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XR",
@@ -3317,7 +3686,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XS",
@@ -3326,7 +3696,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XS Max",
@@ -3335,7 +3706,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 8",
@@ -3344,7 +3716,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 8 Plus",
@@ -3353,7 +3726,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11",
@@ -3362,7 +3736,8 @@
           "model_number": "A2111",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11 Pro",
@@ -3371,7 +3746,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11 Pro Max",
@@ -3380,7 +3756,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12",
@@ -3389,7 +3766,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Pro",
@@ -3398,7 +3776,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Pro Max",
@@ -3407,7 +3786,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Mini",
@@ -3416,7 +3796,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13",
@@ -3425,7 +3806,8 @@
           "model_number": "MLML3LL/A",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Pro",
@@ -3434,7 +3816,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Pro Max",
@@ -3443,7 +3826,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Mini",
@@ -3452,7 +3836,8 @@
           "model_number": "A2481",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14",
@@ -3461,7 +3846,8 @@
           "model_number": "",
           "os_version": "16.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Plus",
@@ -3470,7 +3856,8 @@
           "model_number": "",
           "os_version": "16.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Pro",
@@ -3479,7 +3866,8 @@
           "model_number": "MPXT3LL/A",
           "os_version": "16.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Pro Max",
@@ -3488,7 +3876,8 @@
           "model_number": "MQ8R3LL/A",
           "os_version": "16.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15",
@@ -3497,7 +3886,8 @@
           "model_number": "MTLV3LL/A",
           "os_version": "17.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Plus",
@@ -3506,7 +3896,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Pro",
@@ -3515,7 +3906,8 @@
           "model_number": "AA2848",
           "os_version": "17.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Pro Max",
@@ -3524,7 +3916,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16",
@@ -3533,7 +3926,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Plus",
@@ -3542,7 +3936,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Pro",
@@ -3551,7 +3946,8 @@
           "model_number": "A3082",
           "os_version": "18.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Pro Max",
@@ -3560,7 +3956,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16e",
@@ -3569,7 +3966,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone Air",
@@ -3578,7 +3976,8 @@
           "model_number": "MG184LL/A",
           "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17",
@@ -3587,7 +3986,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17 Pro",
@@ -3596,7 +3996,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17 Pro Max",
@@ -3605,7 +4006,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone SE 2nd Generation*",
@@ -3614,7 +4016,8 @@
           "model_number": "MX9M2LL/A",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple iPhone SE 3rd Generation",
@@ -3623,34 +4026,38 @@
           "model_number": "MMX53LL/A",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 5",
           "manufacturer": "Apple",
           "model": "Watch Series 5",
           "model_number": "",
-          "os_version": "6.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 6",
           "manufacturer": "Apple",
           "model": "Watch Series 6",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 7",
           "manufacturer": "Apple",
           "model": "Watch Series 7",
           "model_number": "",
-          "os_version": "8.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 8",
@@ -3659,25 +4066,28 @@
           "model_number": "",
           "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Series 11",
           "manufacturer": "Apple",
           "model": "Watch Series 11",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch SE",
           "manufacturer": "Apple",
           "model": "Watch SE",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch SE 3 MEPJ4LW/A",
@@ -3686,7 +4096,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Ultra",
@@ -3695,34 +4106,38 @@
           "model_number": "MNHA3LL/A",
           "os_version": "9.0",
           "rationally_qualified": false,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Ultra 3",
           "manufacturer": "Apple",
           "model": "Watch Ultra 3",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Hermes",
           "manufacturer": "Apple",
           "model": "Watch Hermes",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Apple Watch Nike",
           "manufacturer": "Apple",
           "model": "Watch Nike",
           "model_number": "",
-          "os_version": "7.0",
+          "os_version": "9.0",
           "rationally_qualified": true,
-          "product": "365"
+          "product": "365",
+          "region": "US"
         }
       ]
     },
@@ -3735,7 +4150,8 @@
           "model_number": "GD1YQ",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6",
@@ -3744,7 +4160,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6a",
@@ -3753,7 +4170,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 6 Pro",
@@ -3762,7 +4180,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7",
@@ -3771,7 +4190,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7a",
@@ -3780,7 +4200,8 @@
           "model_number": "GWKK3",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 7 Pro",
@@ -3789,7 +4210,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8",
@@ -3798,7 +4220,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8a",
@@ -3807,7 +4230,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 8 Pro",
@@ -3816,7 +4240,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9",
@@ -3825,7 +4250,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9a",
@@ -3834,7 +4260,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9 Pro",
@@ -3843,7 +4270,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 9 Pro XL",
@@ -3852,7 +4280,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10",
@@ -3861,7 +4290,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10 Pro",
@@ -3870,7 +4300,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Google Pixel 10 Pro XL",
@@ -3879,7 +4310,8 @@
           "model_number": "GUL82",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia G300 N1374DL",
@@ -3888,7 +4320,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia G50",
@@ -3897,7 +4330,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia X100",
@@ -3906,7 +4340,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "HMD Global Nokia XR20",
@@ -3915,7 +4350,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "HTC Desire 21 Pro",
@@ -3924,7 +4360,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "LG LM-V350",
@@ -3933,7 +4370,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "LG LM-V405, LM-V409N",
@@ -3942,7 +4380,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 50 Pro Edge 50 pro",
@@ -3951,7 +4390,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 5G edge 5G UW",
@@ -3960,16 +4400,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 2022 edge (2022)",
           "manufacturer": "Motorola",
           "model": "Edge 2022 edge (2022)",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Edge 2025 edge 2025",
@@ -3978,7 +4420,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Edge Plus 2023 edge plus 2023",
@@ -3987,7 +4430,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G64 g64 5G",
@@ -3996,7 +4440,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Power g power",
@@ -4005,7 +4450,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Motorola Edge Edge (2024)",
@@ -4014,7 +4460,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G04s g04s",
@@ -4023,7 +4470,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Moto One 5G Ace one 5G ace",
@@ -4032,7 +4480,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Play (2024) g play - 2024",
@@ -4041,7 +4490,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G 5G 2023 g 5G - 2023",
@@ -4050,7 +4500,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G 5G 2024 g 5G - 2024",
@@ -4059,7 +4510,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G 2025 g - 2025",
@@ -4068,7 +4520,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Play 2023 g play",
@@ -4077,7 +4530,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 5G 2024 power 5G - 2024",
@@ -4086,16 +4540,18 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 2021 g power (2021)",
           "manufacturer": "Motorola",
           "model": "G Power 2021 g power (2021)",
           "model_number": "",
-          "os_version": "11.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 2025 g power - 2025",
@@ -4104,7 +4560,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Power 5G 2023 g power 5G - 2023",
@@ -4113,16 +4570,18 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2022 g stylus 5G (2022)",
           "manufacturer": "Motorola",
           "model": "G Stylus 5G 2022 g stylus 5G (2022)",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2023 g stylus 5G - 2023",
@@ -4131,7 +4590,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 2023 g stylus (2023)",
@@ -4140,7 +4600,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola G Stylus 5G 2024 g stylus 5G - 2024",
@@ -4149,7 +4610,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Motorola Moto G Stylus (2025) g stylus - 2025",
@@ -4158,7 +4620,8 @@
           "model_number": "XT2517-1",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus Ace 3 PJE110",
@@ -4167,7 +4630,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus Ace 3V PJF110",
@@ -4176,16 +4640,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 5T A5010",
           "manufacturer": "OnePlus",
           "model": "5T A5010",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 7 Pro GM191, GM1925",
@@ -4194,7 +4660,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 9 Pro 5G LE212",
@@ -4203,7 +4670,8 @@
           "model_number": "LE2125",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 10 Pro 5G NE221",
@@ -4212,7 +4680,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 12R CPH2585, CPH2609, CPH2611",
@@ -4221,7 +4690,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 13 PJZ110, CPH2649, CPH2653, CPH2655",
@@ -4230,7 +4700,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus 13R CPH264, CPH2691",
@@ -4239,7 +4710,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord CE4 CPH2613",
@@ -4248,7 +4720,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "OnePlus Nord N30 SE CPH2605",
@@ -4257,7 +4730,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A03s SM-A037, SM-S134DL",
@@ -4266,7 +4740,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A12 SM-A125, SM-A127",
@@ -4275,7 +4750,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A13 SM-A135.SM-A137",
@@ -4284,7 +4760,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A14 5G SM-A146, SM-S146",
@@ -4293,7 +4770,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A15 5G SM- A156, SM-S156",
@@ -4302,7 +4780,8 @@
           "model_number": "SM-A156M/DSN",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A16 SM-A165",
@@ -4311,7 +4790,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A16 5G SM-A166, SM-S166",
@@ -4320,16 +4800,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A23 SM-A235",
           "manufacturer": "Samsung",
           "model": "Galaxy A23 SM-A235",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A23 5G SM-A233, SM-A236, SM-S236, SM-",
@@ -4338,169 +4820,188 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A25 5G SC-53F, SCG33, SM-A253, SM-A256,",
           "manufacturer": "Samsung",
           "model": "Galaxy A25 5G SC-53F, SCG33, SM-A253, SM-A256,",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A26 5G SM-A266, SM-S266",
           "manufacturer": "Samsung",
           "model": "Galaxy A26 5G SM-A266, SM-S266",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A32 SM-A325",
           "manufacturer": "Samsung",
           "model": "Galaxy A32 SM-A325",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A33 SM-A336",
           "manufacturer": "Samsung",
           "model": "Galaxy A33 SM-A336",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A34 SM-A346",
           "manufacturer": "Samsung",
           "model": "Galaxy A34 SM-A346",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A35 SM-A356, SM-S356",
           "manufacturer": "Samsung",
           "model": "Galaxy A35 SM-A356, SM-S356",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A36 5G SC-54F, SM-A366, SM-S366",
           "manufacturer": "Samsung",
           "model": "Galaxy A36 5G SC-54F, SM-A366, SM-S366",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A42 SM-A426, SM-S426",
           "manufacturer": "Samsung",
           "model": "Galaxy A42 SM-A426, SM-S426",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A50 SM-A505, SM-S506",
           "manufacturer": "Samsung",
           "model": "Galaxy A50 SM-A505, SM-S506",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A51 SM-A515, SM-S515",
           "manufacturer": "Samsung",
           "model": "Galaxy A51 SM-A515, SM-S515",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A51 5G SC-54A, SCG07, SM-A516",
           "manufacturer": "Samsung",
           "model": "Galaxy A51 5G SC-54A, SCG07, SM-A516",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52 SM-A525",
           "manufacturer": "Samsung",
           "model": "Galaxy A52 SM-A525",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52 5G SM-A526, SC-53B",
           "manufacturer": "Samsung",
           "model": "Galaxy A52 5G SM-A526, SC-53B",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A52s 5G SM-A528",
           "manufacturer": "Samsung",
           "model": "Galaxy A52s 5G SM-A528",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A53 5G SM-A536, SM-S536, SC-53C, SCG15",
           "manufacturer": "Samsung",
           "model": "Galaxy A53 5G SM-A536, SM-S536, SC-53C, SCG15",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A54 5G SM-A546, SM-S546, SC-53D, SCG21",
           "manufacturer": "Samsung",
           "model": "Galaxy A54 5G SM-A546, SM-S546, SC-53D, SCG21",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A55 SC-53E, SCG27, SM-A556",
           "manufacturer": "Samsung",
           "model": "Galaxy A55 SC-53E, SCG27, SM-A556",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A56 5G SM-A566",
           "manufacturer": "Samsung",
           "model": "Galaxy A56 5G SM-A566",
           "model_number": "",
-          "os_version": "14.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A71 SM-A715",
@@ -4509,7 +5010,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy A73 5G SM-A736",
@@ -4518,7 +5020,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note10 SM-N970, SM-N971",
@@ -4527,7 +5030,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note10+ SM-N975, SM-N976, SC-01M, SCV45",
@@ -4536,7 +5040,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 SM-N980",
@@ -4545,7 +5050,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 5G SM-N981",
@@ -4554,7 +5060,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 Ultra SM-N985",
@@ -4563,7 +5070,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy Note20 Ultra 5G SM-N986, SC-53A, SCG06",
@@ -4572,7 +5080,8 @@
           "model_number": "SM-N986U1",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G960, SC-02K, SCV38",
@@ -4581,7 +5090,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G973, SC-03L, SCV41",
@@ -4590,7 +5100,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G975, SC-04L, SCV42",
@@ -4599,7 +5110,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung SM-G970",
@@ -4608,7 +5120,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 FE 5G SM-G781",
@@ -4617,7 +5130,8 @@
           "model_number": "SM-G781U1",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 5G SM-G981, SC-51A, SC51Aa, SCG01",
@@ -4626,7 +5140,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20+ 5G SM-G986, SC-52A, SCG02",
@@ -4635,7 +5150,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 Ultra 5G SM-G988, SCG03",
@@ -4644,7 +5160,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 SM-G980",
@@ -4653,7 +5170,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20+ SM-G985",
@@ -4662,7 +5180,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S20 FE SM-G780",
@@ -4671,7 +5190,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 5G SM-G991, SC-51B, SCG09",
@@ -4680,7 +5200,8 @@
           "model_number": "SM-G991UI",
           "os_version": "11.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21+ 5G SM-G996, SCG10",
@@ -4689,7 +5210,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 Ultra 5G SM-G998, SC-52B",
@@ -4698,7 +5220,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S21 FE 5G SM-G990",
@@ -4707,7 +5230,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22 SM-S901, SC-51C, SCG13",
@@ -4716,7 +5240,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22+ SM-S906",
@@ -4725,7 +5250,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S22 Ultra SM-S908, SC-52C, SCG14",
@@ -4734,7 +5260,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 SM-S911, SC-51D, SCG19",
@@ -4743,7 +5270,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23+ SM-S916",
@@ -4752,7 +5280,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 Ultra SM-S918, SC-52D, SCG20",
@@ -4761,7 +5290,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S23 FE SM-S711, SCG24",
@@ -4770,7 +5300,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 SM-S921, SC-51E, SCG25",
@@ -4779,7 +5310,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 Ultra SM-S928, SC-52E, SCG26",
@@ -4788,7 +5320,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24+ SM-S926",
@@ -4797,7 +5330,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S24 FE SCG30, SM-S721",
@@ -4806,7 +5340,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 SM-S931, SC-51F, SCG31",
@@ -4815,7 +5350,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Plus SM-S936",
@@ -4824,7 +5360,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Ultra SM-S938, SC-52F, SCG32",
@@ -4833,7 +5370,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 FE SM-S731B",
@@ -4842,7 +5380,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Samsung Galaxy S25 Edge SM-S937",
@@ -4851,7 +5390,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 5 III A103SO, SO-53B, SOG05, XQ-BQ",
@@ -4860,7 +5400,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Sony Xperia PRO XQ-AQ, XQ-BE",
@@ -4869,7 +5410,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 10 III A102SO, SO-52B, SOG04, XQ-BT52",
@@ -4878,16 +5420,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Sony Xperia 1 VII SO-51F, A501SO, SOG15, XQ-FS",
           "manufacturer": "Sony",
           "model": "Xperia 1 VII SO-51F, A501SO, SOG15, XQ-FS",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 10C 220333Q",
@@ -4896,16 +5440,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Turbo 3 24069RA21C",
           "manufacturer": "Xiaomi",
           "model": "Redmi Turbo 3 24069RA21C",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 14C 2409BRN2C, 2411DRN47I",
@@ -4914,7 +5460,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 24117RN76, 24094RAD4",
@@ -4923,16 +5470,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 Pro 24090RA29, 24116RACCG",
           "manufacturer": "Xiaomi",
           "model": "Redmi Note 14 Pro 24090RA29, 24116RACCG",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 14 Pro+ 24115RA8E",
@@ -4941,7 +5490,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Civi 4 (Pro) 24053PY09C",
@@ -4950,7 +5500,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco X6 Neo 2312FRAFDI (reference)",
@@ -4959,7 +5510,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco C61 2312BPC51H",
@@ -4968,7 +5520,8 @@
           "model_number": "2312BPC51H",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Mi 10 T M2007J3S",
@@ -4977,16 +5530,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi 13 T Pro 23078PND5G, A301XM",
           "manufacturer": "Xiaomi",
           "model": "13 T Pro 23078PND5G, A301XM",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi Note 10 M2101K7, M2103K1",
@@ -4995,16 +5550,18 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Redmi 15C 4G 25078RA3",
           "manufacturer": "Xiaomi",
           "model": "Redmi 15C 4G 25078RA3",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Xiaomi Poco C61 2312BPC51",
@@ -5013,7 +5570,8 @@
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Lively Jitterbug Smart 4 T608G",
@@ -5022,7 +5580,8 @@
           "model_number": "T608G",
           "os_version": "10.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         }
       ],
       "ios": [
@@ -5033,7 +5592,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XR",
@@ -5042,7 +5602,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XS",
@@ -5051,7 +5612,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone XS Max",
@@ -5060,7 +5622,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 8",
@@ -5069,7 +5632,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 8 Plus",
@@ -5078,7 +5642,8 @@
           "model_number": "",
           "os_version": "11.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11",
@@ -5087,7 +5652,8 @@
           "model_number": "A2111",
           "os_version": "13.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11 Pro",
@@ -5096,7 +5662,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 11 Pro Max",
@@ -5105,7 +5672,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12",
@@ -5114,7 +5682,8 @@
           "model_number": "A2172",
           "os_version": "14.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Pro Rationally qualified",
@@ -5123,7 +5692,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Pro Max Rationally qualified",
@@ -5132,7 +5702,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 12 Mini",
@@ -5141,7 +5712,8 @@
           "model_number": "",
           "os_version": "14.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13",
@@ -5150,7 +5722,8 @@
           "model_number": "MLML3LL/A",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Pro Rationally qualified",
@@ -5159,7 +5732,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Pro Max Rationally qualified",
@@ -5168,7 +5742,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 13 Mini Rationally qualified",
@@ -5177,7 +5752,8 @@
           "model_number": "",
           "os_version": "15.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14",
@@ -5186,7 +5762,8 @@
           "model_number": "",
           "os_version": "16.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Plus",
@@ -5195,7 +5772,8 @@
           "model_number": "",
           "os_version": "16.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Pro",
@@ -5204,7 +5782,8 @@
           "model_number": "MPXT3LL/A",
           "os_version": "16.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 14 Pro Max",
@@ -5213,7 +5792,8 @@
           "model_number": "MQ8R3LL/A",
           "os_version": "16.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15",
@@ -5222,7 +5802,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Plus",
@@ -5231,7 +5812,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Pro",
@@ -5240,7 +5822,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 15 Pro Max",
@@ -5249,7 +5832,8 @@
           "model_number": "",
           "os_version": "17.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16",
@@ -5258,7 +5842,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Plus",
@@ -5267,7 +5852,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Pro",
@@ -5276,7 +5862,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16 Pro Max",
@@ -5285,7 +5872,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 16e",
@@ -5294,7 +5882,8 @@
           "model_number": "",
           "os_version": "18.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone Air",
@@ -5303,7 +5892,8 @@
           "model_number": "MG184LL/A",
           "os_version": "12.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17",
@@ -5312,7 +5902,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17 Pro",
@@ -5321,7 +5912,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone 17 Pro Max",
@@ -5330,7 +5922,8 @@
           "model_number": "",
           "os_version": "19.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone SE 2nd Generation Rationally qualified",
@@ -5339,7 +5932,8 @@
           "model_number": "",
           "os_version": "13.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPhone SE 3rd Generation",
@@ -5348,7 +5942,8 @@
           "model_number": "A2783",
           "os_version": "15.0",
           "rationally_qualified": false,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         },
         {
           "name": "Apple iPod Touch Gen 7 Rationally qualified",
@@ -5357,7 +5952,8 @@
           "model_number": "",
           "os_version": "12.0",
           "rationally_qualified": true,
-          "product": "NOW"
+          "product": "NOW",
+          "region": "US"
         }
       ]
     }
