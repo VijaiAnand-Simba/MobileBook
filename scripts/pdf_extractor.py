@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Universal PDF extractor with multiple fallback strategies.
-Handles text transformations, rotations, format changes, and concatenated devices.
+Handles text transformations, rotations, format changes, concatenated devices, and malformed NOW tables.
 """
 
 import pdfplumber
@@ -143,6 +143,169 @@ class UniversalPDFExtractor:
         return False
     
     
+    def _extract_multiple_iphone_models(self, text: str) -> List[str]:
+        """
+        Extract multiple iPhone models from concatenated text.
+        Example: "iPhone 11 iPhone 11 Pro iPhone 11 Pro Max" -> ["iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max"]
+        """
+        
+        models = []
+        
+        # Pattern to match iPhone models
+        # Matches: iPhone 14, iPhone 14 Pro, iPhone 14 Pro Max, iPhone SE, etc.
+        pattern = r'iPhone\s+(?:\d+\s*(?:Pro\s*(?:Max)?|Plus|Mini)?|SE(?:\s+\(\d+(?:st|nd|rd|th)\s+generation\))?|X[RS]?(?:\s+Max)?)'
+        
+        matches = re.finditer(pattern, text, re.IGNORECASE)
+        seen = set()
+        
+        for match in matches:
+            model = match.group(0).strip()
+            # Normalize spaces
+            model = ' '.join(model.split())
+            
+            # Skip duplicates and noise
+            if model in seen or model.lower() in ['confidential', 'rationally', 'qualified']:
+                continue
+            
+            seen.add(model)
+            models.append(model)
+        
+        # Fallback: if no matches, try simple split
+        if not models:
+            models = self._split_concatenated_models(text, '')
+        
+        return models
+    
+    
+    def _parse_now_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
+        """
+        Special parser for NOW tables which have corrupted formatting.
+        NOW tables often have multiple concatenated entries and malformed rows.
+        Example: "Apple Apple Apple" with "iPhone 11 iPhone 11 Pro iPhone 11 Pro Max"
+        """
+        
+        devices = []
+        
+        print(f"      🔧 Using NOW-specific parser for {os_type}")
+        
+        for i, row in enumerate(table):
+            if i == 0:
+                continue  # Skip header
+            
+            if not row:
+                continue
+            
+            # Clean row
+            row = [str(cell).strip() if cell is not None else '' for cell in row]
+            row = [cell for cell in row if cell]
+            
+            if len(row) < 2:
+                continue
+            
+            manufacturer_cell = row[0]
+            model_cell = row[1] if len(row) > 1 else ''
+            model_number_cell = row[2] if len(row) > 2 else ''
+            
+            # Debug first few rows
+            if i <= 3:
+                print(f"         Row {i}: Mfr='{manufacturer_cell[:30]}...' Model='{model_cell[:30]}...'")
+            
+            # Handle iOS (Apple only)
+            if os_type == 'ios':
+                # Count how many "Apple" appear in manufacturer cell
+                apple_count = manufacturer_cell.count('Apple')
+                
+                if apple_count == 0:
+                    continue
+                
+                # Handle normal case: single Apple
+                if apple_count == 1 and manufacturer_cell.strip() == 'Apple':
+                    # Extract models using iPhone pattern matcher
+                    models = self._extract_multiple_iphone_models(model_cell)
+                    
+                    for model in models:
+                        # Skip noise
+                        if model.lower() in ['confidential', 'rationally qualified', 'rationally', 'qualified']:
+                            continue
+                        
+                        # Clean model
+                        model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+                        
+                        if len(model) < 3:
+                            continue
+                        
+                        # Check if model_number is actually RQ status
+                        rq = False
+                        model_number = ''
+                        
+                        if 'rationally' in model_number_cell.lower() or 'qualified' in model_number_cell.lower():
+                            rq = True
+                        else:
+                            model_number = model_number_cell if model_number_cell not in ['', 'Confidential'] else ''
+                        
+                        device = {
+                            "name": f"Apple {model}",
+                            "manufacturer": "Apple",
+                            "model": model,
+                            "model_number": model_number,
+                            "os_version": self._extract_ios_version(model),
+                            "rationally_qualified": rq,
+                            "product": product,
+                            "region": self.region
+                        }
+                        
+                        devices.append(device)
+                        if i <= 5:  # Debug output for first few
+                            print(f"            ✓ Added: {device['name']}")
+                
+                # Handle corrupted case: multiple "Apple" concatenated
+                elif apple_count > 1:
+                    # This row has multiple devices concatenated
+                    # Extract all iPhone models from the model cell
+                    models = self._extract_multiple_iphone_models(model_cell)
+                    
+                    # Limit to reasonable number (prevent over-extraction)
+                    for model in models[:apple_count * 2]:  # Max 2x the Apple count
+                        if model.lower() in ['confidential', 'rationally', 'qualified']:
+                            continue
+                        
+                        model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+                        
+                        if len(model) < 3:
+                            continue
+                        
+                        device = {
+                            "name": f"Apple {model}",
+                            "manufacturer": "Apple",
+                            "model": model,
+                            "model_number": "",
+                            "os_version": self._extract_ios_version(model),
+                            "rationally_qualified": True,  # NOW devices are typically RQ
+                            "product": product,
+                            "region": self.region
+                        }
+                        
+                        devices.append(device)
+                        if i <= 5:
+                            print(f"            ✓ Added (concatenated): {device['name']}")
+            
+            else:
+                # Android NOW devices (use standard parser)
+                # Check if manufacturer is valid
+                if not self._is_valid_manufacturer(manufacturer_cell, 'android'):
+                    continue
+                
+                row_devices = self._row_to_devices(row, os_type, product)
+                devices.extend(row_devices)
+                
+                if row_devices and i <= 5:
+                    for dev in row_devices:
+                        print(f"            ✓ Added: {dev['name']}")
+        
+        print(f"      ✅ NOW parser extracted {len(devices)} devices")
+        return devices
+    
+    
     def _try_pdfplumber_tables(self) -> ExtractionResult:
         """Extract using pdfplumber's table detection."""
         
@@ -172,7 +335,7 @@ class UniversalPDFExtractor:
                         if not table_info:
                             continue
                         
-                        # Parse rows
+                        # Parse rows (NOW tables use special parser)
                         parsed = self._parse_table_rows(
                             table, 
                             table_info['os'], 
@@ -195,6 +358,8 @@ class UniversalPDFExtractor:
             
         except Exception as e:
             errors.append(str(e))
+            import traceback
+            traceback.print_exc()
             return ExtractionResult(False, "pdfplumber_tables", [], 0, 0.0, errors)
     
     
@@ -261,6 +426,8 @@ class UniversalPDFExtractor:
             
         except Exception as e:
             errors.append(str(e))
+            import traceback
+            traceback.print_exc()
             return ExtractionResult(False, "pdfplumber_layout", [], 0, 0.0, errors)
     
     
@@ -332,6 +499,8 @@ class UniversalPDFExtractor:
             
         except Exception as e:
             errors.append(str(e))
+            import traceback
+            traceback.print_exc()
             return ExtractionResult(False, "pymupdf", [], 0, 0.0, errors)
     
     
@@ -339,12 +508,19 @@ class UniversalPDFExtractor:
         """Detect table type from header line."""
         
         patterns = [
+            # E3 patterns
             (r'E3.*?iOS.*?(?:MMA|Compatible)', {"product": "E3", "os": "ios"}),
             (r'E3.*?Android.*?(?:MMA|Compatible)', {"product": "E3", "os": "android"}),
+            
+            # 365 patterns
             (r'365.*?iOS.*?(?:MMA|Compatible)', {"product": "365", "os": "ios"}),
             (r'365.*?Android.*?(?:MMA|Compatible)', {"product": "365", "os": "android"}),
-            (r'NOW.*?iOS.*?App', {"product": "NOW", "os": "ios"}),
-            (r'NOW.*?Android.*?App', {"product": "NOW", "os": "android"}),
+            
+            # NOW patterns - MORE FLEXIBLE
+            (r'NOW.*?iOS.*?(?:App|Application|Compatible)', {"product": "NOW", "os": "ios"}),
+            (r'NOW.*?Android.*?(?:App|Application|Compatible)', {"product": "NOW", "os": "android"}),
+            (r'Table\s+\d+.*?NOW.*?iOS', {"product": "NOW", "os": "ios"}),
+            (r'Table\s+\d+.*?NOW.*?Android', {"product": "NOW", "os": "android"}),
         ]
         
         for pattern, info in patterns:
@@ -362,11 +538,14 @@ class UniversalPDFExtractor:
         if text:
             lines = text.split('\n')
             for i, line in enumerate(lines):
-                if i > 20:  # Only check first 20 lines
+                if i > 30:  # Check more lines for NOW tables
                     break
                 
                 match = self._detect_table_header(line)
                 if match:
+                    # Special logging for NOW tables
+                    if match['product'] == 'NOW':
+                        print(f"         ℹ️  NOW table detected - using special parser")
                     return match
         
         # Check first row of table for clues
@@ -382,6 +561,11 @@ class UniversalPDFExtractor:
     def _parse_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
         """Parse table rows into device objects."""
         
+        # Use special parser for NOW tables (they have corrupted formatting)
+        if product == 'NOW':
+            return self._parse_now_table_rows(table, os_type, product)
+        
+        # Standard parser for E3 and 365
         devices = []
         
         # Skip header row(s)
@@ -520,14 +704,22 @@ class UniversalPDFExtractor:
             model_text = parts[0].strip()
             model_number = parts[1].strip() if len(parts) > 1 else ''
             
-            # Split concatenated models
-            models = self._split_concatenated_models(model_text, 'Apple')
+            # For NOW, use special iPhone extractor
+            if product == 'NOW':
+                models = self._extract_multiple_iphone_models(model_text)
+            else:
+                # Split concatenated models
+                models = self._split_concatenated_models(model_text, 'Apple')
             
             for model in models:
                 # Clean model
                 model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
                 
                 if not model or len(model) < 2:
+                    continue
+                
+                # Skip noise
+                if model.lower() in ['confidential', 'rationally', 'qualified']:
                     continue
                 
                 device = {
@@ -616,6 +808,12 @@ class UniversalPDFExtractor:
             return '15.0'
         elif 'iphone 12' in model_lower:
             return '14.0'
+        elif 'iphone 11' in model_lower:
+            return '13.0'
+        elif 'iphone x' in model_lower:
+            return '12.0'
+        elif 'iphone 8' in model_lower:
+            return '11.0'
         elif 'watch' in model_lower:
             return '9.0'
         
@@ -695,19 +893,14 @@ def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
     }
     
     # Organize devices with deduplication
-    seen_devices = set()
-    
     for device in result.devices:
         product = device.get('product', 'E3')
         os_type = device.get('os', 'android')
         
         if product in compatibility_data["products"] and os_type in compatibility_data["products"][product]:
-            # Create unique key for deduplication - FIXED: use 'region' not 'self.region'
-            device_key = f"{product}|{os_type}|{device['name']}|{region}"
-            
-            # Check for duplicates
-            if device_key not in seen_devices:
-                seen_devices.add(device_key)
+            # Check for duplicates by name
+            existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
+            if device['name'] not in existing_names:
                 compatibility_data["products"][product][os_type].append(device)
     
     return compatibility_data
