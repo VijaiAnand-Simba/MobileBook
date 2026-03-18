@@ -185,31 +185,54 @@ class UniversalPDFExtractor:
                         print(f"      📋 Table {table_idx+1}: {len(table)} rows x {len(table[0]) if table[0] else 0} cols")
                         
                         if table[0]:
-                            header = [str(cell)[:20] if cell else '' for cell in table[0][:4]]
+                            header = [str(cell)[:25] if cell else '' for cell in table[0][:4]]
                             print(f"         Header: {header}")
                         
                         if len(table) > 1 and table[1]:
-                            sample = [str(cell)[:20] if cell else '' for cell in table[1][:4]]
+                            sample = [str(cell)[:25] if cell else '' for cell in table[1][:4]]
                             print(f"         Sample: {sample}")
+                        
+                        # Check if this is a device table (has "Device Manufacturer" in header)
+                        is_device_table = False
+                        if table[0]:
+                            header_text = ' '.join([str(c) for c in table[0] if c]).lower()
+                            is_device_table = 'device manufacturer' in header_text or 'manufacturer' in header_text
+                        
+                        if is_device_table:
+                            print(f"         ✓ Device table detected")
                         
                         table_info = self._identify_table(page, table, page_num)
                         
+                        if not table_info and is_device_table:
+                            # Manual detection based on page content
+                            page_text = page.extract_text()
+                            
+                            if page_text:
+                                page_lower = page_text.lower()
+                                
+                                # Check for table numbers in surrounding text
+                                if 'table 7' in page_lower and 'ios' in page_lower:
+                                    table_info = {"product": "NOW", "os": "ios"}
+                                    print(f"         ✓ Manual: NOW iOS (Table 7)")
+                                elif 'table 8' in page_lower and 'android' in page_lower:
+                                    table_info = {"product": "NOW", "os": "android"}
+                                    print(f"         ✓ Manual: NOW Android (Table 8)")
+                                elif 'table 3' in page_lower:
+                                    table_info = {"product": "E3", "os": "ios"}
+                                    print(f"         ✓ Manual: E3 iOS (Table 3)")
+                                elif 'table 4' in page_lower:
+                                    table_info = {"product": "E3", "os": "android"}
+                                    print(f"         ✓ Manual: E3 Android (Table 4)")
+                                elif 'table 5' in page_lower:
+                                    table_info = {"product": "365", "os": "ios"}
+                                    print(f"         ✓ Manual: 365 iOS (Table 5)")
+                                elif 'table 6' in page_lower:
+                                    table_info = {"product": "365", "os": "android"}
+                                    print(f"         ✓ Manual: 365 Android (Table 6)")
+                        
                         if not table_info:
                             print(f"         ⚠️  Could not identify table type")
-                            
-                            if table[0]:
-                                first_row_text = ' '.join([str(cell) for cell in table[0] if cell]).lower()
-                                print(f"         Debug: {first_row_text[:80]}")
-                                
-                                if 'now' in first_row_text and 'android' in first_row_text:
-                                    table_info = {"product": "NOW", "os": "android"}
-                                    print(f"         ✓ Manual: NOW Android")
-                                elif 'now' in first_row_text and 'ios' in first_row_text:
-                                    table_info = {"product": "NOW", "os": "ios"}
-                                    print(f"         ✓ Manual: NOW iOS")
-                            
-                            if not table_info:
-                                continue
+                            continue
                         
                         print(f"         ✅ Type: {table_info['product']} / {table_info['os']}")
                         
@@ -373,69 +396,121 @@ class UniversalPDFExtractor:
             return ExtractionResult(False, "pymupdf", [], 0, 0.0, errors)
     
     
-    def _detect_table_header(self, line: str) -> Optional[Dict[str, str]]:
-        """Detect table type from header line."""
+def _detect_table_header(self, line: str) -> Optional[Dict[str, str]]:
+    """Detect table type from header line."""
+    
+    patterns = [
+        # E3 patterns
+        (r'Table\s+3.*?E3.*?iOS.*?MMA', {"product": "E3", "os": "ios"}),
+        (r'Table\s+4.*?E3.*?Android.*?MMA', {"product": "E3", "os": "android"}),
+        (r'E3.*?iOS.*?(?:MMA|Compatible)', {"product": "E3", "os": "ios"}),
+        (r'E3.*?Android.*?(?:MMA|Compatible)', {"product": "E3", "os": "android"}),
         
-        patterns = [
-            (r'E3.*?iOS.*?(?:MMA|Compatible)', {"product": "E3", "os": "ios"}),
-            (r'E3.*?Android.*?(?:MMA|Compatible)', {"product": "E3", "os": "android"}),
-            (r'365.*?iOS.*?(?:MMA|Compatible)', {"product": "365", "os": "ios"}),
-            (r'365.*?Android.*?(?:MMA|Compatible)', {"product": "365", "os": "android"}),
-            (r'NOW.*?iOS.*?(?:App|Application|Compatible)', {"product": "NOW", "os": "ios"}),
-            (r'NOW.*?Android.*?(?:App|Application|Compatible)', {"product": "NOW", "os": "android"}),
-            (r'Table\s+\d+.*?NOW.*?iOS', {"product": "NOW", "os": "ios"}),
-            (r'Table\s+\d+.*?NOW.*?Android', {"product": "NOW", "os": "android"}),
-        ]
+        # 365 patterns
+        (r'Table\s+5.*?365.*?iOS.*?MMA', {"product": "365", "os": "ios"}),
+        (r'Table\s+6.*?365.*?Android.*?MMA', {"product": "365", "os": "android"}),
+        (r'365.*?iOS.*?(?:MMA|Compatible)', {"product": "365", "os": "ios"}),
+        (r'365.*?Android.*?(?:MMA|Compatible)', {"product": "365", "os": "android"}),
         
-        for pattern, info in patterns:
-            if re.search(pattern, line, re.IGNORECASE):
+        # NOW patterns - EXACT MATCH
+        (r'Table\s+7.*?iOS.*?NOW.*?Application', {"product": "NOW", "os": "ios"}),
+        (r'Table\s+8.*?Android.*?NOW.*?Application', {"product": "NOW", "os": "android"}),
+        (r'NOW.*?iOS.*?(?:App|Application|Compatible)', {"product": "NOW", "os": "ios"}),
+        (r'NOW.*?Android.*?(?:App|Application|Compatible)', {"product": "NOW", "os": "android"}),
+        (r'iOS.*?NOW.*?Application', {"product": "NOW", "os": "ios"}),
+        (r'Android.*?NOW.*?Application', {"product": "NOW", "os": "android"}),
+    ]
+    
+    for pattern, info in patterns:
+        if re.search(pattern, line, re.IGNORECASE):
+            return info
+    
+    return None
+    
+    
+def _identify_table(self, page, table: List[List], page_num: int) -> Optional[Dict[str, str]]:
+    """Identify table type from nearby text or content."""
+    
+    # Get full page text
+    text = page.extract_text()
+    
+    if text:
+        lines = text.split('\n')
+        
+        # Look for table numbers first
+        table_markers = {
+            3: {"product": "E3", "os": "ios"},
+            4: {"product": "E3", "os": "android"},
+            5: {"product": "365", "os": "ios"},
+            6: {"product": "365", "os": "android"},
+            7: {"product": "NOW", "os": "ios"},
+            8: {"product": "NOW", "os": "android"},
+        }
+        
+        # Check for "Table X" markers
+        for table_num, info in table_markers.items():
+            pattern = rf'Table\s+{table_num}\s+[–-]'
+            if re.search(pattern, text, re.IGNORECASE):
+                product = info['product']
+                os_type = info['os']
+                print(f"         ℹ️  Found Table {table_num}: {product} {os_type.upper()}")
                 return info
         
-        return None
-    
-    
-    def _identify_table(self, page, table: List[List], page_num: int) -> Optional[Dict[str, str]]:
-        """Identify table type from nearby text or content."""
-        
-        text = page.extract_text()
-        if text:
-            lines = text.split('\n')
+        # Fallback: pattern matching on lines
+        for i, line in enumerate(lines):
+            if i > 50:
+                break
             
-            for i, line in enumerate(lines):
-                if i > 50:
-                    break
-                
-                match = self._detect_table_header(line)
-                if match:
-                    return match
-            
-            for line in lines[:50]:
-                if 'table' in line.lower():
-                    if 'now' in line.lower():
-                        if 'android' in line.lower():
-                            print(f"         ℹ️  NOW Android: {line[:60]}")
-                            return {"product": "NOW", "os": "android"}
-                        elif 'ios' in line.lower():
-                            print(f"         ℹ️  NOW iOS: {line[:60]}")
-                            return {"product": "NOW", "os": "ios"}
-        
-        if table and table[0]:
-            first_row = ' '.join(str(cell) for cell in table[0] if cell)
-            match = self._detect_table_header(first_row)
+            match = self._detect_table_header(line)
             if match:
                 return match
-            
-            first_row_lower = first_row.lower()
-            if 'device manufacturer' in first_row_lower or 'manufacturer' in first_row_lower:
-                if text:
-                    text_lower = text.lower()
-                    if 'now' in text_lower:
-                        if 'android' in text_lower:
-                            return {"product": "NOW", "os": "android"}
-                        elif 'ios' in text_lower:
-                            return {"product": "NOW", "os": "ios"}
         
-        return None
+        # Check for NOW specifically
+        for line in lines[:50]:
+            line_lower = line.lower()
+            
+            # NOW iOS (Table 7)
+            if 'table 7' in line_lower or ('ios' in line_lower and 'now application' in line_lower):
+                print(f"         ℹ️  Found NOW iOS marker: {line[:60]}")
+                return {"product": "NOW", "os": "ios"}
+            
+            # NOW Android (Table 8)
+            if 'table 8' in line_lower or ('android' in line_lower and 'now application' in line_lower):
+                print(f"         ℹ️  Found NOW Android marker: {line[:60]}")
+                return {"product": "NOW", "os": "android"}
+    
+    # Check table headers
+    if table and table[0]:
+        first_row = ' '.join(str(cell) for cell in table[0] if cell)
+        first_row_lower = first_row.lower()
+        
+        # Match exact header patterns
+        if 'device manufacturer' in first_row_lower or 'manufacturer' in first_row_lower:
+            # This is a device table, determine which one from page context
+            
+            if text:
+                text_lower = text.lower()
+                
+                # Check for table numbers
+                if 'table 7' in text_lower or ('ios' in text_lower and 'now' in text_lower):
+                    return {"product": "NOW", "os": "ios"}
+                elif 'table 8' in text_lower or ('android' in text_lower and 'now' in text_lower):
+                    return {"product": "NOW", "os": "android"}
+                elif 'table 3' in text_lower or ('e3' in text_lower and 'ios' in text_lower):
+                    return {"product": "E3", "os": "ios"}
+                elif 'table 4' in text_lower or ('e3' in text_lower and 'android' in text_lower):
+                    return {"product": "E3", "os": "android"}
+                elif 'table 5' in text_lower or ('365' in text_lower and 'ios' in text_lower):
+                    return {"product": "365", "os": "ios"}
+                elif 'table 6' in text_lower or ('365' in text_lower and 'android' in text_lower):
+                    return {"product": "365", "os": "android"}
+        
+        # Try pattern matching on first row
+        match = self._detect_table_header(first_row)
+        if match:
+            return match
+    
+    return None
     
     
     def _parse_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
