@@ -9,6 +9,7 @@ import fitz  # PyMuPDF
 import pandas as pd
 import re
 import os
+from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 import json
@@ -61,15 +62,8 @@ class UniversalPDFExtractor:
             return result
         self.results.append(result)
         
-        # Strategy 4: Tabula (Java-based, very robust)
-        result = self._try_tabula()
-        if result.success and result.confidence > 0.5:
-            print(f"✅ Method: {result.method} | Confidence: {result.confidence:.0%}")
-            return result
-        self.results.append(result)
-        
         # Return best result
-        best = max(self.results, key=lambda r: r.confidence)
+        best = max(self.results, key=lambda r: r.confidence) if self.results else ExtractionResult(False, "none", [], 0, 0.0, ["No extraction methods succeeded"])
         print(f"⚠️  Best available: {best.method} | Confidence: {best.confidence:.0%}")
         return best
     
@@ -143,7 +137,7 @@ class UniversalPDFExtractor:
                 
                 for page_num, page in enumerate(pdf.pages, 1):
                     # Try to fix rotated/flipped text
-                    text = self._extract_text_safe(page)
+                    text = page.extract_text()
                     
                     if not text:
                         continue
@@ -161,7 +155,6 @@ class UniversalPDFExtractor:
                         if table_match:
                             current_table = table_match
                             header_seen = False
-                            print(f"   Found: {current_table['product']} {current_table['os'].upper()} (Page {page_num})")
                             continue
                         
                         # Detect column headers
@@ -212,7 +205,7 @@ class UniversalPDFExtractor:
                 page = doc[page_num]
                 
                 # Extract text with layout preservation
-                text = page.get_text("text", flags=fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE)
+                text = page.get_text("text")
                 
                 if not text:
                     continue
@@ -267,104 +260,6 @@ class UniversalPDFExtractor:
             return ExtractionResult(False, "pymupdf", [], 0, 0.0, errors)
     
     
-    def _try_tabula(self) -> ExtractionResult:
-        """Extract using Tabula (Java-based, very robust)."""
-        
-        print("\n☕ Trying: Tabula extraction...")
-        devices = []
-        errors = []
-        
-        try:
-            import tabula
-            
-            # Extract all tables
-            tables = tabula.read_pdf(
-                self.pdf_path, 
-                pages='all', 
-                multiple_tables=True,
-                lattice=True  # Use lattice mode for better accuracy
-            )
-            
-            for idx, df in enumerate(tables):
-                if df.empty:
-                    continue
-                
-                # Try to identify table type from content
-                table_info = self._identify_table_from_dataframe(df)
-                
-                if not table_info:
-                    continue
-                
-                # Parse dataframe rows
-                parsed = self._parse_dataframe_rows(
-                    df,
-                    table_info['os'],
-                    table_info['product']
-                )
-                
-                devices.extend(parsed)
-                print(f"   Table {idx+1}: {len(parsed)} devices ({table_info['product']}/{table_info['os']})")
-            
-            confidence = self._calculate_confidence(devices, len(tables))
-            
-            return ExtractionResult(
-                success=len(devices) > 0,
-                method="tabula",
-                devices=devices,
-                tables_found=len(tables),
-                confidence=confidence,
-                errors=errors
-            )
-            
-        except ImportError:
-            errors.append("Tabula not installed (requires Java)")
-            return ExtractionResult(False, "tabula", [], 0, 0.0, errors)
-        except Exception as e:
-            errors.append(str(e))
-            return ExtractionResult(False, "tabula", [], 0, 0.0, errors)
-    
-    
-    def _extract_text_safe(self, page) -> str:
-        """Extract text with error handling for transformations."""
-        try:
-            # Try standard extraction
-            text = page.extract_text()
-            
-            # Check if text looks corrupted
-            if text and self._is_text_corrupted(text):
-                # Try different extraction settings
-                text = page.extract_text(
-                    x_tolerance=3,
-                    y_tolerance=3,
-                    layout=True,
-                    x_density=7.25,
-                    y_density=13
-                )
-            
-            return text or ""
-            
-        except Exception:
-            return ""
-    
-    
-    def _is_text_corrupted(self, text: str) -> bool:
-        """Check if extracted text appears corrupted."""
-        if not text:
-            return True
-        
-        # Check for excessive special characters
-        special_chars = sum(1 for c in text if not c.isalnum() and c not in ' \n\t.,()-')
-        if special_chars / len(text) > 0.5:
-            return True
-        
-        # Check for readable words
-        words = re.findall(r'\b[a-zA-Z]{3,}\b', text)
-        if len(words) < 10:
-            return True
-        
-        return False
-    
-    
     def _detect_table_header(self, line: str) -> Optional[Dict[str, str]]:
         """Detect table type from header line."""
         
@@ -409,22 +304,12 @@ class UniversalPDFExtractor:
         return None
     
     
-    def _identify_table_from_dataframe(self, df: pd.DataFrame) -> Optional[Dict[str, str]]:
-        """Identify table type from DataFrame content."""
-        
-        # Check column names and first few rows
-        text = ' '.join(df.columns.astype(str)) + ' ' + ' '.join(df.head(3).to_string().split())
-        
-        return self._detect_table_header(text)
-    
-    
     def _parse_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
         """Parse table rows into device objects."""
         
         devices = []
         
         # Skip header row(s)
-        start_idx = 1
         for i, row in enumerate(table):
             if i == 0:
                 continue  # Skip first row (usually header)
@@ -434,19 +319,6 @@ class UniversalPDFExtractor:
             
             # Convert row to device
             device = self._row_to_device(row, os_type, product)
-            if device:
-                devices.append(device)
-        
-        return devices
-    
-    
-    def _parse_dataframe_rows(self, df: pd.DataFrame, os_type: str, product: str) -> List[Dict]:
-        """Parse DataFrame rows into device objects."""
-        
-        devices = []
-        
-        for _, row in df.iterrows():
-            device = self._dataframe_row_to_device(row, os_type, product)
             if device:
                 devices.append(device)
         
@@ -475,11 +347,14 @@ class UniversalPDFExtractor:
             if not model:
                 return None
             
+            # Clean model
+            model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+            
             return {
                 "name": f"Apple {model}",
                 "manufacturer": manufacturer,
                 "model": model,
-                "model_number": model_number,
+                "model_number": model_number if 'Rationally' not in model_number else '',
                 "os_version": self._extract_ios_version(model),
                 "rationally_qualified": 'rationally qualified' in ' '.join(row).lower(),
                 "product": product,
@@ -492,7 +367,7 @@ class UniversalPDFExtractor:
             model = row[1] if len(row) > 1 else ''
             
             # Check for known manufacturers
-            known_manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo']
+            known_manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 'Realme', 'Lively', 'TCL']
             if manufacturer not in known_manufacturers:
                 return None
             
@@ -526,14 +401,6 @@ class UniversalPDFExtractor:
             }
     
     
-    def _dataframe_row_to_device(self, row: pd.Series, os_type: str, product: str) -> Optional[Dict]:
-        """Convert DataFrame row to device object."""
-        
-        # Convert to list and process
-        row_list = row.tolist()
-        return self._row_to_device(row_list, os_type, product)
-    
-    
     def _parse_device_line(self, line: str, os_type: str, product: str) -> Optional[Dict]:
         """Parse a single device line (text-based)."""
         
@@ -553,6 +420,9 @@ class UniversalPDFExtractor:
             model = parts[0].strip()
             model_number = parts[1].strip() if len(parts) > 1 else ''
             
+            # Clean model
+            model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+            
             return {
                 "name": f"Apple {model}",
                 "manufacturer": "Apple",
@@ -566,7 +436,7 @@ class UniversalPDFExtractor:
         
         else:
             # Android parsing
-            manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 'Realme']
+            manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 'Realme', 'Lively', 'TCL']
             
             manufacturer = None
             for mfr in manufacturers:
@@ -629,6 +499,8 @@ class UniversalPDFExtractor:
             return '16.0'
         elif 'iphone 13' in model_lower:
             return '15.0'
+        elif 'watch' in model_lower:
+            return '9.0'
         
         return '12.0'
     
@@ -641,6 +513,8 @@ class UniversalPDFExtractor:
             return '14.0'
         elif 'pixel 8' in model_lower:
             return '14.0'
+        elif 'pixel 7' in model_lower:
+            return '13.0'
         elif 's26' in model_lower or 's25' in model_lower:
             return '15.0'
         elif 's24' in model_lower:
@@ -657,29 +531,24 @@ class UniversalPDFExtractor:
         
         score = 0.0
         
-        # Device count (more is better, up to a point)
-        if len(devices) > 5:
+        # Device count (more is better)
+        if len(devices) > 50:
+            score += 0.4
+        elif len(devices) > 10:
             score += 0.3
         elif len(devices) > 0:
             score += 0.1
         
         # Tables found
-        if tables_found >= 6:  # All 6 expected tables
+        if tables_found >= 6:
             score += 0.3
         elif tables_found >= 3:
             score += 0.2
-        elif tables_found >= 1:
-            score += 0.1
         
-        # Data quality checks
+        # Data quality
         valid_names = sum(1 for d in devices if d.get('name') and len(d['name']) > 3)
-        if valid_names / len(devices) > 0.9:
-            score += 0.2
-        
-        # Product distribution (should have E3, 365, NOW)
-        products = set(d.get('product') for d in devices)
-        if len(products) >= 2:
-            score += 0.2
+        if len(devices) > 0 and valid_names / len(devices) > 0.9:
+            score += 0.3
         
         return min(1.0, score)
 
@@ -714,9 +583,9 @@ def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
         os_type = device.get('os', 'android')
         
         if product in compatibility_data["products"] and os_type in compatibility_data["products"][product]:
-            compatibility_data["products"][product][os_type].append(device)
+            # Check for duplicates
+            existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
+            if device['name'] not in existing_names:
+                compatibility_data["products"][product][os_type].append(device)
     
     return compatibility_data
-
-
-# ... rest of the merge_compatibility_data and main functions ...
