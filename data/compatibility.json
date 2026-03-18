@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-18T06:45:20.108701",
+  "last_updated": "2026-03-18T08:33:00.887718",
   "regions": {
     "US": {
       "revision": null,
@@ -13,22 +13,12 @@
       "effective_date": null,
       "source_file": "compatibility_ous.pdf",
       "extraction_method": "pymupdf",
-      "confidence": 1.0
+      "confidence": 0.8999999999999999
     }
   },
   "products": {
     "E3": {
       "android": [
-        {
-          "name": "Apple ",
-          "manufacturer": "Apple",
-          "model": "",
-          "model_number": "",
-          "os_version": "12.0",
-          "rationally_qualified": false,
-          "product": "E3",
-          "region": "US"
-        },
         {
           "name": "Nokia G300",
           "manufacturer": "Nokia",
@@ -70,9 +60,9 @@
           "region": "US"
         },
         {
-          "name": "LG -AS993, LG-H87, LG-LS993,",
+          "name": "LG -AS993",
           "manufacturer": "LG",
-          "model": "-AS993, LG-H87, LG-LS993,",
+          "model": "-AS993",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -80,9 +70,49 @@
           "region": "US"
         },
         {
-          "name": "LG M-G600, LGUS997, VS988",
+          "name": "LG LG-H87",
           "manufacturer": "LG",
-          "model": "M-G600, LGUS997, VS988",
+          "model": "LG-H87",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "US"
+        },
+        {
+          "name": "LG LG-LS993",
+          "manufacturer": "LG",
+          "model": "LG-LS993",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "US"
+        },
+        {
+          "name": "LG M-G600",
+          "manufacturer": "LG",
+          "model": "M-G600",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "US"
+        },
+        {
+          "name": "LG LGUS997",
+          "manufacturer": "LG",
+          "model": "LGUS997",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "US"
+        },
+        {
+          "name": "LG VS988",
+          "manufacturer": "LG",
+          "model": "VS988",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -98,16 +128,6 @@
           "rationally_qualified": false,
           "product": "E3",
           "region": "US"
-        },
-        {
-          "name": "Apple ",
-          "manufacturer": "Apple",
-          "model": "",
-          "model_number": "",
-          "os_version": "12.0",
-          "rationally_qualified": false,
-          "product": "E3",
-          "region": "OUS"
         },
         {
           "name": "HTC U11",
@@ -140,16 +160,6 @@
           "region": "OUS"
         },
         {
-          "name": "Nokia 9",
-          "manufacturer": "Nokia",
-          "model": "9",
-          "model_number": "",
-          "os_version": "10.0",
-          "rationally_qualified": false,
-          "product": "E3",
-          "region": "OUS"
-        },
-        {
           "name": "Nokia G50",
           "manufacturer": "Nokia",
           "model": "G50",
@@ -190,9 +200,9 @@
           "region": "OUS"
         },
         {
-          "name": "LG -F700, LG-H8, LGAS992,",
+          "name": "LG -F700",
           "manufacturer": "LG",
-          "model": "-F700, LG-H8, LGAS992,",
+          "model": "-F700",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -200,9 +210,9 @@
           "region": "OUS"
         },
         {
-          "name": "LG LS992, LGUS992, RS988,",
+          "name": "LG LG-H8",
           "manufacturer": "LG",
-          "model": "LS992, LGUS992, RS988,",
+          "model": "LG-H8",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -210,9 +220,9 @@
           "region": "OUS"
         },
         {
-          "name": "LG -AS9, LG-H87, LG-LS9,",
+          "name": "LG LGAS992",
           "manufacturer": "LG",
-          "model": "-AS9, LG-H87, LG-LS9,",
+          "model": "LGAS992",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -220,9 +230,89 @@
           "region": "OUS"
         },
         {
-          "name": "LG M-G600, LGUS997, VS988",
+          "name": "LG LS992",
           "manufacturer": "LG",
-          "model": "M-G600, LGUS997, VS988",
+          "model": "LS992",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG LGUS992",
+          "manufacturer": "LG",
+          "model": "LGUS992",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG RS988",
+          "manufacturer": "LG",
+          "model": "RS988",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG -AS9",
+          "manufacturer": "LG",
+          "model": "-AS9",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG LG-H87",
+          "manufacturer": "LG",
+          "model": "LG-H87",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG LG-LS9",
+          "manufacturer": "LG",
+          "model": "LG-LS9",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG M-G600",
+          "manufacturer": "LG",
+          "model": "M-G600",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG LGUS997",
+          "manufacturer": "LG",
+          "model": "LGUS997",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "E3",
+          "region": "OUS"
+        },
+        {
+          "name": "LG VS988",
+          "manufacturer": "LG",
+          "model": "VS988",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -244,16 +334,6 @@
     },
     "365": {
       "android": [
-        {
-          "name": "Apple ",
-          "manufacturer": "Apple",
-          "model": "",
-          "model_number": "",
-          "os_version": "12.0",
-          "rationally_qualified": false,
-          "product": "365",
-          "region": "US"
-        },
         {
           "name": "Nokia G300",
           "manufacturer": "Nokia",
@@ -305,9 +385,9 @@
           "region": "US"
         },
         {
-          "name": "Samsung Galaxy J7 Prime, Samsung Galaxy Note 8, Samsung Galaxy S9, Samsung Galaxy S9+,",
+          "name": "Samsung Galaxy J7 Prime",
           "manufacturer": "Samsung",
-          "model": "Galaxy J7 Prime, Samsung Galaxy Note 8, Samsung Galaxy S9, Samsung Galaxy S9+,",
+          "model": "Galaxy J7 Prime",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -315,9 +395,69 @@
           "region": "US"
         },
         {
-          "name": "Xiaomi Mi 9.",
+          "name": "Samsung Samsung Galaxy Note 8",
+          "manufacturer": "Samsung",
+          "model": "Samsung Galaxy Note 8",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Samsung Galaxy S9",
+          "manufacturer": "Samsung",
+          "model": "Samsung Galaxy S9",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Samsung Galaxy S9+",
+          "manufacturer": "Samsung",
+          "model": "Samsung Galaxy S9+",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei P10",
+          "manufacturer": "Huawei",
+          "model": "P10",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Sony Xperia E5",
+          "manufacturer": "Huawei",
+          "model": "Sony Xperia E5",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Mate 10 Pro",
+          "manufacturer": "Huawei",
+          "model": "Mate 10 Pro",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Xiaomi Mi 9",
           "manufacturer": "Xiaomi",
-          "model": "Mi 9.",
+          "model": "Mi 9",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -325,9 +465,79 @@
           "region": "US"
         },
         {
-          "name": "Samsung Galaxy A7, Samsung Galaxy J6, Samsung Galaxy Note 9 and Asus Zenfone 4.",
+          "name": "Huawei P9 Lite",
+          "manufacturer": "Huawei",
+          "model": "P9 Lite",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Mate 20 Pro",
+          "manufacturer": "Huawei",
+          "model": "Mate 20 Pro",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Huawei Mate 20 X",
+          "manufacturer": "Huawei",
+          "model": "Huawei Mate 20 X",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Huawei Y6",
+          "manufacturer": "Huawei",
+          "model": "Huawei Y6",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei LG G8 ThinQ",
+          "manufacturer": "Huawei",
+          "model": "LG G8 ThinQ",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei LG V35 ThinQ",
+          "manufacturer": "Huawei",
+          "model": "LG V35 ThinQ",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei LG V40 ThinQ",
+          "manufacturer": "Huawei",
+          "model": "LG V40 ThinQ",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Galaxy A7",
           "manufacturer": "Samsung",
-          "model": "Galaxy A7, Samsung Galaxy J6, Samsung Galaxy Note 9 and Asus Zenfone 4.",
+          "model": "Galaxy A7",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -335,9 +545,39 @@
           "region": "US"
         },
         {
-          "name": "OnePlus 7 Pro, Motorola Moto G7, Motorola Moto G7 Play, Motorola Moto G7 Plus, Motorola Moto",
+          "name": "Samsung Samsung Galaxy J6",
+          "manufacturer": "Samsung",
+          "model": "Samsung Galaxy J6",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Samsung Galaxy Note 9",
+          "manufacturer": "Samsung",
+          "model": "Samsung Galaxy Note 9",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Asus Zenfone 4",
+          "manufacturer": "Samsung",
+          "model": "Asus Zenfone 4",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "OnePlus 7 Pro",
           "manufacturer": "OnePlus",
-          "model": "7 Pro, Motorola Moto G7, Motorola Moto G7 Play, Motorola Moto G7 Plus, Motorola Moto",
+          "model": "7 Pro",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -345,9 +585,49 @@
           "region": "US"
         },
         {
-          "name": "Motorola moto e⁴ plus, Zenfone 3 Zoom, Jitterbug Smart 2 and Samsung A50.",
+          "name": "OnePlus Motorola Moto G7",
+          "manufacturer": "OnePlus",
+          "model": "Motorola Moto G7",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "OnePlus Motorola Moto G7 Play",
+          "manufacturer": "OnePlus",
+          "model": "Motorola Moto G7 Play",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "OnePlus Motorola Moto G7 Plus",
+          "manufacturer": "OnePlus",
+          "model": "Motorola Moto G7 Plus",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "OnePlus Motorola Moto",
+          "manufacturer": "OnePlus",
+          "model": "Motorola Moto",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Motorola moto e⁴ plus",
           "manufacturer": "Motorola",
-          "model": "moto e⁴ plus, Zenfone 3 Zoom, Jitterbug Smart 2 and Samsung A50.",
+          "model": "moto e⁴ plus",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -355,9 +635,39 @@
           "region": "US"
         },
         {
-          "name": "LG V20, OnePlus 7T, Alcatel Pixi4, HTC U11,",
+          "name": "Motorola Zenfone 3 Zoom",
+          "manufacturer": "Motorola",
+          "model": "Zenfone 3 Zoom",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Motorola Jitterbug Smart 2",
+          "manufacturer": "Motorola",
+          "model": "Jitterbug Smart 2",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Motorola Samsung A50",
+          "manufacturer": "Motorola",
+          "model": "Samsung A50",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "LG V20",
           "manufacturer": "LG",
-          "model": "V20, OnePlus 7T, Alcatel Pixi4, HTC U11,",
+          "model": "V20",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -365,9 +675,59 @@
           "region": "US"
         },
         {
-          "name": "Google - Pixel, Pixel XL, Pixel 2 and Pixel 3a XL",
+          "name": "LG OnePlus 7T",
+          "manufacturer": "LG",
+          "model": "OnePlus 7T",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "LG Alcatel Pixi4",
+          "manufacturer": "LG",
+          "model": "Alcatel Pixi4",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "LG HTC U11",
+          "manufacturer": "LG",
+          "model": "HTC U11",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Asus - Nexus 7 Tab",
+          "manufacturer": "Asus",
+          "model": "- Nexus 7 Tab",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Asus Zenfone 4",
+          "manufacturer": "Asus",
+          "model": "Zenfone 4",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Google - Pixel",
           "manufacturer": "Google",
-          "model": "- Pixel, Pixel XL, Pixel 2 and Pixel 3a XL",
+          "model": "- Pixel",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -375,9 +735,109 @@
           "region": "US"
         },
         {
-          "name": "Motorola - Moto G5, Moto G7, Moto G7 Play and Moto G7 Plus,",
+          "name": "Google Pixel XL",
+          "manufacturer": "Google",
+          "model": "Pixel XL",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Google Pixel 2",
+          "manufacturer": "Google",
+          "model": "Pixel 2",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Google Pixel 3a XL",
+          "manufacturer": "Google",
+          "model": "Pixel 3a XL",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei - Honor 6A",
+          "manufacturer": "Huawei",
+          "model": "- Honor 6A",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Honor 6A Pro",
+          "manufacturer": "Huawei",
+          "model": "Honor 6A Pro",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Honor 7X",
+          "manufacturer": "Huawei",
+          "model": "Honor 7X",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Honor 9",
+          "manufacturer": "Huawei",
+          "model": "Honor 9",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Honor 9 Lite",
+          "manufacturer": "Huawei",
+          "model": "Honor 9 Lite",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Honor View 10",
+          "manufacturer": "Huawei",
+          "model": "Honor View 10",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Huawei Mate 10",
+          "manufacturer": "Huawei",
+          "model": "Mate 10",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Motorola - Moto G5",
           "manufacturer": "Motorola",
-          "model": "- Moto G5, Moto G7, Moto G7 Play and Moto G7 Plus,",
+          "model": "- Moto G5",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -385,9 +845,39 @@
           "region": "US"
         },
         {
-          "name": "Samsung - Galaxy A3 (2017), Galaxy A5 2017, Galaxy A6, Galaxy A7, Galaxy J3, Galaxy J3 Pro,",
+          "name": "Motorola Moto G7",
+          "manufacturer": "Motorola",
+          "model": "Moto G7",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Motorola Moto G7 Play",
+          "manufacturer": "Motorola",
+          "model": "Moto G7 Play",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Motorola Moto G7 Plus",
+          "manufacturer": "Motorola",
+          "model": "Moto G7 Plus",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung - Galaxy A3 (2017)",
           "manufacturer": "Samsung",
-          "model": "- Galaxy A3 (2017), Galaxy A5 2017, Galaxy A6, Galaxy A7, Galaxy J3, Galaxy J3 Pro,",
+          "model": "- Galaxy A3 (2017)",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -395,9 +885,49 @@
           "region": "US"
         },
         {
-          "name": "Sony - Xperia E5, Xperia XA, Xperia XZs, Xperia XZ, Xperia Z2 and Xperia Z5 Compact",
+          "name": "Samsung Galaxy A5 2017",
+          "manufacturer": "Samsung",
+          "model": "Galaxy A5 2017",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Galaxy A6",
+          "manufacturer": "Samsung",
+          "model": "Galaxy A6",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Galaxy J3",
+          "manufacturer": "Samsung",
+          "model": "Galaxy J3",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Galaxy J3 Pro",
+          "manufacturer": "Samsung",
+          "model": "Galaxy J3 Pro",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Sony - Xperia E5",
           "manufacturer": "Sony",
-          "model": "- Xperia E5, Xperia XA, Xperia XZs, Xperia XZ, Xperia Z2 and Xperia Z5 Compact",
+          "model": "- Xperia E5",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -405,9 +935,59 @@
           "region": "US"
         },
         {
-          "name": "Xiaomi - Mi 9 and Redmi Note6 Pro",
+          "name": "Sony Xperia XA",
+          "manufacturer": "Sony",
+          "model": "Xperia XA",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Sony Xperia XZs",
+          "manufacturer": "Sony",
+          "model": "Xperia XZs",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Sony Xperia XZ",
+          "manufacturer": "Sony",
+          "model": "Xperia XZ",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Sony Xperia Z2",
+          "manufacturer": "Sony",
+          "model": "Xperia Z2",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Sony Xperia Z5 Compact",
+          "manufacturer": "Sony",
+          "model": "Xperia Z5 Compact",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Xiaomi - Mi 9",
           "manufacturer": "Xiaomi",
-          "model": "- Mi 9 and Redmi Note6 Pro",
+          "model": "- Mi 9",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -415,9 +995,19 @@
           "region": "US"
         },
         {
-          "name": "Samsung Galaxy A52, A52 5G, A52s 5G, Samsung Galaxy Note 20, Note 20 5G, Note 20 Ultra",
+          "name": "Xiaomi Redmi Note6 Pro",
+          "manufacturer": "Xiaomi",
+          "model": "Redmi Note6 Pro",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Galaxy A52",
           "manufacturer": "Samsung",
-          "model": "Galaxy A52, A52 5G, A52s 5G, Samsung Galaxy Note 20, Note 20 5G, Note 20 Ultra",
+          "model": "Galaxy A52",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -425,9 +1015,59 @@
           "region": "US"
         },
         {
-          "name": "Google Pixel 3, Galaxy Note 9, S9 and S20 Ultra; Table 7 - Samsung Galaxy Note 9, Note 10+ 5G, S9,",
+          "name": "Samsung A52 5G",
+          "manufacturer": "Samsung",
+          "model": "A52 5G",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung A52s 5G",
+          "manufacturer": "Samsung",
+          "model": "A52s 5G",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Samsung Galaxy Note 20",
+          "manufacturer": "Samsung",
+          "model": "Samsung Galaxy Note 20",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Note 20 5G",
+          "manufacturer": "Samsung",
+          "model": "Note 20 5G",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Samsung Note 20 Ultra",
+          "manufacturer": "Samsung",
+          "model": "Note 20 Ultra",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Google Pixel 3",
           "manufacturer": "Google",
-          "model": "Pixel 3, Galaxy Note 9, S9 and S20 Ultra; Table 7 - Samsung Galaxy Note 9, Note 10+ 5G, S9,",
+          "model": "Pixel 3",
           "model_number": "",
           "os_version": "10.0",
           "rationally_qualified": false,
@@ -435,14 +1075,44 @@
           "region": "US"
         },
         {
-          "name": "Apple ",
-          "manufacturer": "Apple",
-          "model": "",
+          "name": "Google Galaxy Note 9",
+          "manufacturer": "Google",
+          "model": "Galaxy Note 9",
           "model_number": "",
-          "os_version": "12.0",
+          "os_version": "10.0",
           "rationally_qualified": false,
           "product": "365",
-          "region": "OUS"
+          "region": "US"
+        },
+        {
+          "name": "Google S9",
+          "manufacturer": "Google",
+          "model": "S9",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Google S20 Ultra",
+          "manufacturer": "Google",
+          "model": "S20 Ultra",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
+        },
+        {
+          "name": "Google Note 10+ 5G",
+          "manufacturer": "Google",
+          "model": "Note 10+ 5G",
+          "model_number": "",
+          "os_version": "10.0",
+          "rationally_qualified": false,
+          "product": "365",
+          "region": "US"
         },
         {
           "name": "Nokia G300",
