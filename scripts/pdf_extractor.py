@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Simple PDF extractor focused on exact table structures.
+Text-based PDF extractor - doesn't rely on table structure.
 """
 
 import pdfplumber
 import re
 import os
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from dataclasses import dataclass
 import json
 
@@ -23,7 +23,7 @@ class ExtractionResult:
 
 
 class UniversalPDFExtractor:
-    """Simple PDF extractor for device tables."""
+    """Text-based PDF extractor."""
     
     def __init__(self, pdf_path: str, region: str = "US"):
         self.pdf_path = pdf_path
@@ -32,11 +32,12 @@ class UniversalPDFExtractor:
         self.KNOWN_MANUFACTURERS = [
             'Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 
             'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 
-            'Realme', 'Lively', 'TCL', 'Asus', 'Alcatel', 'Huawei', 'ZTE'
+            'Realme', 'Lively', 'TCL', 'Asus', 'Alcatel', 'Huawei', 'ZTE',
+            'Apple'
         ]
     
     def extract(self) -> ExtractionResult:
-        """Extract devices from PDF."""
+        """Extract devices from PDF using text parsing."""
         
         print(f"\n{'='*70}")
         print(f"🔍 EXTRACTING: {os.path.basename(self.pdf_path)} ({self.region})")
@@ -46,129 +47,56 @@ class UniversalPDFExtractor:
         errors = []
         tables_found = 0
         
-        # Table mapping: Table Number -> (Product, OS)
-        table_map = {
-            3: ("E3", "ios"),
-            4: ("E3", "android"),
-            5: ("365", "ios"),
-            6: ("365", "android"),
-            7: ("NOW", "ios"),
-            8: ("NOW", "android"),
-        }
-        
         try:
             with pdfplumber.open(self.pdf_path) as pdf:
+                current_table = None
+                in_table = False
+                
                 for page_num, page in enumerate(pdf.pages, 1):
-                    # Get page text to find table markers
-                    page_text = page.extract_text()
-                    if not page_text:
+                    text = page.extract_text()
+                    if not text:
                         continue
                     
-                    # Extract tables from page
-                    tables = page.extract_tables()
-                    if not tables:
-                        continue
+                    lines = text.split('\n')
                     
-                    print(f"\n📄 Page {page_num}: {len(tables)} table(s)")
-                    
-                    # DEBUG: Check for table markers
-                    for table_num in range(1, 10):
-                        if f"Table {table_num}" in page_text:
-                            print(f"   🔍 Found: 'Table {table_num}' marker")
-                    
-                    # Find which table number is on this page
-                    current_table_info = None
-                    for table_num, (product, os_type) in table_map.items():
-                        # Try different patterns
-                        patterns = [
-                            f"Table {table_num}",
-                            f"Table\n{table_num}",
-                            f"Table  {table_num}",
-                            f"Table{table_num}",
-                        ]
+                    for line in lines:
+                        line = line.strip()
                         
-                        for pattern in patterns:
-                            if pattern in page_text:
-                                current_table_info = (product, os_type, table_num)
-                                print(f"   ✅ Matched: Table {table_num} - {product} {os_type.upper()}")
-                                break
-                        
-                        if current_table_info:
-                            break
-                    
-                    # Process each table on the page
-                    for table_idx, table in enumerate(tables):
-                        if not table or len(table) < 2:
+                        if not line:
                             continue
                         
-                        # DEBUG: Show first row
-                        if table[0]:
-                            header = [str(c)[:30] for c in table[0][:3] if c]
-                            print(f"      Table {table_idx+1} header: {header}")
-                        
-                        # Check if this is a device table
-                        is_device_table = False
-                        if table[0]:
-                            header_text = ' '.join([str(c) for c in table[0] if c]).lower()
-                            
-                            if 'device manufacturer' in header_text or 'manufacturer' in header_text:
-                                is_device_table = True
-                                print(f"      ✓ Device table detected")
-                        
-                        if not is_device_table:
+                        # Detect table headers
+                        table_match = self._detect_table(line)
+                        if table_match:
+                            current_table = table_match
+                            in_table = False
+                            tables_found += 1
+                            print(f"\n📋 Page {page_num}: Table {table_match['num']} - {table_match['product']} {table_match['os'].upper()}")
                             continue
                         
-                        # If we don't have table info, try to infer from content
-                        if not current_table_info:
-                            # Look at page text for product/OS clues
-                            text_lower = page_text.lower()
-                            
-                            if 'now' in text_lower and 'ios' in text_lower:
-                                current_table_info = ("NOW", "ios", 7)
-                                print(f"      ℹ️  Inferred: NOW iOS")
-                            elif 'now' in text_lower and 'android' in text_lower:
-                                current_table_info = ("NOW", "android", 8)
-                                print(f"      ℹ️  Inferred: NOW Android")
-                            elif 'e3' in text_lower and 'ios' in text_lower:
-                                current_table_info = ("E3", "ios", 3)
-                                print(f"      ℹ️  Inferred: E3 iOS")
-                            elif 'e3' in text_lower and 'android' in text_lower:
-                                current_table_info = ("E3", "android", 4)
-                                print(f"      ℹ️  Inferred: E3 Android")
-                            elif '365' in text_lower and 'ios' in text_lower:
-                                current_table_info = ("365", "ios", 5)
-                                print(f"      ℹ️  Inferred: 365 iOS")
-                            elif '365' in text_lower and 'android' in text_lower:
-                                current_table_info = ("365", "android", 6)
-                                print(f"      ℹ️  Inferred: 365 Android")
+                        # Skip until we find column headers
+                        if current_table and not in_table:
+                            if 'Device Manufacturer' in line or 'Manufacturer' in line:
+                                in_table = True
+                                print(f"   ✓ Found header row")
+                                continue
                         
-                        # Use table info if found
-                        if current_table_info:
-                            product, os_type, table_num = current_table_info
+                        # Parse device lines
+                        if current_table and in_table:
+                            device = self._parse_device_line(
+                                line, 
+                                current_table['product'], 
+                                current_table['os']
+                            )
                             
-                            print(f"      📋 Parsing as: {product} {os_type} ({len(table)} rows)")
-                            
-                            # DEBUG: Show first data row
-                            if len(table) > 1 and table[1]:
-                                sample = [str(c)[:30] for c in table[1][:3] if c]
-                                print(f"         Sample row: {sample}")
-                            
-                            parsed = self._parse_device_table(table, product, os_type)
-                            
-                            if parsed:
-                                devices.extend(parsed)
-                                tables_found += 1
-                                print(f"      ✅ Extracted {len(parsed)} devices")
-                            else:
-                                print(f"      ⚠️  No devices extracted")
-                        else:
-                            print(f"      ❌ Could not determine table type")
+                            if device:
+                                devices.append(device)
             
             print(f"\n✅ Total: {len(devices)} devices from {tables_found} tables")
             
             return ExtractionResult(
                 success=len(devices) > 0,
-                method="pdfplumber_tables",
+                method="text_parsing",
                 devices=devices,
                 tables_found=tables_found,
                 confidence=0.9 if len(devices) > 0 else 0.0,
@@ -182,122 +110,138 @@ class UniversalPDFExtractor:
             return ExtractionResult(False, "failed", [], 0, 0.0, errors)
     
     
-    def _parse_device_table(self, table: List[List], product: str, os_type: str) -> List[Dict]:
-        """Parse a device table based on product and OS type."""
+    def _detect_table(self, line: str) -> Dict:
+        """Detect which table this line represents."""
         
-        devices = []
+        table_patterns = [
+            (r'Table\s+3.*E3.*iOS', {"num": 3, "product": "E3", "os": "ios"}),
+            (r'Table\s+4.*E3.*Android', {"num": 4, "product": "E3", "os": "android"}),
+            (r'Table\s+5.*365.*iOS', {"num": 5, "product": "365", "os": "ios"}),
+            (r'Table\s+6.*365.*Android', {"num": 6, "product": "365", "os": "android"}),
+            (r'Table\s+7.*iOS.*NOW', {"num": 7, "product": "NOW", "os": "ios"}),
+            (r'Table\s+7.*NOW.*iOS', {"num": 7, "product": "NOW", "os": "ios"}),
+            (r'Table\s+8.*Android.*NOW', {"num": 8, "product": "NOW", "os": "android"}),
+            (r'Table\s+8.*NOW.*Android', {"num": 8, "product": "NOW", "os": "android"}),
+        ]
         
-        for i, row in enumerate(table):
-            if i == 0:  # Skip header
-                continue
+        for pattern, info in table_patterns:
+            if re.search(pattern, line, re.IGNORECASE):
+                return info
+        
+        return None
+    
+    
+    def _parse_device_line(self, line: str, product: str, os_type: str) -> Dict:
+        """Parse a device line from text."""
+        
+        # Skip header lines, page numbers, etc.
+        if any(skip in line.lower() for skip in [
+            'table ', 'page ', 'confidential', 'eversense', 
+            'device manufacturer', 'model number', 'rationally qualified'
+        ]):
+            # Exception: actual device lines might contain "Confidential" in data
+            if not any(mfr in line for mfr in self.KNOWN_MANUFACTURERS):
+                return None
+        
+        # Check if line starts with a known manufacturer
+        manufacturer = None
+        for mfr in self.KNOWN_MANUFACTURERS:
+            if line.startswith(mfr + ' ') or line.startswith(mfr + '\t'):
+                manufacturer = mfr
+                break
+        
+        if not manufacturer:
+            return None
+        
+        # Remove manufacturer from line
+        remaining = line[len(manufacturer):].strip()
+        
+        # Split by multiple spaces or tabs (columns)
+        parts = re.split(r'\s{2,}|\t+', remaining)
+        parts = [p.strip() for p in parts if p.strip()]
+        
+        if len(parts) < 1:
+            return None
+        
+        model = parts[0]
+        
+        # Skip if model is empty or looks like metadata
+        if not model or len(model) < 2:
+            return None
+        
+        # Parse based on OS type
+        if os_type == 'ios':
+            # iOS format: Manufacturer, Model, Model Number
+            # Apple iPhone 14    A2882
             
-            if not row or len(row) < 2:
-                continue
+            if manufacturer != 'Apple':
+                return None
             
-            # Clean row
-            row = [str(cell).strip() if cell else '' for cell in row]
-            row = [c for c in row if c]
+            model_number = parts[1] if len(parts) > 1 else ''
             
-            if len(row) < 2:
-                continue
-            
-            manufacturer = row[0]
-            model = row[1] if len(row) > 1 else ''
-            
-            if not manufacturer or not model:
-                continue
-            
-            # iOS tables: [Manufacturer, Model, Model Number]
-            if os_type == 'ios':
-                if manufacturer.lower() != 'apple':
-                    continue
-                
-                # Handle concatenated Apple entries
-                apple_count = manufacturer.count('Apple')
-                
-                if apple_count > 1:
-                    # Multiple iPhones in one row
-                    models = self._extract_iphone_models(model)
-                else:
-                    models = [model]
-                
-                for m in models:
-                    m = m.strip()
-                    
-                    # Skip noise
-                    if m.lower() in ['confidential', 'rationally', 'qualified', '']:
-                        continue
-                    
-                    if len(m) < 3:
-                        continue
-                    
-                    model_number = row[2] if len(row) > 2 else ''
-                    rq = 'rationally' in model_number.lower() if model_number else False
-                    
-                    if rq:
-                        model_number = ''
-                    
-                    device = {
-                        "name": f"Apple {m}",
-                        "manufacturer": "Apple",
-                        "model": m,
-                        "model_number": model_number,
-                        "os_version": self._get_ios_version(m),
-                        "rationally_qualified": rq or product == "NOW",
-                        "product": product,
-                        "region": self.region
-                    }
-                    
-                    devices.append(device)
-            
-            # Android tables: [Manufacturer, Model Name, Model Number (Reference), RQ]
-            else:
-                if manufacturer not in self.KNOWN_MANUFACTURERS:
-                    continue
-                
-                # Parse RQ status
-                rq = False
+            # Check if model_number is actually RQ status
+            rq = False
+            if 'rationally' in model_number.lower() or model_number.lower() == 'yes':
+                rq = True
                 model_number = ''
-                
-                if len(row) > 2:
-                    # Third column might be model number or RQ
-                    third_col = row[2]
-                    
-                    if third_col.lower() == 'yes':
-                        rq = True
-                    elif 'no (' in third_col.lower():
-                        # Extract model number: "No (GD1YQ)"
-                        match = re.search(r'No\s*\(([^)]+)\)', third_col, re.IGNORECASE)
-                        if match:
-                            model_number = match.group(1)
-                    else:
-                        model_number = third_col
-                
-                if len(row) > 3:
-                    # Fourth column is RQ status
-                    fourth_col = row[3]
-                    if fourth_col.lower() == 'yes':
-                        rq = True
-                
-                device = {
-                    "name": f"{manufacturer} {model}",
-                    "manufacturer": manufacturer,
-                    "model": model,
-                    "model_number": model_number,
-                    "os_version": self._get_android_version(model),
-                    "rationally_qualified": rq,
-                    "product": product,
-                    "region": self.region
-                }
-                
-                devices.append(device)
+            
+            # Extract iPhone models
+            iphone_models = self._extract_iphone_models(model)
+            
+            if not iphone_models:
+                return None
+            
+            # Return first model (can extend to return multiple)
+            model = iphone_models[0]
+            
+            return {
+                "name": f"Apple {model}",
+                "manufacturer": "Apple",
+                "model": model,
+                "model_number": model_number,
+                "os_version": self._get_ios_version(model),
+                "rationally_qualified": rq or product == "NOW",
+                "product": product,
+                "region": self.region
+            }
         
-        return devices
+        else:
+            # Android format: Manufacturer, Model Name, Model Number (Reference), RQ
+            # Google    Pixel 5    Pixel 5    No (GD1YQ)
+            # or: Google    Pixel 6    Pixel 6    Yes
+            
+            model_number = ''
+            rq = False
+            
+            # Check last part for RQ status
+            if len(parts) > 1:
+                last_part = parts[-1]
+                
+                if last_part.lower() == 'yes':
+                    rq = True
+                elif 'no (' in last_part.lower():
+                    # Extract model number from "No (GD1YQ)"
+                    match = re.search(r'No\s*\(([^)]+)\)', last_part, re.IGNORECASE)
+                    if match:
+                        model_number = match.group(1)
+                elif len(parts) > 2:
+                    # Might be: Model, ModelNumber, RQ
+                    model_number = parts[1] if parts[1] != model else ''
+            
+            return {
+                "name": f"{manufacturer} {model}",
+                "manufacturer": manufacturer,
+                "model": model,
+                "model_number": model_number,
+                "os_version": self._get_android_version(model),
+                "rationally_qualified": rq,
+                "product": product,
+                "region": self.region
+            }
     
     
     def _extract_iphone_models(self, text: str) -> List[str]:
-        """Extract iPhone model names from text."""
-        
+        """Extract iPhone model names."""
         pattern = r'iPhone\s+(?:\d+\s*(?:Pro\s*(?:Max)?|Plus|Mini)?|SE|X[RS]?(?:\s+Max)?)'
         
         matches = re.finditer(pattern, text, re.IGNORECASE)
@@ -305,16 +249,16 @@ class UniversalPDFExtractor:
         
         for match in matches:
             model = match.group(0).strip()
-            model = ' '.join(model.split())  # Normalize spaces
+            model = ' '.join(model.split())
             
-            if model not in models and model.lower() not in ['confidential', 'rationally', 'qualified']:
+            if model not in models:
                 models.append(model)
         
         return models if models else [text]
     
     
     def _get_ios_version(self, model: str) -> str:
-        """Get iOS version for model."""
+        """Get iOS version."""
         m = model.lower()
         
         if 'iphone 16' in m: return '18.0'
@@ -325,17 +269,16 @@ class UniversalPDFExtractor:
         if 'iphone 11' in m: return '13.0'
         if 'iphone x' in m: return '12.0'
         if 'iphone 8' in m: return '11.0'
-        if 'watch' in m: return '9.0'
         
         return '12.0'
     
     
     def _get_android_version(self, model: str) -> str:
-        """Get Android version for model."""
+        """Get Android version."""
         m = model.lower()
         
         if 'pixel 9' in m or 'pixel 8' in m: return '14.0'
-        if 'pixel 7' in m or 'pixel 6' in m: return '13.0'
+        if 'pixel 7' in m or 'pixel 6' in m or 'pixel 5' in m: return '13.0'
         if 's25' in m or 's24' in m: return '15.0'
         
         return '10.0'
