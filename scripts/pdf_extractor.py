@@ -702,6 +702,25 @@ def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
         os_type = device.get('os', 'android')
         
         if product in compatibility_data["products"] and os_type in compatibility_data["products"][product]:
+            # Create unique key for deduplication - FIXED: use 'region' not 'self.region'
+            device_key = f"{product}|{os_type}|{device['name']}|{region}"
+            
+            # Check for duplicates
+            if device_key not in seen_devices:
+                seen_devices.add(device_key)
+                compatibility_data["products"][product][os_type].append(device)
+    
+    return compatibility_data
+    }
+    
+    # Organize devices with deduplication
+    seen_devices = set()
+    
+    for device in result.devices:
+        product = device.get('product', 'E3')
+        os_type = device.get('os', 'android')
+        
+        if product in compatibility_data["products"] and os_type in compatibility_data["products"][product]:
             # Create unique key for deduplication
             device_key = f"{product}|{os_type}|{device['name']}|{self.region}"
             
