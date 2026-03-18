@@ -233,6 +233,7 @@ class WordExtractor:
                         "os_version": self._get_ios_version(m),
                         "rationally_qualified": rq or product == "NOW",
                         "product": product,
+                        "os": "ios",  # ✅ ADD THIS LINE
                         "region": self.region
                     }
                     
@@ -279,6 +280,7 @@ class WordExtractor:
                     "os_version": self._get_android_version(model),
                     "rationally_qualified": rq,
                     "product": product,
+                    "os": "android",  # ✅ ADD THIS LINE
                     "region": self.region
                 }
                 
@@ -369,13 +371,6 @@ class WordExtractor:
 def parse_compatibility_docx(docx_path: str, region: str = "US") -> Dict[str, Any]:
     """
     Parse Word document and return compatibility data.
-    
-    Args:
-        docx_path: Path to .docx file
-        region: Region code (US or OUS)
-    
-    Returns:
-        Dictionary with products and device data
     """
     
     extractor = WordExtractor(docx_path, region)
@@ -399,7 +394,7 @@ def parse_compatibility_docx(docx_path: str, region: str = "US") -> Dict[str, An
     # Organize devices by product and OS
     for device in result.devices:
         product = device.get('product', 'E3')
-        os_type = device.get('os', 'android')
+        os_type = device.get('os', 'android')  # ✅ USE THIS
         
         # Validate product and OS
         if product not in compatibility_data["products"]:
