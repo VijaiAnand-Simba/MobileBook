@@ -71,12 +71,29 @@ class UniversalPDFExtractor:
                     
                     print(f"\n📄 Page {page_num}: {len(tables)} table(s)")
                     
+                    # DEBUG: Check for table markers
+                    for table_num in range(1, 10):
+                        if f"Table {table_num}" in page_text:
+                            print(f"   🔍 Found: 'Table {table_num}' marker")
+                    
                     # Find which table number is on this page
                     current_table_info = None
                     for table_num, (product, os_type) in table_map.items():
-                        if f"Table {table_num}" in page_text or f"Table\n{table_num}" in page_text:
-                            current_table_info = (product, os_type, table_num)
-                            print(f"   Found: Table {table_num} - {product} {os_type.upper()}")
+                        # Try different patterns
+                        patterns = [
+                            f"Table {table_num}",
+                            f"Table\n{table_num}",
+                            f"Table  {table_num}",
+                            f"Table{table_num}",
+                        ]
+                        
+                        for pattern in patterns:
+                            if pattern in page_text:
+                                current_table_info = (product, os_type, table_num)
+                                print(f"   ✅ Matched: Table {table_num} - {product} {os_type.upper()}")
+                                break
+                        
+                        if current_table_info:
                             break
                     
                     # Process each table on the page
@@ -84,24 +101,68 @@ class UniversalPDFExtractor:
                         if not table or len(table) < 2:
                             continue
                         
+                        # DEBUG: Show first row
+                        if table[0]:
+                            header = [str(c)[:30] for c in table[0][:3] if c]
+                            print(f"      Table {table_idx+1} header: {header}")
+                        
                         # Check if this is a device table
+                        is_device_table = False
                         if table[0]:
                             header_text = ' '.join([str(c) for c in table[0] if c]).lower()
                             
-                            if 'device manufacturer' not in header_text:
-                                continue  # Not a device table
+                            if 'device manufacturer' in header_text or 'manufacturer' in header_text:
+                                is_device_table = True
+                                print(f"      ✓ Device table detected")
+                        
+                        if not is_device_table:
+                            continue
+                        
+                        # If we don't have table info, try to infer from content
+                        if not current_table_info:
+                            # Look at page text for product/OS clues
+                            text_lower = page_text.lower()
+                            
+                            if 'now' in text_lower and 'ios' in text_lower:
+                                current_table_info = ("NOW", "ios", 7)
+                                print(f"      ℹ️  Inferred: NOW iOS")
+                            elif 'now' in text_lower and 'android' in text_lower:
+                                current_table_info = ("NOW", "android", 8)
+                                print(f"      ℹ️  Inferred: NOW Android")
+                            elif 'e3' in text_lower and 'ios' in text_lower:
+                                current_table_info = ("E3", "ios", 3)
+                                print(f"      ℹ️  Inferred: E3 iOS")
+                            elif 'e3' in text_lower and 'android' in text_lower:
+                                current_table_info = ("E3", "android", 4)
+                                print(f"      ℹ️  Inferred: E3 Android")
+                            elif '365' in text_lower and 'ios' in text_lower:
+                                current_table_info = ("365", "ios", 5)
+                                print(f"      ℹ️  Inferred: 365 iOS")
+                            elif '365' in text_lower and 'android' in text_lower:
+                                current_table_info = ("365", "android", 6)
+                                print(f"      ℹ️  Inferred: 365 Android")
                         
                         # Use table info if found
                         if current_table_info:
                             product, os_type, table_num = current_table_info
                             
-                            print(f"   📋 Parsing Table {table_num}: {len(table)} rows")
+                            print(f"      📋 Parsing as: {product} {os_type} ({len(table)} rows)")
+                            
+                            # DEBUG: Show first data row
+                            if len(table) > 1 and table[1]:
+                                sample = [str(c)[:30] for c in table[1][:3] if c]
+                                print(f"         Sample row: {sample}")
                             
                             parsed = self._parse_device_table(table, product, os_type)
-                            devices.extend(parsed)
-                            tables_found += 1
                             
-                            print(f"      ✅ Extracted {len(parsed)} devices")
+                            if parsed:
+                                devices.extend(parsed)
+                                tables_found += 1
+                                print(f"      ✅ Extracted {len(parsed)} devices")
+                            else:
+                                print(f"      ⚠️  No devices extracted")
+                        else:
+                            print(f"      ❌ Could not determine table type")
             
             print(f"\n✅ Total: {len(devices)} devices from {tables_found} tables")
             
