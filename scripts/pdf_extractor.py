@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Universal PDF extractor with multiple fallback strategies.
-Handles text transformations, rotations, and format changes.
+Handles text transformations, rotations, format changes, and concatenated devices.
 """
 
 import pdfplumber
@@ -34,6 +34,14 @@ class UniversalPDFExtractor:
         self.region = region
         self.results = []
         
+        # Known manufacturers for validation
+        self.KNOWN_MANUFACTURERS = [
+            'Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 
+            'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 
+            'Realme', 'Lively', 'TCL', 'Asus', 'Alcatel', 'Huawei', 
+            'ZTE', 'Lenovo', 'BlackBerry'
+        ]
+        
     def extract(self) -> ExtractionResult:
         """Try multiple extraction methods in order of reliability."""
         
@@ -63,9 +71,76 @@ class UniversalPDFExtractor:
         self.results.append(result)
         
         # Return best result
-        best = max(self.results, key=lambda r: r.confidence) if self.results else ExtractionResult(False, "none", [], 0, 0.0, ["No extraction methods succeeded"])
+        best = max(self.results, key=lambda r: r.confidence) if self.results else ExtractionResult(
+            False, "none", [], 0, 0.0, ["No extraction methods succeeded"]
+        )
         print(f"⚠️  Best available: {best.method} | Confidence: {best.confidence:.0%}")
         return best
+    
+    
+    def _split_concatenated_models(self, text: str, manufacturer: str = "") -> List[str]:
+        """
+        Split concatenated device models intelligently.
+        Handles: "Pixel 8, Pixel 9" or "Galaxy S23, Galaxy S24, Galaxy S25"
+        """
+        
+        # Remove manufacturer prefix if present
+        if manufacturer and text.startswith(manufacturer):
+            text = text[len(manufacturer):].strip()
+        
+        # Split by common separators
+        # Patterns: ", ", " and ", "; ", " & "
+        models = re.split(r',\s*(?:and\s+)?|;\s*|\s+and\s+|\s+&\s+', text)
+        
+        cleaned_models = []
+        for model in models:
+            model = model.strip()
+            
+            # Remove leading conjunctions
+            model = re.sub(r'^(and|or)\s+', '', model, flags=re.IGNORECASE).strip()
+            
+            # Remove trailing punctuation
+            model = re.sub(r'[,;.]$', '', model).strip()
+            
+            # Skip if too short or empty
+            if len(model) < 2:
+                continue
+            
+            # Skip metadata/noise patterns
+            skip_patterns = [
+                r'^table\s+\d+',
+                r'rationally\s+qualified',
+                r'^see\s+',
+                r'^note\s*:',
+                r'^version\s+',
+                r'^\d+\.\d+$',  # Just version numbers like "10.0"
+                r'^page\s+\d+',
+                r'^compatible',
+                r'^mma\s+app',
+            ]
+            
+            if any(re.search(pattern, model, re.IGNORECASE) for pattern in skip_patterns):
+                continue
+            
+            cleaned_models.append(model)
+        
+        return cleaned_models if cleaned_models else [text]
+    
+    
+    def _is_valid_manufacturer(self, manufacturer: str, os_type: str) -> bool:
+        """Validate manufacturer for given OS type."""
+        
+        manufacturer = manufacturer.strip()
+        
+        # Apple only in iOS
+        if manufacturer.lower() == 'apple':
+            return os_type == 'ios'
+        
+        # Other manufacturers only in Android
+        if manufacturer in self.KNOWN_MANUFACTURERS:
+            return os_type == 'android'
+        
+        return False
     
     
     def _try_pdfplumber_tables(self) -> ExtractionResult:
@@ -163,15 +238,15 @@ class UniversalPDFExtractor:
                                 header_seen = True
                                 continue
                         
-                        # Parse device lines
+                        # Parse device lines (returns list now)
                         if current_table and header_seen:
-                            device = self._parse_device_line(
+                            parsed_devices = self._parse_device_line(
                                 line,
                                 current_table['os'],
                                 current_table['product']
                             )
-                            if device:
-                                devices.append(device)
+                            if parsed_devices:
+                                devices.extend(parsed_devices)
             
             confidence = self._calculate_confidence(devices, len(devices))
             
@@ -232,15 +307,15 @@ class UniversalPDFExtractor:
                             header_seen = True
                             continue
                     
-                    # Parse device lines
+                    # Parse device lines (returns list now)
                     if current_table and header_seen:
-                        device = self._parse_device_line(
+                        parsed_devices = self._parse_device_line(
                             line,
                             current_table['os'],
                             current_table['product']
                         )
-                        if device:
-                            devices.append(device)
+                        if parsed_devices:
+                            devices.extend(parsed_devices)
             
             doc.close()
             
@@ -317,64 +392,70 @@ class UniversalPDFExtractor:
             if not row or all(cell is None or str(cell).strip() == '' for cell in row):
                 continue  # Skip empty rows
             
-            # Convert row to device
-            device = self._row_to_device(row, os_type, product)
-            if device:
-                devices.append(device)
+            # Convert row to device(s) - now returns list
+            row_devices = self._row_to_devices(row, os_type, product)
+            if row_devices:
+                devices.extend(row_devices)
         
         return devices
     
     
-    def _row_to_device(self, row: List, os_type: str, product: str) -> Optional[Dict]:
-        """Convert table row to device object."""
+    def _row_to_devices(self, row: List, os_type: str, product: str) -> List[Dict]:
+        """
+        Convert table row to device object(s).
+        Returns LIST because one row might contain multiple concatenated devices.
+        """
         
         # Clean row
         row = [str(cell).strip() if cell is not None else '' for cell in row]
         row = [cell for cell in row if cell]  # Remove empty cells
         
         if len(row) < 2:
-            return None
+            return []
+        
+        manufacturer = row[0].strip()
+        model_text = row[1].strip() if len(row) > 1 else ''
+        
+        if not model_text:
+            return []
+        
+        # Validate manufacturer for OS type
+        if not self._is_valid_manufacturer(manufacturer, os_type):
+            return []
+        
+        devices = []
         
         if os_type == 'ios':
             # iOS: [Manufacturer, Model, Model Number]
-            if row[0].lower() != 'apple':
-                return None
-            
-            manufacturer = 'Apple'
-            model = row[1] if len(row) > 1 else ''
             model_number = row[2] if len(row) > 2 else ''
             
-            if not model:
-                return None
+            # Split concatenated models
+            models = self._split_concatenated_models(model_text, manufacturer)
             
-            # Clean model
-            model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
-            
-            return {
-                "name": f"Apple {model}",
-                "manufacturer": manufacturer,
-                "model": model,
-                "model_number": model_number if 'Rationally' not in model_number else '',
-                "os_version": self._extract_ios_version(model),
-                "rationally_qualified": 'rationally qualified' in ' '.join(row).lower(),
-                "product": product,
-                "region": self.region
-            }
+            for model in models:
+                # Clean model
+                model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+                
+                if not model or len(model) < 2:
+                    continue
+                
+                device = {
+                    "name": f"Apple {model}",
+                    "manufacturer": "Apple",
+                    "model": model,
+                    "model_number": model_number if 'Rationally' not in model_number else '',
+                    "os_version": self._extract_ios_version(model),
+                    "rationally_qualified": 'rationally qualified' in ' '.join(row).lower(),
+                    "product": product,
+                    "region": self.region
+                }
+                
+                devices.append(device)
         
         else:
             # Android: [Manufacturer, Model, Model Number, RQ]
-            manufacturer = row[0]
-            model = row[1] if len(row) > 1 else ''
             
-            # Check for known manufacturers
-            known_manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 'Realme', 'Lively', 'TCL']
-            if manufacturer not in known_manufacturers:
-                return None
-            
-            if not model:
-                return None
-            
-            # Extract RQ and model number
+            # Extract RQ and model number from last columns
             rq = False
             model_number = ''
             
@@ -386,66 +467,92 @@ class UniversalPDFExtractor:
                     match = re.search(r'No\s*\(([^)]+)\)', last_col, re.IGNORECASE)
                     if match:
                         model_number = match.group(1)
+                elif len(row) > 3:
+                    # Model number might be in second-to-last column
+                    model_number = row[-2] if row[-2] not in ['Yes', 'No'] else ''
                 else:
                     model_number = last_col
             
-            return {
-                "name": f"{manufacturer} {model}",
-                "manufacturer": manufacturer,
-                "model": model,
-                "model_number": model_number,
-                "os_version": self._extract_android_version(model),
-                "rationally_qualified": rq,
-                "product": product,
-                "region": self.region
-            }
+            # Split concatenated models
+            models = self._split_concatenated_models(model_text, manufacturer)
+            
+            for model in models:
+                if not model or len(model) < 2:
+                    continue
+                
+                device = {
+                    "name": f"{manufacturer} {model}",
+                    "manufacturer": manufacturer,
+                    "model": model,
+                    "model_number": model_number,
+                    "os_version": self._extract_android_version(model),
+                    "rationally_qualified": rq,
+                    "product": product,
+                    "region": self.region
+                }
+                
+                devices.append(device)
+        
+        return devices
     
     
-    def _parse_device_line(self, line: str, os_type: str, product: str) -> Optional[Dict]:
-        """Parse a single device line (text-based)."""
+    def _parse_device_line(self, line: str, os_type: str, product: str) -> List[Dict]:
+        """
+        Parse a single device line (text-based).
+        Returns LIST to handle concatenated devices.
+        """
         
         if len(line) < 5:
-            return None
+            return []
+        
+        devices = []
         
         if os_type == 'ios':
             if not line.startswith('Apple'):
-                return None
+                return []
             
             remaining = line[5:].strip()
             parts = re.split(r'\s{2,}', remaining)
             
             if len(parts) < 1:
-                return None
+                return []
             
-            model = parts[0].strip()
+            model_text = parts[0].strip()
             model_number = parts[1].strip() if len(parts) > 1 else ''
             
-            # Clean model
-            model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+            # Split concatenated models
+            models = self._split_concatenated_models(model_text, 'Apple')
             
-            return {
-                "name": f"Apple {model}",
-                "manufacturer": "Apple",
-                "model": model,
-                "model_number": model_number if 'Rationally' not in model_number else '',
-                "os_version": self._extract_ios_version(model),
-                "rationally_qualified": 'rationally qualified' in line.lower(),
-                "product": product,
-                "region": self.region
-            }
+            for model in models:
+                # Clean model
+                model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+                
+                if not model or len(model) < 2:
+                    continue
+                
+                device = {
+                    "name": f"Apple {model}",
+                    "manufacturer": "Apple",
+                    "model": model,
+                    "model_number": model_number if 'Rationally' not in model_number else '',
+                    "os_version": self._extract_ios_version(model),
+                    "rationally_qualified": 'rationally qualified' in line.lower(),
+                    "product": product,
+                    "region": self.region
+                }
+                
+                devices.append(device)
         
         else:
             # Android parsing
-            manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 'Realme', 'Lively', 'TCL']
-            
             manufacturer = None
-            for mfr in manufacturers:
+            for mfr in self.KNOWN_MANUFACTURERS:
                 if line.startswith(mfr):
                     manufacturer = mfr
                     break
             
             if not manufacturer:
-                return None
+                return []
             
             remaining = line[len(manufacturer):].strip()
             
@@ -468,21 +575,29 @@ class UniversalPDFExtractor:
             
             # Parse model
             parts = re.split(r'\s{2,}', remaining)
-            model = parts[0].strip() if parts else remaining
+            model_text = parts[0].strip() if parts else remaining
             
-            if not model:
-                return None
+            # Split concatenated models
+            models = self._split_concatenated_models(model_text, manufacturer)
             
-            return {
-                "name": f"{manufacturer} {model}",
-                "manufacturer": manufacturer,
-                "model": model,
-                "model_number": model_number,
-                "os_version": self._extract_android_version(model),
-                "rationally_qualified": rq,
-                "product": product,
-                "region": self.region
-            }
+            for model in models:
+                if not model or len(model) < 2:
+                    continue
+                
+                device = {
+                    "name": f"{manufacturer} {model}",
+                    "manufacturer": manufacturer,
+                    "model": model,
+                    "model_number": model_number,
+                    "os_version": self._extract_android_version(model),
+                    "rationally_qualified": rq,
+                    "product": product,
+                    "region": self.region
+                }
+                
+                devices.append(device)
+        
+        return devices
     
     
     def _extract_ios_version(self, model: str) -> str:
@@ -499,6 +614,8 @@ class UniversalPDFExtractor:
             return '16.0'
         elif 'iphone 13' in model_lower:
             return '15.0'
+        elif 'iphone 12' in model_lower:
+            return '14.0'
         elif 'watch' in model_lower:
             return '9.0'
         
@@ -577,15 +694,20 @@ def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
         }
     }
     
-    # Organize devices
+    # Organize devices with deduplication
+    seen_devices = set()
+    
     for device in result.devices:
         product = device.get('product', 'E3')
         os_type = device.get('os', 'android')
         
         if product in compatibility_data["products"] and os_type in compatibility_data["products"][product]:
+            # Create unique key for deduplication
+            device_key = f"{product}|{os_type}|{device['name']}|{self.region}"
+            
             # Check for duplicates
-            existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
-            if device['name'] not in existing_names:
+            if device_key not in seen_devices:
+                seen_devices.add(device_key)
                 compatibility_data["products"][product][os_type].append(device)
     
     return compatibility_data
