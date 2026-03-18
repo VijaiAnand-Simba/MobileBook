@@ -177,190 +177,277 @@ class UniversalPDFExtractor:
         return models
     
     
-    def _parse_now_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
-        """
-        Special parser for NOW tables which have corrupted formatting.
-        NOW tables often have multiple concatenated entries and malformed rows.
-        Example: "Apple Apple Apple" with "iPhone 11 iPhone 11 Pro iPhone 11 Pro Max"
-        """
+def _parse_now_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
+    """
+    Special parser for NOW tables which have corrupted formatting.
+    NOW tables often have multiple concatenated entries and malformed rows.
+    """
+    
+    devices = []
+    
+    print(f"      🔧 Using NOW-specific parser for {os_type}")
+    print(f"         Table has {len(table)} total rows")
+    
+    for i, row in enumerate(table):
+        if i == 0:
+            # Debug: show header
+            print(f"         Header row: {[str(c)[:20] for c in row[:4]]}")
+            continue  # Skip header
         
-        devices = []
+        if not row:
+            continue
         
-        print(f"      🔧 Using NOW-specific parser for {os_type}")
+        # Clean row
+        row = [str(cell).strip() if cell is not None else '' for cell in row]
+        row = [cell for cell in row if cell]
         
-        for i, row in enumerate(table):
-            if i == 0:
-                continue  # Skip header
-            
-            if not row:
+        if len(row) < 2:
+            continue
+        
+        # Debug first few rows
+        if i <= 5:
+            print(f"         Row {i}: {[c[:20] for c in row[:4]]}")
+        
+        manufacturer_cell = row[0]
+        model_cell = row[1] if len(row) > 1 else ''
+        
+        # NOW tables have format: [Manufacturer, Model, Model Number/RQ]
+        # Handle both iOS and Android
+        
+        if os_type == 'ios':
+            # iOS NOW tables
+            # Handle "Apple" entries
+            if 'apple' not in manufacturer_cell.lower():
                 continue
             
-            # Clean row
-            row = [str(cell).strip() if cell is not None else '' for cell in row]
-            row = [cell for cell in row if cell]
+            # Count Apple occurrences
+            apple_count = manufacturer_cell.count('Apple')
             
-            if len(row) < 2:
-                continue
-            
-            manufacturer_cell = row[0]
-            model_cell = row[1] if len(row) > 1 else ''
-            model_number_cell = row[2] if len(row) > 2 else ''
-            
-            # Debug first few rows
-            if i <= 3:
-                print(f"         Row {i}: Mfr='{manufacturer_cell[:30]}...' Model='{model_cell[:30]}...'")
-            
-            # Handle iOS (Apple only)
-            if os_type == 'ios':
-                # Count how many "Apple" appear in manufacturer cell
-                apple_count = manufacturer_cell.count('Apple')
+            if apple_count == 1 and manufacturer_cell.strip() == 'Apple':
+                # Single device per row
+                models = self._extract_multiple_iphone_models(model_cell)
                 
-                if apple_count == 0:
-                    continue
+                if not models:
+                    # Fallback: treat whole model_cell as model name
+                    models = [model_cell]
                 
-                # Handle normal case: single Apple
-                if apple_count == 1 and manufacturer_cell.strip() == 'Apple':
-                    # Extract models using iPhone pattern matcher
-                    models = self._extract_multiple_iphone_models(model_cell)
-                    
-                    for model in models:
-                        # Skip noise
-                        if model.lower() in ['confidential', 'rationally qualified', 'rationally', 'qualified']:
-                            continue
-                        
-                        # Clean model
-                        model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
-                        
-                        if len(model) < 3:
-                            continue
-                        
-                        # Check if model_number is actually RQ status
-                        rq = False
-                        model_number = ''
-                        
-                        if 'rationally' in model_number_cell.lower() or 'qualified' in model_number_cell.lower():
-                            rq = True
-                        else:
-                            model_number = model_number_cell if model_number_cell not in ['', 'Confidential'] else ''
-                        
-                        device = {
-                            "name": f"Apple {model}",
-                            "manufacturer": "Apple",
-                            "model": model,
-                            "model_number": model_number,
-                            "os_version": self._extract_ios_version(model),
-                            "rationally_qualified": rq,
-                            "product": product,
-                            "region": self.region
-                        }
-                        
-                        devices.append(device)
-                        if i <= 5:  # Debug output for first few
-                            print(f"            ✓ Added: {device['name']}")
-                
-                # Handle corrupted case: multiple "Apple" concatenated
-                elif apple_count > 1:
-                    # This row has multiple devices concatenated
-                    # Extract all iPhone models from the model cell
-                    models = self._extract_multiple_iphone_models(model_cell)
-                    
-                    # Limit to reasonable number (prevent over-extraction)
-                    for model in models[:apple_count * 2]:  # Max 2x the Apple count
-                        if model.lower() in ['confidential', 'rationally', 'qualified']:
-                            continue
-                        
-                        model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
-                        
-                        if len(model) < 3:
-                            continue
-                        
-                        device = {
-                            "name": f"Apple {model}",
-                            "manufacturer": "Apple",
-                            "model": model,
-                            "model_number": "",
-                            "os_version": self._extract_ios_version(model),
-                            "rationally_qualified": True,  # NOW devices are typically RQ
-                            "product": product,
-                            "region": self.region
-                        }
-                        
-                        devices.append(device)
-                        if i <= 5:
-                            print(f"            ✓ Added (concatenated): {device['name']}")
-            
-            else:
-                # Android NOW devices (use standard parser)
-                # Check if manufacturer is valid
-                if not self._is_valid_manufacturer(manufacturer_cell, 'android'):
-                    continue
-                
-                row_devices = self._row_to_devices(row, os_type, product)
-                devices.extend(row_devices)
-                
-                if row_devices and i <= 5:
-                    for dev in row_devices:
-                        print(f"            ✓ Added: {dev['name']}")
-        
-        print(f"      ✅ NOW parser extracted {len(devices)} devices")
-        return devices
-    
-    
-    def _try_pdfplumber_tables(self) -> ExtractionResult:
-        """Extract using pdfplumber's table detection."""
-        
-        print("\n📊 Trying: pdfplumber table extraction...")
-        devices = []
-        errors = []
-        tables_found = 0
-        
-        try:
-            with pdfplumber.open(self.pdf_path) as pdf:
-                for page_num, page in enumerate(pdf.pages, 1):
-                    # Extract tables
-                    tables = page.extract_tables()
-                    
-                    if not tables:
+                for model in models:
+                    # Skip noise
+                    if model.lower() in ['confidential', 'rationally qualified', 'rationally', 'qualified', '']:
                         continue
                     
-                    for table_idx, table in enumerate(tables):
-                        if not table or len(table) < 2:
-                            continue
+                    # Clean model
+                    model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+                    
+                    if len(model) < 3:
+                        continue
+                    
+                    # Check RQ status (usually in column 3 or 4)
+                    rq = False
+                    model_number = ''
+                    
+                    if len(row) > 2:
+                        third_col = row[2]
+                        if 'rationally' in third_col.lower() or 'qualified' in third_col.lower():
+                            rq = True
+                        else:
+                            model_number = third_col if third_col not in ['', 'Confidential'] else ''
+                    
+                    device = {
+                        "name": f"Apple {model}",
+                        "manufacturer": "Apple",
+                        "model": model,
+                        "model_number": model_number,
+                        "os_version": self._extract_ios_version(model),
+                        "rationally_qualified": rq,
+                        "product": product,
+                        "region": self.region
+                    }
+                    
+                    devices.append(device)
+                    if i <= 5:
+                        print(f"            ✓ Added: {device['name']}")
+            
+            elif apple_count > 1:
+                # Multiple concatenated Apple devices
+                models = self._extract_multiple_iphone_models(model_cell)
+                
+                for model in models:
+                    if model.lower() in ['confidential', 'rationally', 'qualified', '']:
+                        continue
+                    
+                    model = re.sub(r'\s*\(\d+\s*mm\)', '', model).strip()
+                    
+                    if len(model) < 3:
+                        continue
+                    
+                    device = {
+                        "name": f"Apple {model}",
+                        "manufacturer": "Apple",
+                        "model": model,
+                        "model_number": "",
+                        "os_version": self._extract_ios_version(model),
+                        "rationally_qualified": True,
+                        "product": product,
+                        "region": self.region
+                    }
+                    
+                    devices.append(device)
+                    if i <= 5:
+                        print(f"            ✓ Added (concat): {device['name']}")
+        
+        else:
+            # Android NOW tables
+            # Format: [Manufacturer, Model Name, Model Number (Reference), RQ Status]
+            
+            if not self._is_valid_manufacturer(manufacturer_cell, 'android'):
+                if i <= 5:
+                    print(f"            ✗ Invalid manufacturer: {manufacturer_cell}")
+                continue
+            
+            # Model is in second column
+            model = model_cell
+            
+            if not model or len(model) < 2:
+                continue
+            
+            # RQ status and model number
+            # Column 3 might be "Model Number (Reference)" or just RQ status
+            # Column 4 might be RQ status
+            rq = False
+            model_number = ''
+            
+            if len(row) > 2:
+                # Check third column
+                third_col = row[2]
+                
+                # If it says "Yes" or "No (...)", it's RQ status
+                if third_col.lower() == 'yes':
+                    rq = True
+                elif 'no (' in third_col.lower():
+                    # Extract model number from "No (GD1YQ)"
+                    match = re.search(r'No\s*\(([^)]+)\)', third_col, re.IGNORECASE)
+                    if match:
+                        model_number = match.group(1)
+                else:
+                    # It's a model number
+                    model_number = third_col
+                
+                # Check fourth column for RQ if we haven't found it
+                if not rq and len(row) > 3:
+                    fourth_col = row[3]
+                    if fourth_col.lower() == 'yes':
+                        rq = True
+            
+            device = {
+                "name": f"{manufacturer_cell} {model}",
+                "manufacturer": manufacturer_cell,
+                "model": model,
+                "model_number": model_number,
+                "os_version": self._extract_android_version(model),
+                "rationally_qualified": rq,
+                "product": product,
+                "region": self.region
+            }
+            
+            devices.append(device)
+            if i <= 5:
+                print(f"            ✓ Added: {device['name']} (RQ={rq}, MN={model_number})")
+    
+    print(f"      ✅ NOW parser extracted {len(devices)} devices")
+    return devices
+    
+    
+def _try_pdfplumber_tables(self) -> ExtractionResult:
+    """Extract using pdfplumber's table detection."""
+    
+    print("\n📊 Trying: pdfplumber table extraction...")
+    devices = []
+    errors = []
+    tables_found = 0
+    
+    try:
+        with pdfplumber.open(self.pdf_path) as pdf:
+            for page_num, page in enumerate(pdf.pages, 1):
+                # Extract tables
+                tables = page.extract_tables()
+                
+                if not tables:
+                    continue
+                
+                print(f"   📄 Page {page_num}: Found {len(tables)} table(s)")
+                
+                for table_idx, table in enumerate(tables):
+                    if not table or len(table) < 2:
+                        print(f"      ⏭️  Table {table_idx+1}: Skipped (empty or too small)")
+                        continue
+                    
+                    tables_found += 1
+                    
+                    # Show table structure
+                    print(f"      📋 Table {table_idx+1}: {len(table)} rows x {len(table[0]) if table[0] else 0} cols")
+                    
+                    # Show header
+                    if table[0]:
+                        header = [str(cell)[:20] if cell else '' for cell in table[0][:4]]
+                        print(f"         Header: {header}")
+                    
+                    # Show first data row
+                    if len(table) > 1 and table[1]:
+                        sample = [str(cell)[:20] if cell else '' for cell in table[1][:4]]
+                        print(f"         Sample: {sample}")
+                    
+                    # Identify table type from headers or nearby text
+                    table_info = self._identify_table(page, table, page_num)
+                    
+                    if not table_info:
+                        print(f"         ⚠️  Could not identify table type")
                         
-                        tables_found += 1
-                        
-                        # Identify table type from headers or nearby text
-                        table_info = self._identify_table(page, table, page_num)
+                        # DEBUG: Try to manually detect from header
+                        if table[0]:
+                            first_row_text = ' '.join([str(cell) for cell in table[0] if cell]).lower()
+                            print(f"         Debug: First row contains: {first_row_text[:100]}")
+                            
+                            # Manual detection attempt
+                            if 'now' in first_row_text and 'android' in first_row_text:
+                                table_info = {"product": "NOW", "os": "android"}
+                                print(f"         ✓ Manually detected: NOW Android")
+                            elif 'now' in first_row_text and 'ios' in first_row_text:
+                                table_info = {"product": "NOW", "os": "ios"}
+                                print(f"         ✓ Manually detected: NOW iOS")
                         
                         if not table_info:
                             continue
-                        
-                        # Parse rows (NOW tables use special parser)
-                        parsed = self._parse_table_rows(
-                            table, 
-                            table_info['os'], 
-                            table_info['product']
-                        )
-                        
-                        devices.extend(parsed)
-                        print(f"   Page {page_num}, Table {table_idx+1}: {len(parsed)} devices ({table_info['product']}/{table_info['os']})")
-            
-            confidence = self._calculate_confidence(devices, tables_found)
-            
-            return ExtractionResult(
-                success=len(devices) > 0,
-                method="pdfplumber_tables",
-                devices=devices,
-                tables_found=tables_found,
-                confidence=confidence,
-                errors=errors
-            )
-            
-        except Exception as e:
-            errors.append(str(e))
-            import traceback
-            traceback.print_exc()
-            return ExtractionResult(False, "pdfplumber_tables", [], 0, 0.0, errors)
+                    
+                    print(f"         ✅ Type: {table_info['product']} / {table_info['os']}")
+                    
+                    # Parse rows
+                    parsed = self._parse_table_rows(
+                        table, 
+                        table_info['os'], 
+                        table_info['product']
+                    )
+                    
+                    devices.extend(parsed)
+                    print(f"         ✓ Extracted {len(parsed)} devices")
+        
+        print(f"\n   📊 Total devices extracted: {len(devices)}")
+        confidence = self._calculate_confidence(devices, tables_found)
+        
+        return ExtractionResult(
+            success=len(devices) > 0,
+            method="pdfplumber_tables",
+            devices=devices,
+            tables_found=tables_found,
+            confidence=confidence,
+            errors=errors
+        )
+        
+    except Exception as e:
+        errors.append(str(e))
+        import traceback
+        traceback.print_exc()
+        return ExtractionResult(False, "pdfplumber_tables", [], 0, 0.0, errors)
     
     
     def _try_pdfplumber_layout(self) -> ExtractionResult:
@@ -530,33 +617,57 @@ class UniversalPDFExtractor:
         return None
     
     
-    def _identify_table(self, page, table: List[List], page_num: int) -> Optional[Dict[str, str]]:
-        """Identify table type from nearby text or content."""
+def _identify_table(self, page, table: List[List], page_num: int) -> Optional[Dict[str, str]]:
+    """Identify table type from nearby text or content."""
+    
+    # Check text on entire page (not just first 20 lines)
+    text = page.extract_text()
+    if text:
+        lines = text.split('\n')
         
-        # Check text above table
-        text = page.extract_text()
-        if text:
-            lines = text.split('\n')
-            for i, line in enumerate(lines):
-                if i > 30:  # Check more lines for NOW tables
-                    break
-                
-                match = self._detect_table_header(line)
-                if match:
-                    # Special logging for NOW tables
-                    if match['product'] == 'NOW':
-                        print(f"         ℹ️  NOW table detected - using special parser")
-                    return match
-        
-        # Check first row of table for clues
-        if table and table[0]:
-            first_row = ' '.join(str(cell) for cell in table[0] if cell)
-            match = self._detect_table_header(first_row)
+        # Look for table headers in more lines
+        for i, line in enumerate(lines):
+            if i > 50:  # Check first 50 lines instead of 20
+                break
+            
+            match = self._detect_table_header(line)
             if match:
                 return match
         
-        return None
+        # Also check for "Table X - " patterns specifically
+        for line in lines[:50]:
+            if 'table' in line.lower():
+                # Check if this line mentions NOW
+                if 'now' in line.lower():
+                    if 'android' in line.lower():
+                        print(f"         ℹ️  Found NOW Android table marker: {line[:60]}")
+                        return {"product": "NOW", "os": "android"}
+                    elif 'ios' in line.lower():
+                        print(f"         ℹ️  Found NOW iOS table marker: {line[:60]}")
+                        return {"product": "NOW", "os": "ios"}
     
+    # Check first row of table for clues
+    if table and table[0]:
+        first_row = ' '.join(str(cell) for cell in table[0] if cell)
+        match = self._detect_table_header(first_row)
+        if match:
+            return match
+        
+        # Check if header row contains device/manufacturer/model
+        first_row_lower = first_row.lower()
+        if 'device manufacturer' in first_row_lower or 'manufacturer' in first_row_lower:
+            # This is a device compatibility table, but which one?
+            # Look at page text again more carefully
+            if text:
+                text_lower = text.lower()
+                # Find the closest "Table X" reference
+                if 'now' in text_lower:
+                    if 'android' in text_lower:
+                        return {"product": "NOW", "os": "android"}
+                    elif 'ios' in text_lower:
+                        return {"product": "NOW", "os": "ios"}
+    
+    return None
     
     def _parse_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
         """Parse table rows into device objects."""
