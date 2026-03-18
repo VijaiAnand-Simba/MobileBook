@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'pdf/*.pdf'
+      - 'docx/*.docx'
 
 permissions:
   contents: write
@@ -26,15 +27,22 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install -r scripts/requirements.txt
+          pip install python-docx pdfplumber
           
-      - name: Parse PDFs (US + OUS)
+      - name: Check file types
         run: |
-          echo "📄 Parsing US and OUS PDFs..."
-          python scripts/parse_pdf.py
+          echo "📁 Checking available files..."
+          ls -la pdf/ 2>/dev/null || echo "❌ pdf/ folder not found"
+          ls -la docx/ 2>/dev/null || echo "❌ docx/ folder not found"
+          
+      - name: Parse Documents (Word or PDF)
+        run: |
+          echo "📄 Parsing Compatibility Documents..."
+          python scripts/parse_documents.py
           
       - name: Copy JSON to docs
         run: |
+          mkdir -p docs
           cp data/compatibility.json docs/
           echo "✅ Copied to docs folder"
           
@@ -57,13 +65,18 @@ jobs:
               us_count = 0
               ous_count = 0
               
+              print("\n📊 Device Count by Product:")
               for product in ['E3', '365', 'NOW']:
                   if product in data['products']:
-                      for os_type in ['ios', 'android']:
-                          devices = data['products'][product].get(os_type, [])
-                          total += len(devices)
-                          us_count += sum(1 for d in devices if d.get('region') == 'US')
-                          ous_count += sum(1 for d in devices if d.get('region') == 'OUS')
+                      ios = len(data['products'][product].get('ios', []))
+                      android = len(data['products'][product].get('android', []))
+                      product_total = ios + android
+                      total += product_total
+                      
+                      us_count += sum(1 for d in data['products'][product].get('ios', []) + data['products'][product].get('android', []) if d.get('region') == 'US')
+                      ous_count += sum(1 for d in data['products'][product].get('ios', []) + data['products'][product].get('android', []) if d.get('region') == 'OUS')
+                      
+                      print(f"  {product}: {ios} iOS + {android} Android = {product_total}")
               
               print(f"\n✅ Valid JSON")
               print(f"🌍 US Devices: {us_count}")
@@ -86,6 +99,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions Bot"
           git add data/compatibility.json docs/compatibility.json
-          git diff --staged --quiet || (git commit -m "🤖 Update compatibility data (US + OUS)" && git push)
+          git diff --staged --quiet || (git commit -m "🤖 Update compatibility data ($(date +'%Y-%m-%d'))" && git push)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
