@@ -27,15 +27,19 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install python-docx pdfplumber
+          pip install python-docx pdfplumber PyMuPDF
+          echo "✅ Dependencies installed"
           
       - name: Check file types
         run: |
           echo "📁 Checking available files..."
-          ls -la pdf/ 2>/dev/null || echo "❌ pdf/ folder not found"
-          ls -la docx/ 2>/dev/null || echo "❌ docx/ folder not found"
+          echo "PDF files:"
+          ls -lh pdf/ 2>/dev/null || echo "   (no pdf folder)"
+          echo ""
+          echo "DOCX files:"
+          ls -lh docx/ 2>/dev/null || echo "   (no docx folder)"
           
-      - name: Parse Documents (Word or PDF)
+      - name: Parse Documents (DOCX)
         run: |
           echo "📄 Parsing Compatibility Documents..."
           python scripts/parse_documents.py
@@ -44,7 +48,7 @@ jobs:
         run: |
           mkdir -p docs
           cp data/compatibility.json docs/
-          echo "✅ Copied to docs folder"
+          echo "✅ Copied compatibility.json to docs/"
           
       - name: Verify JSON structure
         run: |
@@ -73,8 +77,12 @@ jobs:
                       product_total = ios + android
                       total += product_total
                       
-                      us_count += sum(1 for d in data['products'][product].get('ios', []) + data['products'][product].get('android', []) if d.get('region') == 'US')
-                      ous_count += sum(1 for d in data['products'][product].get('ios', []) + data['products'][product].get('android', []) if d.get('region') == 'OUS')
+                      for os_type in ['ios', 'android']:
+                          for device in data['products'][product].get(os_type, []):
+                              if device.get('region') == 'US':
+                                  us_count += 1
+                              elif device.get('region') == 'OUS':
+                                  ous_count += 1
                       
                       print(f"  {product}: {ios} iOS + {android} Android = {product_total}")
               
