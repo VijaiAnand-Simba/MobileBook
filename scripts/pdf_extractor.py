@@ -1,0 +1,722 @@
+#!/usr/bin/env python3
+"""
+Universal PDF extractor with multiple fallback strategies.
+Handles text transformations, rotations, and format changes.
+"""
+
+import pdfplumber
+import fitz  # PyMuPDF
+import pandas as pd
+import re
+import os
+from typing import Dict, List, Any, Optional, Tuple
+from dataclasses import dataclass
+import json
+
+
+@dataclass
+class ExtractionResult:
+    """Results from a PDF extraction attempt."""
+    success: bool
+    method: str
+    devices: List[Dict[str, Any]]
+    tables_found: int
+    confidence: float
+    errors: List[str]
+
+
+class UniversalPDFExtractor:
+    """Multi-strategy PDF extractor with automatic fallback."""
+    
+    def __init__(self, pdf_path: str, region: str = "US"):
+        self.pdf_path = pdf_path
+        self.region = region
+        self.results = []
+        
+    def extract(self) -> ExtractionResult:
+        """Try multiple extraction methods in order of reliability."""
+        
+        print(f"\n{'='*70}")
+        print(f"🔍 EXTRACTING: {os.path.basename(self.pdf_path)} ({self.region})")
+        print(f"{'='*70}")
+        
+        # Strategy 1: pdfplumber table extraction (most reliable for tables)
+        result = self._try_pdfplumber_tables()
+        if result.success and result.confidence > 0.7:
+            print(f"✅ Method: {result.method} | Confidence: {result.confidence:.0%}")
+            return result
+        self.results.append(result)
+        
+        # Strategy 2: pdfplumber with layout analysis
+        result = self._try_pdfplumber_layout()
+        if result.success and result.confidence > 0.7:
+            print(f"✅ Method: {result.method} | Confidence: {result.confidence:.0%}")
+            return result
+        self.results.append(result)
+        
+        # Strategy 3: PyMuPDF (handles transformations better)
+        result = self._try_pymupdf()
+        if result.success and result.confidence > 0.6:
+            print(f"✅ Method: {result.method} | Confidence: {result.confidence:.0%}")
+            return result
+        self.results.append(result)
+        
+        # Strategy 4: Tabula (Java-based, very robust)
+        result = self._try_tabula()
+        if result.success and result.confidence > 0.5:
+            print(f"✅ Method: {result.method} | Confidence: {result.confidence:.0%}")
+            return result
+        self.results.append(result)
+        
+        # Return best result
+        best = max(self.results, key=lambda r: r.confidence)
+        print(f"⚠️  Best available: {best.method} | Confidence: {best.confidence:.0%}")
+        return best
+    
+    
+    def _try_pdfplumber_tables(self) -> ExtractionResult:
+        """Extract using pdfplumber's table detection."""
+        
+        print("\n📊 Trying: pdfplumber table extraction...")
+        devices = []
+        errors = []
+        tables_found = 0
+        
+        try:
+            with pdfplumber.open(self.pdf_path) as pdf:
+                for page_num, page in enumerate(pdf.pages, 1):
+                    # Extract tables
+                    tables = page.extract_tables()
+                    
+                    if not tables:
+                        continue
+                    
+                    for table_idx, table in enumerate(tables):
+                        if not table or len(table) < 2:
+                            continue
+                        
+                        tables_found += 1
+                        
+                        # Identify table type from headers or nearby text
+                        table_info = self._identify_table(page, table, page_num)
+                        
+                        if not table_info:
+                            continue
+                        
+                        # Parse rows
+                        parsed = self._parse_table_rows(
+                            table, 
+                            table_info['os'], 
+                            table_info['product']
+                        )
+                        
+                        devices.extend(parsed)
+                        print(f"   Page {page_num}, Table {table_idx+1}: {len(parsed)} devices ({table_info['product']}/{table_info['os']})")
+            
+            confidence = self._calculate_confidence(devices, tables_found)
+            
+            return ExtractionResult(
+                success=len(devices) > 0,
+                method="pdfplumber_tables",
+                devices=devices,
+                tables_found=tables_found,
+                confidence=confidence,
+                errors=errors
+            )
+            
+        except Exception as e:
+            errors.append(str(e))
+            return ExtractionResult(False, "pdfplumber_tables", [], 0, 0.0, errors)
+    
+    
+    def _try_pdfplumber_layout(self) -> ExtractionResult:
+        """Extract using pdfplumber with layout analysis."""
+        
+        print("\n📄 Trying: pdfplumber layout analysis...")
+        devices = []
+        errors = []
+        
+        try:
+            with pdfplumber.open(self.pdf_path) as pdf:
+                current_table = None
+                header_seen = False
+                
+                for page_num, page in enumerate(pdf.pages, 1):
+                    # Try to fix rotated/flipped text
+                    text = self._extract_text_safe(page)
+                    
+                    if not text:
+                        continue
+                    
+                    lines = text.split('\n')
+                    
+                    for line in lines:
+                        line = line.strip()
+                        
+                        if not line:
+                            continue
+                        
+                        # Detect table headers
+                        table_match = self._detect_table_header(line)
+                        if table_match:
+                            current_table = table_match
+                            header_seen = False
+                            print(f"   Found: {current_table['product']} {current_table['os'].upper()} (Page {page_num})")
+                            continue
+                        
+                        # Detect column headers
+                        if current_table and not header_seen:
+                            if 'Device Manufacturer' in line or 'Manufacturer' in line:
+                                header_seen = True
+                                continue
+                        
+                        # Parse device lines
+                        if current_table and header_seen:
+                            device = self._parse_device_line(
+                                line,
+                                current_table['os'],
+                                current_table['product']
+                            )
+                            if device:
+                                devices.append(device)
+            
+            confidence = self._calculate_confidence(devices, len(devices))
+            
+            return ExtractionResult(
+                success=len(devices) > 0,
+                method="pdfplumber_layout",
+                devices=devices,
+                tables_found=len(set(d.get('product', '') + d.get('os', '') for d in devices)),
+                confidence=confidence,
+                errors=errors
+            )
+            
+        except Exception as e:
+            errors.append(str(e))
+            return ExtractionResult(False, "pdfplumber_layout", [], 0, 0.0, errors)
+    
+    
+    def _try_pymupdf(self) -> ExtractionResult:
+        """Extract using PyMuPDF (better handles transformations)."""
+        
+        print("\n📑 Trying: PyMuPDF extraction...")
+        devices = []
+        errors = []
+        
+        try:
+            doc = fitz.open(self.pdf_path)
+            current_table = None
+            header_seen = False
+            
+            for page_num in range(len(doc)):
+                page = doc[page_num]
+                
+                # Extract text with layout preservation
+                text = page.get_text("text", flags=fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE)
+                
+                if not text:
+                    continue
+                
+                lines = text.split('\n')
+                
+                for line in lines:
+                    line = line.strip()
+                    
+                    if not line:
+                        continue
+                    
+                    # Detect table headers
+                    table_match = self._detect_table_header(line)
+                    if table_match:
+                        current_table = table_match
+                        header_seen = False
+                        print(f"   Found: {current_table['product']} {current_table['os'].upper()} (Page {page_num+1})")
+                        continue
+                    
+                    # Detect column headers
+                    if current_table and not header_seen:
+                        if 'Device Manufacturer' in line or 'Manufacturer' in line:
+                            header_seen = True
+                            continue
+                    
+                    # Parse device lines
+                    if current_table and header_seen:
+                        device = self._parse_device_line(
+                            line,
+                            current_table['os'],
+                            current_table['product']
+                        )
+                        if device:
+                            devices.append(device)
+            
+            doc.close()
+            
+            confidence = self._calculate_confidence(devices, len(devices))
+            
+            return ExtractionResult(
+                success=len(devices) > 0,
+                method="pymupdf",
+                devices=devices,
+                tables_found=len(set(d.get('product', '') + d.get('os', '') for d in devices)),
+                confidence=confidence,
+                errors=errors
+            )
+            
+        except Exception as e:
+            errors.append(str(e))
+            return ExtractionResult(False, "pymupdf", [], 0, 0.0, errors)
+    
+    
+    def _try_tabula(self) -> ExtractionResult:
+        """Extract using Tabula (Java-based, very robust)."""
+        
+        print("\n☕ Trying: Tabula extraction...")
+        devices = []
+        errors = []
+        
+        try:
+            import tabula
+            
+            # Extract all tables
+            tables = tabula.read_pdf(
+                self.pdf_path, 
+                pages='all', 
+                multiple_tables=True,
+                lattice=True  # Use lattice mode for better accuracy
+            )
+            
+            for idx, df in enumerate(tables):
+                if df.empty:
+                    continue
+                
+                # Try to identify table type from content
+                table_info = self._identify_table_from_dataframe(df)
+                
+                if not table_info:
+                    continue
+                
+                # Parse dataframe rows
+                parsed = self._parse_dataframe_rows(
+                    df,
+                    table_info['os'],
+                    table_info['product']
+                )
+                
+                devices.extend(parsed)
+                print(f"   Table {idx+1}: {len(parsed)} devices ({table_info['product']}/{table_info['os']})")
+            
+            confidence = self._calculate_confidence(devices, len(tables))
+            
+            return ExtractionResult(
+                success=len(devices) > 0,
+                method="tabula",
+                devices=devices,
+                tables_found=len(tables),
+                confidence=confidence,
+                errors=errors
+            )
+            
+        except ImportError:
+            errors.append("Tabula not installed (requires Java)")
+            return ExtractionResult(False, "tabula", [], 0, 0.0, errors)
+        except Exception as e:
+            errors.append(str(e))
+            return ExtractionResult(False, "tabula", [], 0, 0.0, errors)
+    
+    
+    def _extract_text_safe(self, page) -> str:
+        """Extract text with error handling for transformations."""
+        try:
+            # Try standard extraction
+            text = page.extract_text()
+            
+            # Check if text looks corrupted
+            if text and self._is_text_corrupted(text):
+                # Try different extraction settings
+                text = page.extract_text(
+                    x_tolerance=3,
+                    y_tolerance=3,
+                    layout=True,
+                    x_density=7.25,
+                    y_density=13
+                )
+            
+            return text or ""
+            
+        except Exception:
+            return ""
+    
+    
+    def _is_text_corrupted(self, text: str) -> bool:
+        """Check if extracted text appears corrupted."""
+        if not text:
+            return True
+        
+        # Check for excessive special characters
+        special_chars = sum(1 for c in text if not c.isalnum() and c not in ' \n\t.,()-')
+        if special_chars / len(text) > 0.5:
+            return True
+        
+        # Check for readable words
+        words = re.findall(r'\b[a-zA-Z]{3,}\b', text)
+        if len(words) < 10:
+            return True
+        
+        return False
+    
+    
+    def _detect_table_header(self, line: str) -> Optional[Dict[str, str]]:
+        """Detect table type from header line."""
+        
+        patterns = [
+            (r'E3.*?iOS.*?(?:MMA|Compatible)', {"product": "E3", "os": "ios"}),
+            (r'E3.*?Android.*?(?:MMA|Compatible)', {"product": "E3", "os": "android"}),
+            (r'365.*?iOS.*?(?:MMA|Compatible)', {"product": "365", "os": "ios"}),
+            (r'365.*?Android.*?(?:MMA|Compatible)', {"product": "365", "os": "android"}),
+            (r'NOW.*?iOS.*?App', {"product": "NOW", "os": "ios"}),
+            (r'NOW.*?Android.*?App', {"product": "NOW", "os": "android"}),
+        ]
+        
+        for pattern, info in patterns:
+            if re.search(pattern, line, re.IGNORECASE):
+                return info
+        
+        return None
+    
+    
+    def _identify_table(self, page, table: List[List], page_num: int) -> Optional[Dict[str, str]]:
+        """Identify table type from nearby text or content."""
+        
+        # Check text above table
+        text = page.extract_text()
+        if text:
+            lines = text.split('\n')
+            for i, line in enumerate(lines):
+                if i > 20:  # Only check first 20 lines
+                    break
+                
+                match = self._detect_table_header(line)
+                if match:
+                    return match
+        
+        # Check first row of table for clues
+        if table and table[0]:
+            first_row = ' '.join(str(cell) for cell in table[0] if cell)
+            match = self._detect_table_header(first_row)
+            if match:
+                return match
+        
+        return None
+    
+    
+    def _identify_table_from_dataframe(self, df: pd.DataFrame) -> Optional[Dict[str, str]]:
+        """Identify table type from DataFrame content."""
+        
+        # Check column names and first few rows
+        text = ' '.join(df.columns.astype(str)) + ' ' + ' '.join(df.head(3).to_string().split())
+        
+        return self._detect_table_header(text)
+    
+    
+    def _parse_table_rows(self, table: List[List], os_type: str, product: str) -> List[Dict]:
+        """Parse table rows into device objects."""
+        
+        devices = []
+        
+        # Skip header row(s)
+        start_idx = 1
+        for i, row in enumerate(table):
+            if i == 0:
+                continue  # Skip first row (usually header)
+            
+            if not row or all(cell is None or str(cell).strip() == '' for cell in row):
+                continue  # Skip empty rows
+            
+            # Convert row to device
+            device = self._row_to_device(row, os_type, product)
+            if device:
+                devices.append(device)
+        
+        return devices
+    
+    
+    def _parse_dataframe_rows(self, df: pd.DataFrame, os_type: str, product: str) -> List[Dict]:
+        """Parse DataFrame rows into device objects."""
+        
+        devices = []
+        
+        for _, row in df.iterrows():
+            device = self._dataframe_row_to_device(row, os_type, product)
+            if device:
+                devices.append(device)
+        
+        return devices
+    
+    
+    def _row_to_device(self, row: List, os_type: str, product: str) -> Optional[Dict]:
+        """Convert table row to device object."""
+        
+        # Clean row
+        row = [str(cell).strip() if cell is not None else '' for cell in row]
+        row = [cell for cell in row if cell]  # Remove empty cells
+        
+        if len(row) < 2:
+            return None
+        
+        if os_type == 'ios':
+            # iOS: [Manufacturer, Model, Model Number]
+            if row[0].lower() != 'apple':
+                return None
+            
+            manufacturer = 'Apple'
+            model = row[1] if len(row) > 1 else ''
+            model_number = row[2] if len(row) > 2 else ''
+            
+            if not model:
+                return None
+            
+            return {
+                "name": f"Apple {model}",
+                "manufacturer": manufacturer,
+                "model": model,
+                "model_number": model_number,
+                "os_version": self._extract_ios_version(model),
+                "rationally_qualified": 'rationally qualified' in ' '.join(row).lower(),
+                "product": product,
+                "region": self.region
+            }
+        
+        else:
+            # Android: [Manufacturer, Model, Model Number, RQ]
+            manufacturer = row[0]
+            model = row[1] if len(row) > 1 else ''
+            
+            # Check for known manufacturers
+            known_manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo']
+            if manufacturer not in known_manufacturers:
+                return None
+            
+            if not model:
+                return None
+            
+            # Extract RQ and model number
+            rq = False
+            model_number = ''
+            
+            if len(row) > 2:
+                last_col = row[-1]
+                if last_col.lower() == 'yes':
+                    rq = True
+                elif 'no (' in last_col.lower():
+                    match = re.search(r'No\s*\(([^)]+)\)', last_col, re.IGNORECASE)
+                    if match:
+                        model_number = match.group(1)
+                else:
+                    model_number = last_col
+            
+            return {
+                "name": f"{manufacturer} {model}",
+                "manufacturer": manufacturer,
+                "model": model,
+                "model_number": model_number,
+                "os_version": self._extract_android_version(model),
+                "rationally_qualified": rq,
+                "product": product,
+                "region": self.region
+            }
+    
+    
+    def _dataframe_row_to_device(self, row: pd.Series, os_type: str, product: str) -> Optional[Dict]:
+        """Convert DataFrame row to device object."""
+        
+        # Convert to list and process
+        row_list = row.tolist()
+        return self._row_to_device(row_list, os_type, product)
+    
+    
+    def _parse_device_line(self, line: str, os_type: str, product: str) -> Optional[Dict]:
+        """Parse a single device line (text-based)."""
+        
+        if len(line) < 5:
+            return None
+        
+        if os_type == 'ios':
+            if not line.startswith('Apple'):
+                return None
+            
+            remaining = line[5:].strip()
+            parts = re.split(r'\s{2,}', remaining)
+            
+            if len(parts) < 1:
+                return None
+            
+            model = parts[0].strip()
+            model_number = parts[1].strip() if len(parts) > 1 else ''
+            
+            return {
+                "name": f"Apple {model}",
+                "manufacturer": "Apple",
+                "model": model,
+                "model_number": model_number if 'Rationally' not in model_number else '',
+                "os_version": self._extract_ios_version(model),
+                "rationally_qualified": 'rationally qualified' in line.lower(),
+                "product": product,
+                "region": self.region
+            }
+        
+        else:
+            # Android parsing
+            manufacturers = ['Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 'HMD Global', 'Sony', 'Xiaomi', 'Oppo', 'Vivo', 'Realme']
+            
+            manufacturer = None
+            for mfr in manufacturers:
+                if line.startswith(mfr):
+                    manufacturer = mfr
+                    break
+            
+            if not manufacturer:
+                return None
+            
+            remaining = line[len(manufacturer):].strip()
+            
+            # Extract RQ from end
+            rq_match = re.search(r'\s+(Yes|No\s*\([^)]+\))\s*$', remaining, re.IGNORECASE)
+            
+            rq = False
+            model_number = ''
+            
+            if rq_match:
+                rq_text = rq_match.group(1).strip()
+                remaining = remaining[:rq_match.start()].strip()
+                
+                if rq_text.lower() == 'yes':
+                    rq = True
+                else:
+                    no_match = re.search(r'No\s*\(([^)]+)\)', rq_text, re.IGNORECASE)
+                    if no_match:
+                        model_number = no_match.group(1).strip()
+            
+            # Parse model
+            parts = re.split(r'\s{2,}', remaining)
+            model = parts[0].strip() if parts else remaining
+            
+            if not model:
+                return None
+            
+            return {
+                "name": f"{manufacturer} {model}",
+                "manufacturer": manufacturer,
+                "model": model,
+                "model_number": model_number,
+                "os_version": self._extract_android_version(model),
+                "rationally_qualified": rq,
+                "product": product,
+                "region": self.region
+            }
+    
+    
+    def _extract_ios_version(self, model: str) -> str:
+        """Extract iOS version from model name."""
+        model_lower = model.lower()
+        
+        if 'iphone 17' in model_lower:
+            return '19.0'
+        elif 'iphone 16' in model_lower:
+            return '18.0'
+        elif 'iphone 15' in model_lower:
+            return '17.0'
+        elif 'iphone 14' in model_lower:
+            return '16.0'
+        elif 'iphone 13' in model_lower:
+            return '15.0'
+        
+        return '12.0'
+    
+    
+    def _extract_android_version(self, model: str) -> str:
+        """Extract Android version from model name."""
+        model_lower = model.lower()
+        
+        if 'pixel 10' in model_lower or 'pixel 9' in model_lower:
+            return '14.0'
+        elif 'pixel 8' in model_lower:
+            return '14.0'
+        elif 's26' in model_lower or 's25' in model_lower:
+            return '15.0'
+        elif 's24' in model_lower:
+            return '14.0'
+        
+        return '10.0'
+    
+    
+    def _calculate_confidence(self, devices: List[Dict], tables_found: int) -> float:
+        """Calculate confidence score for extraction."""
+        
+        if not devices:
+            return 0.0
+        
+        score = 0.0
+        
+        # Device count (more is better, up to a point)
+        if len(devices) > 5:
+            score += 0.3
+        elif len(devices) > 0:
+            score += 0.1
+        
+        # Tables found
+        if tables_found >= 6:  # All 6 expected tables
+            score += 0.3
+        elif tables_found >= 3:
+            score += 0.2
+        elif tables_found >= 1:
+            score += 0.1
+        
+        # Data quality checks
+        valid_names = sum(1 for d in devices if d.get('name') and len(d['name']) > 3)
+        if valid_names / len(devices) > 0.9:
+            score += 0.2
+        
+        # Product distribution (should have E3, 365, NOW)
+        products = set(d.get('product') for d in devices)
+        if len(products) >= 2:
+            score += 0.2
+        
+        return min(1.0, score)
+
+
+def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
+    """Main parsing function using universal extractor."""
+    
+    extractor = UniversalPDFExtractor(pdf_path, region)
+    result = extractor.extract()
+    
+    # Organize devices by product and OS
+    compatibility_data = {
+        "region": region,
+        "last_updated": datetime.now().isoformat(),
+        "document_info": {
+            "revision": None,
+            "effective_date": None,
+            "source_file": os.path.basename(pdf_path),
+            "extraction_method": result.method,
+            "confidence": result.confidence
+        },
+        "products": {
+            "E3": {"android": [], "ios": []},
+            "365": {"android": [], "ios": []},
+            "NOW": {"android": [], "ios": []}
+        }
+    }
+    
+    # Organize devices
+    for device in result.devices:
+        product = device.get('product', 'E3')
+        os_type = device.get('os', 'android')
+        
+        if product in compatibility_data["products"] and os_type in compatibility_data["products"][product]:
+            compatibility_data["products"][product][os_type].append(device)
+    
+    return compatibility_data
+
+
+# ... rest of the merge_compatibility_data and main functions ...
