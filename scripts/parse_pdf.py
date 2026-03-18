@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Parse Eversense compatibility PDFs (US and OUS) using line-by-line extraction.
+Parse Eversense compatibility PDFs (US and OUS) with robust table detection.
 """
 
 import pdfplumber
@@ -11,13 +11,14 @@ from typing import Dict, List, Any, Optional
 import sys
 import os
 
+
 def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
-    """Parse all 6 tables from the Eversense compatibility PDF."""
+    """Parse all tables from the Eversense compatibility PDF."""
     
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF file not found: {pdf_path}")
     
-    print(f"📄 Reading PDF: {pdf_path} ({region})")
+    print(f"\n📄 Reading PDF: {pdf_path} ({region})")
     
     compatibility_data = {
         "region": region,
@@ -28,149 +29,148 @@ def parse_eversense_pdf(pdf_path: str, region: str = "US") -> Dict[str, Any]:
             "source_file": os.path.basename(pdf_path)
         },
         "products": {
-            "E3": {
-                "android": [],
-                "ios": []
-            },
-            "365": {
-                "android": [],
-                "ios": []
-            },
-            "NOW": {
-                "android": [],
-                "ios": []
-            }
-        }
-    }
-    
-    # Table configurations
-    table_configs = {
-        3: {"product": "E3", "os": "ios", "name": "E3 iOS MMA"},
-        4: {"product": "E3", "os": "android", "name": "E3 Android MMA"},
-        5: {"product": "365", "os": "ios", "name": "365 iOS MMA"},
-        6: {"product": "365", "os": "android", "name": "365 Android MMA"},
-        7: {"product": "NOW", "os": "ios", "name": "NOW iOS App"},
-        8: {"product": "NOW", "os": "android", "name": "NOW Android App"}
-    }
-    
-    current_table_num = None
-    in_table = False
-    table_header_seen = False
-    
-    with pdfplumber.open(pdf_path) as pdf:
-        print(f"📑 Total pages: {len(pdf.pages)}\n")
-        
-        for page_num, page in enumerate(pdf.pages, 1):
-            text = page.extract_text()
-            if not text:
-                continue
-            
-            lines = text.split('\n')
-            
-            # Extract metadata
-            for line in lines:
-                if 'Revision:' in line:
-                    revision_match = re.search(r'Revision:\s*(\d+)', line)
-                    if revision_match and not compatibility_data["document_info"]["revision"]:
-                        compatibility_data["document_info"]["revision"] = revision_match.group(1)
-                
-                if 'Effective Date:' in line:
-                    date_match = re.search(r'Effective Date:\s*(\d{1,2}\s+\w+\s+\d{4})', line)
-                    if date_match and not compatibility_data["document_info"]["effective_date"]:
-                        compatibility_data["document_info"]["effective_date"] = date_match.group(1).strip()
-            
-            # Process each line
-            for line in lines:
-                line_stripped = line.strip()
-                
-                if not line_stripped:
-                    continue
-                
-                if any(skip in line_stripped for skip in ['Confidential', 'Property of Senseonics', 'Document #:', 'Title:', 'Pages:']):
-                    continue
-                
-                # Detect table start
-                table_detected = False
-                for tnum in range(3, 9):
-                    if f"Table {tnum}" in line_stripped:
-                        if current_table_num and in_table:
-                            config = table_configs[current_table_num]
-                            count = len(compatibility_data["products"][config["product"]][config["os"]])
-                            print(f"   ✅ Table {current_table_num}: {count} devices\n")
-                        
-                        current_table_num = tnum
-                        in_table = True
-                        table_header_seen = False
-                        config = table_configs[tnum]
-                        print(f"{'📱' if config['os'] == 'ios' else '🤖'} Found Table {tnum} - {config['name']} (Page {page_num})")
-                        table_detected = True
-                        break
-                
-                if table_detected:
-                    continue
-                
-                if 'Device Manufacturer' in line_stripped or 'Device Model' in line_stripped:
-                    table_header_seen = True
-                    continue
-                
-                if not in_table or not table_header_seen or not current_table_num:
-                    continue
-                
-                if re.match(r'^\d+\s+[A-Z][a-z]+\s+[A-Z][a-z]+', line_stripped):
-                    if 'Updated' in line_stripped or 'Added' in line_stripped or 'Removed' in line_stripped:
-                        continue
-                
-                config = table_configs[current_table_num]
-                device = parse_device_line_simple(line_stripped, config["os"], config["product"], region)
-                
-                if device:
-                    product = config["product"]
-                    os_type = config["os"]
-                    
-                    existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
-                    if device['name'] not in existing_names:
-                        compatibility_data["products"][product][os_type].append(device)
-        
-        if current_table_num and in_table:
-            config = table_configs[current_table_num]
-            count = len(compatibility_data["products"][config["product"]][config["os"]])
-            print(f"   ✅ Table {current_table_num}: {count} devices\n")
-    
-    return compatibility_data
-
-
-def merge_compatibility_data(us_data: Dict[str, Any], ous_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Merge US and OUS compatibility data."""
-    
-    merged = {
-        "last_updated": datetime.now().isoformat(),
-        "regions": {
-            "US": us_data.get("document_info", {}),
-            "OUS": ous_data.get("document_info", {})
-        },
-        "products": {
             "E3": {"android": [], "ios": []},
             "365": {"android": [], "ios": []},
             "NOW": {"android": [], "ios": []}
         }
     }
     
-    # Merge devices from both regions
-    for product in ['E3', '365', 'NOW']:
-        for os_type in ['android', 'ios']:
-            # Add US devices
-            if us_data.get("products", {}).get(product, {}).get(os_type):
-                merged["products"][product][os_type].extend(us_data["products"][product][os_type])
-            
-            # Add OUS devices
-            if ous_data.get("products", {}).get(product, {}).get(os_type):
-                merged["products"][product][os_type].extend(ous_data["products"][product][os_type])
+    # More flexible table detection patterns
+    table_patterns = [
+        # Pattern: "Table 3 – Eversense E3 iOS MMA Compatible Handheld Devices"
+        (r'Table\s*(\d+).*?E3.*?iOS', {"product": "E3", "os": "ios"}),
+        (r'Table\s*(\d+).*?E3.*?Android', {"product": "E3", "os": "android"}),
+        (r'Table\s*(\d+).*?365.*?iOS', {"product": "365", "os": "ios"}),
+        (r'Table\s*(\d+).*?365.*?Android', {"product": "365", "os": "android"}),
+        (r'Table\s*(\d+).*?NOW.*?iOS', {"product": "NOW", "os": "ios"}),
+        (r'Table\s*(\d+).*?NOW.*?Android', {"product": "NOW", "os": "android"}),
+    ]
     
-    return merged
+    current_table = None
+    in_table = False
+    header_seen = False
+    
+    with pdfplumber.open(pdf_path) as pdf:
+        print(f"📑 Total pages: {len(pdf.pages)}")
+        
+        for page_num, page in enumerate(pdf.pages, 1):
+            text = page.extract_text()
+            if not text:
+                print(f"   ⚠️ Page {page_num}: No text extracted")
+                continue
+            
+            lines = text.split('\n')
+            
+            # Extract metadata
+            for line in lines:
+                if 'Revision:' in line or 'Rev:' in line:
+                    match = re.search(r'Rev(?:ision)?:?\s*(\d+)', line)
+                    if match and not compatibility_data["document_info"]["revision"]:
+                        compatibility_data["document_info"]["revision"] = match.group(1)
+                        print(f"   📌 Revision: {match.group(1)}")
+                
+                if 'Effective Date:' in line or 'Date:' in line:
+                    match = re.search(r'(?:Effective\s+)?Date:?\s*(\d{1,2}\s+\w+\s+\d{4})', line)
+                    if match and not compatibility_data["document_info"]["effective_date"]:
+                        compatibility_data["document_info"]["effective_date"] = match.group(1).strip()
+                        print(f"   📅 Effective Date: {match.group(1)}")
+            
+            # Process each line for table data
+            for line_num, line in enumerate(lines):
+                line_stripped = line.strip()
+                
+                if not line_stripped:
+                    continue
+                
+                # Skip document headers/footers
+                if any(skip in line_stripped for skip in [
+                    'Confidential', 'Property of Senseonics', 
+                    'Document #:', 'Title:', 'Page ', 'of '
+                ]):
+                    continue
+                
+                # Detect table start
+                table_detected = False
+                for pattern, config in table_patterns:
+                    match = re.search(pattern, line_stripped, re.IGNORECASE)
+                    if match:
+                        # End previous table
+                        if current_table and in_table:
+                            product = current_table["product"]
+                            os_type = current_table["os"]
+                            count = len(compatibility_data["products"][product][os_type])
+                            print(f"      ✅ {product}/{os_type}: {count} devices")
+                        
+                        # Start new table
+                        current_table = config
+                        in_table = True
+                        header_seen = False
+                        table_num = match.group(1) if match.lastindex else "?"
+                        print(f"\n   {'📱' if config['os'] == 'ios' else '🤖'} Table {table_num}: {config['product']} {config['os'].upper()} (Page {page_num})")
+                        table_detected = True
+                        break
+                
+                if table_detected:
+                    continue
+                
+                # Detect table header
+                if in_table and not header_seen:
+                    if 'Device Manufacturer' in line_stripped or 'Manufacturer' in line_stripped:
+                        header_seen = True
+                        print(f"      📋 Header found: {line_stripped[:60]}...")
+                        continue
+                
+                # Parse device lines (only after header)
+                if not in_table or not header_seen or not current_table:
+                    continue
+                
+                # Skip revision history
+                if re.match(r'^\d+\s+[A-Z][a-z]+\s+[A-Z][a-z]+', line_stripped):
+                    if any(word in line_stripped for word in ['Updated', 'Added', 'Removed', 'Created']):
+                        continue
+                
+                # Detect end of table (next table or major section)
+                if re.search(r'(Revision\s+History|Table\s+\d+)', line_stripped, re.IGNORECASE):
+                    if 'Table' not in line_stripped or not any(p[0] for p in table_patterns if re.search(p[0], line_stripped, re.IGNORECASE)):
+                        # End of current table
+                        if in_table and current_table:
+                            product = current_table["product"]
+                            os_type = current_table["os"]
+                            count = len(compatibility_data["products"][product][os_type])
+                            print(f"      ✅ {product}/{os_type}: {count} devices")
+                        in_table = False
+                        header_seen = False
+                        continue
+                
+                # Parse device line
+                device = parse_device_line_simple(
+                    line_stripped, 
+                    current_table["os"], 
+                    current_table["product"],
+                    region
+                )
+                
+                if device:
+                    product = current_table["product"]
+                    os_type = current_table["os"]
+                    
+                    # Avoid duplicates
+                    existing_names = [d['name'] for d in compatibility_data["products"][product][os_type]]
+                    if device['name'] not in existing_names:
+                        compatibility_data["products"][product][os_type].append(device)
+        
+        # End last table
+        if current_table and in_table:
+            product = current_table["product"]
+            os_type = current_table["os"]
+            count = len(compatibility_data["products"][product][os_type])
+            print(f"      ✅ {product}/{os_type}: {count} devices")
+    
+    return compatibility_data
 
 
 def parse_device_line_simple(line: str, os_type: str, product: str, region: str = "US") -> Optional[Dict[str, Any]]:
-    """Parse a device line using simple text splitting."""
+    """Parse a device line."""
     
     if len(line) < 5:
         return None
@@ -182,7 +182,7 @@ def parse_device_line_simple(line: str, os_type: str, product: str, region: str 
 
 
 def parse_ios_line_simple(line: str, product: str, region: str) -> Optional[Dict[str, Any]]:
-    """Parse iOS device line (3 columns)."""
+    """Parse iOS device line."""
     
     if not line.startswith('Apple'):
         return None
@@ -222,7 +222,7 @@ def parse_ios_line_simple(line: str, product: str, region: str) -> Optional[Dict
 
 
 def parse_android_line_simple(line: str, product: str, region: str) -> Optional[Dict[str, Any]]:
-    """Parse Android device line (4 columns)."""
+    """Parse Android device line."""
     
     manufacturers = [
         'Google', 'Samsung', 'OnePlus', 'Motorola', 'LG', 'HTC', 'Nokia', 
@@ -241,7 +241,7 @@ def parse_android_line_simple(line: str, product: str, region: str) -> Optional[
     
     remaining = line[len(manufacturer):].strip()
     
-    # Extract RQ column from the END
+    # Extract RQ from end
     rq_pattern = r'\s+(Yes|No\s*\([^)]+\))\s*$'
     rq_match = re.search(rq_pattern, remaining, re.IGNORECASE)
     
@@ -305,7 +305,7 @@ def parse_android_line_simple(line: str, product: str, region: str) -> Optional[
 
 
 def extract_ios_version(model_name: str) -> str:
-    """Extract iOS version from device model."""
+    """Extract iOS version."""
     model_lower = model_name.lower()
     
     if 'iphone 17' in model_lower:
@@ -322,24 +322,12 @@ def extract_ios_version(model_name: str) -> str:
         return '14.0'
     elif 'iphone 11' in model_lower:
         return '13.0'
-    elif 'iphone xs' in model_lower or 'iphone xr' in model_lower or 'iphone x' in model_lower:
-        return '12.0'
-    elif 'iphone 8' in model_lower:
-        return '11.0'
-    elif 'se 3' in model_lower or 'se (3' in model_lower:
-        return '15.0'
-    elif 'se 2' in model_lower or 'se (2' in model_lower:
-        return '13.0'
-    elif 'watch' in model_lower:
-        return '9.0'
-    elif 'ipad' in model_lower:
-        return '15.0'
     
     return '12.0'
 
 
 def extract_android_version(model_name: str) -> str:
-    """Extract Android version from device model."""
+    """Extract Android version."""
     model_lower = model_name.lower()
     
     if 'pixel 10' in model_lower or 'pixel 9' in model_lower:
@@ -348,24 +336,35 @@ def extract_android_version(model_name: str) -> str:
         return '14.0'
     elif 'pixel 7' in model_lower:
         return '13.0'
-    elif 'pixel 6' in model_lower:
-        return '12.0'
-    elif 'pixel 5' in model_lower or 'pixel 4' in model_lower:
-        return '11.0'
-    elif 's25' in model_lower or 's24' in model_lower:
-        return '14.0'
-    elif 's23' in model_lower or 's22' in model_lower:
-        return '13.0'
-    elif 's21' in model_lower or 's20' in model_lower:
-        return '11.0'
-    elif '2025' in model_lower:
-        return '15.0'
-    elif '2024' in model_lower:
-        return '14.0'
-    elif '2023' in model_lower:
-        return '13.0'
     
     return '10.0'
+
+
+def merge_compatibility_data(us_data: Dict[str, Any], ous_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Merge US and OUS data."""
+    
+    merged = {
+        "last_updated": datetime.now().isoformat(),
+        "regions": {
+            "US": us_data.get("document_info", {}),
+            "OUS": ous_data.get("document_info", {})
+        },
+        "products": {
+            "E3": {"android": [], "ios": []},
+            "365": {"android": [], "ios": []},
+            "NOW": {"android": [], "ios": []}
+        }
+    }
+    
+    for product in ['E3', '365', 'NOW']:
+        for os_type in ['android', 'ios']:
+            if us_data.get("products", {}).get(product, {}).get(os_type):
+                merged["products"][product][os_type].extend(us_data["products"][product][os_type])
+            
+            if ous_data.get("products", {}).get(product, {}).get(os_type):
+                merged["products"][product][os_type].extend(ous_data["products"][product][os_type])
+    
+    return merged
 
 
 if __name__ == '__main__':
@@ -373,62 +372,52 @@ if __name__ == '__main__':
     ous_pdf = 'pdf/compatibility_ous.pdf'
     
     try:
-        # Parse US PDF
-        us_data = None
+        us_data = {"products": {"E3": {"android": [], "ios": []}, "365": {"android": [], "ios": []}, "NOW": {"android": [], "ios": []}}}
+        ous_data = {"products": {"E3": {"android": [], "ios": []}, "365": {"android": [], "ios": []}, "NOW": {"android": [], "ios": []}}}
+        
         if os.path.exists(us_pdf):
             us_data = parse_eversense_pdf(us_pdf, region="US")
         else:
             print(f"⚠️  US PDF not found: {us_pdf}")
-            us_data = {"products": {"E3": {"android": [], "ios": []}, "365": {"android": [], "ios": []}, "NOW": {"android": [], "ios": []}}}
         
-        # Parse OUS PDF
-        ous_data = None
         if os.path.exists(ous_pdf):
             ous_data = parse_eversense_pdf(ous_pdf, region="OUS")
         else:
             print(f"⚠️  OUS PDF not found: {ous_pdf}")
-            ous_data = {"products": {"E3": {"android": [], "ios": []}, "365": {"android": [], "ios": []}, "NOW": {"android": [], "ios": []}}}
         
-        # Merge both datasets
         merged_data = merge_compatibility_data(us_data, ous_data)
         
-        # Save to JSON
         os.makedirs('data', exist_ok=True)
         output_file = 'data/compatibility.json'
         
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(merged_data, f, indent=2, ensure_ascii=False)
         
-        # Print summary
         print(f"\n{'='*60}")
         print(f"✅ PARSING COMPLETED")
         print(f"{'='*60}")
         
-        total_devices = 0
+        total = 0
         for product in ['E3', '365', 'NOW']:
             ios_count = len(merged_data["products"][product]["ios"])
             android_count = len(merged_data["products"][product]["android"])
-            product_total = ios_count + android_count
-            total_devices += product_total
+            total += ios_count + android_count
             
             print(f"\n{product}:")
-            print(f"   📱 iOS: {ios_count} devices")
-            print(f"   🤖 Android: {android_count} devices")
-            print(f"   📊 Total: {product_total} devices")
+            print(f"   📱 iOS: {ios_count}")
+            print(f"   🤖 Android: {android_count}")
         
-        # Count by region
         us_count = sum(1 for p in ['E3', '365', 'NOW'] for os in ['ios', 'android'] for d in merged_data["products"][p][os] if d.get('region') == 'US')
         ous_count = sum(1 for p in ['E3', '365', 'NOW'] for os in ['ios', 'android'] for d in merged_data["products"][p][os] if d.get('region') == 'OUS')
         
         print(f"\n{'='*60}")
-        print(f"🌍 US Devices: {us_count}")
-        print(f"🌎 OUS Devices: {ous_count}")
-        print(f"📊 GRAND TOTAL: {total_devices} devices")
+        print(f"🌍 US: {us_count} | 🌎 OUS: {ous_count} | 📊 TOTAL: {total}")
         print(f"💾 Saved to: {output_file}")
         
         sys.exit(0)
+        
     except Exception as e:
-        print(f"\n❌ Error parsing PDF: {e}")
+        print(f"\n❌ Error: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
