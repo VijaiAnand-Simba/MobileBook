@@ -387,6 +387,19 @@ body {
     overflow: hidden;
 }
 
+/* Hide removed sections */
+.manufacturer-badge {
+    display: none !important;
+}
+
+.device-details {
+    display: none !important;
+}
+
+.rq-info {
+    display: none !important;
+}
+
 .device-card::before {
     content: '';
     position: absolute;
@@ -513,7 +526,7 @@ body {
     letter-spacing: 0.5px;
     margin-left: 0.5rem;
     vertical-align: middle;
-    animation: fadeIn 0.3s ease;
+    animation: fadeInBadge 0.3s ease;
 }
 
 /* Highlight RQ cards with left border */
@@ -522,7 +535,7 @@ body {
     background: linear-gradient(to right, rgba(245, 158, 11, 0.02) 0%, transparent 100%);
 }
 
-@keyframes fadeIn {
+@keyframes fadeInBadge {
     from {
         opacity: 0;
         transform: scale(0.9);
