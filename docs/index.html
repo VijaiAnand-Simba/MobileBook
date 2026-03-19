@@ -3,43 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGM Device Compatibility Checker</title>
+    <title>CGM Device Compatibility</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- ===== NAVBAR ===== -->
+    <!-- Navbar -->
     <nav class="navbar">
-        <div class="container">
+        <div class="navbar-inner">
             <div class="brand">
-                <div class="brand-icon">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <span>CGM Compatibility</span>
+                <div class="brand-logo"><i class="fas fa-heartbeat"></i></div>
+                <span class="brand-text">CGM Compatibility</span>
             </div>
 
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input
-                    type="text"
-                    id="deviceSearch"
-                    placeholder="Search device (e.g. iPhone 14, Galaxy S23)"
-                    autocomplete="off"
-                >
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="deviceSearch"
+                    placeholder="Search device..." autocomplete="off">
                 <button id="clearSearch" class="clear-btn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
             <div class="nav-stats">
-                <span class="stat-pill compatible">
+                <span class="pill pill--ok">
                     <i class="fas fa-check"></i>
                     <span id="compatibleCount">0</span> Compatible
                 </span>
-                <span class="stat-pill new">
+                <span class="pill pill--new">
                     <i class="fas fa-plus"></i>
                     <span id="newDevicesCount">0</span> New
                 </span>
@@ -47,90 +41,73 @@
         </div>
     </nav>
 
-    <!-- ===== TABS BAR ===== -->
-    <div class="tabs-bar">
-        <div class="tabs-inner">
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-inner">
             <div class="tabs">
                 <button class="tab-btn active" data-tab="compatible">
                     <i class="fas fa-check-circle"></i>
                     Compatible
+                    <span class="tab-num" id="tabCompatibleCount">0</span>
                 </button>
                 <button class="tab-btn" data-tab="new-devices">
                     <i class="fas fa-plus-circle"></i>
                     New on Market
+                    <span class="tab-num warn" id="tabNewCount">0</span>
                 </button>
             </div>
 
-            <div class="filters-inline">
-                <button class="filter-chip active" data-filter="all">All</button>
-                <button class="filter-chip" data-filter="android">
+            <div class="filters">
+                <button class="chip active" data-filter="all">All</button>
+                <button class="chip" data-filter="android">
                     <i class="fab fa-android"></i> Android
                 </button>
-                <button class="filter-chip" data-filter="ios">
+                <button class="chip" data-filter="ios">
                     <i class="fab fa-apple"></i> iOS
                 </button>
-                <span style="width:1px;height:18px;background:var(--border);margin:0 0.25rem"></span>
-                <button class="filter-chip active" data-product="all">All Products</button>
-                <button class="filter-chip" data-product="E3">E3</button>
-                <button class="filter-chip" data-product="365">365</button>
-                <button class="filter-chip" data-product="NOW">NOW</button>
+                <div class="filter-sep"></div>
+                <button class="chip active" data-product="all">All</button>
+                <button class="chip" data-product="E3">E3</button>
+                <button class="chip" data-product="365">365</button>
+                <button class="chip" data-product="NOW">NOW</button>
             </div>
         </div>
     </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="main">
+    <!-- Main -->
+    <main class="content">
 
-        <!-- Compatible Devices Tab -->
-        <div id="compatibleTab" class="tab-content active">
-            <div id="searchResults" class="device-list">
-                <!-- Cards injected here -->
-            </div>
-
-            <div id="noResults" class="empty-state" style="display:none">
-                <i class="fas fa-search"></i>
+        <!-- Compatible Tab -->
+        <div id="compatibleTab" class="tab-panel active">
+            <div id="searchResults"></div>
+            <div id="noResults" class="state" style="display:none">
+                <div class="state-icon"><i class="fas fa-search"></i></div>
                 <h3>No devices found</h3>
-                <p>Try a different search term or filter</p>
+                <p>Try a different search or filter</p>
             </div>
-
-            <div id="loading" class="loading-state">
-                <div class="dot-loader">
-                    <span></span><span></span><span></span>
-                </div>
-                <p>Loading compatibility data...</p>
+            <div id="loading" class="state">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <p>Loading...</p>
             </div>
         </div>
 
         <!-- New Devices Tab -->
-        <div id="newDevicesTab" class="tab-content">
-            <div class="empty-state" style="padding:0 0 1rem 0;margin-bottom:1rem;
-                border-bottom:1px solid var(--border);">
-                <p style="color:var(--warning);font-size:0.8rem;
-                    display:flex;align-items:center;gap:0.4rem;
-                    justify-content:center;">
-                    <i class="fas fa-info-circle"></i>
-                    Newly launched devices — not yet in official compatibility list
-                </p>
-            </div>
-
-            <div id="newDevicesResults" class="new-device-list">
-                <!-- New device cards injected here -->
-            </div>
-
-            <div id="noNewDevices" class="empty-state" style="display:none">
-                <i class="fas fa-check-circle"></i>
+        <div id="newDevicesTab" class="tab-panel">
+            <div id="newDevicesResults"></div>
+            <div id="noNewDevices" class="state" style="display:none">
+                <div class="state-icon"><i class="fas fa-check-circle"></i></div>
                 <h3>All caught up!</h3>
-                <p>All recent devices are already compatible</p>
+                <p>All recent devices are compatible</p>
             </div>
         </div>
     </main>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 CGM Compatibility Checker &middot; Data updated automatically</p>
-        <p class="disclaimer">
+        <p>&copy; 2024 CGM Compatibility Checker</p>
+        <p class="warn">
             <i class="fas fa-exclamation-triangle"></i>
-            Always verify with your healthcare provider before use
+            Verify with your healthcare provider before use
         </p>
     </footer>
 
