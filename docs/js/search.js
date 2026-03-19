@@ -67,7 +67,7 @@ class DeviceSearchEngine {
             'Google', 'Pixel',
             'OnePlus', 'Xiaomi', 'Huawei', 'LG', 
             'Motorola', 'Nokia', 'HTC', 'Sony',
-            'Oppo', 'Vivo', 'Realme', 'Asus'
+            'Oppo', 'Vivo', 'Realme', 'Asus', 'Xperia'
         ];
         const found = brands.find(brand => deviceName.includes(brand));
         return found || null;
@@ -90,7 +90,7 @@ class DeviceSearchEngine {
         const numbers = queryLower.match(/\b(\d+[\w]*)\b/g);
         parsed.numbers = numbers ? numbers.map(n => n.toLowerCase()) : [];
         
-        // Try to identify brand + model pattern
+        // Try to identify brand from query
         const brand = this.extractBrand(query);
         if (brand) {
             parsed.brand = brand.toLowerCase();
@@ -105,10 +105,20 @@ class DeviceSearchEngine {
                     parsed.modelNumber = parsed.numbers[0];
                 }
             }
-        } else if (parsed.numbers.length > 0) {
-            // Query has a number but no recognized brand
-            // e.g., "galaxy s21" -> number is "21"
-            parsed.modelNumber = parsed.numbers[0];
+        } else {
+            // No recognized brand found
+            // Check if first word could be a brand (even if not in our list)
+            if (parsed.isMultiWord) {
+                parsed.possibleBrand = parts[0];
+                parsed.restOfQuery = parts.slice(1).join(' ');
+                
+                if (parsed.numbers.length > 0) {
+                    parsed.modelNumber = parsed.numbers[0];
+                }
+            } else if (parsed.numbers.length > 0) {
+                // Single word with number (e.g., "5")
+                parsed.modelNumber = parsed.numbers[0];
+            }
         }
         
         return parsed;
@@ -133,46 +143,69 @@ class DeviceSearchEngine {
     
     matchesDevice(device, parsedQuery) {
         const queryLower = parsedQuery.full;
+        const deviceName = device.tokens.fullName;
         
         // Exact full name match
-        if (device.tokens.fullName === queryLower) {
+        if (deviceName === queryLower) {
             return true;
         }
         
-        // STRICT: If query has a number, device MUST have that exact number
-        if (parsedQuery.hasNumber && parsedQuery.numbers.length > 0) {
-            // Get the main number from query (e.g., "5" from "pixel 5")
-            const queryNumber = parsedQuery.numbers[0];
+        // For multi-word queries, ALL words must be present in the device name
+        if (parsedQuery.isMultiWord) {
+            const allWordsMatch = parsedQuery.parts.every(part => {
+                // Each query word must appear in device name
+                return deviceName.includes(part) || 
+                       device.tokens.brand.includes(part) ||
+                       device.tokens.model.includes(part) ||
+                       device.tokens.modelNumber.includes(part) ||
+                       device.tokens.manufacturer.includes(part);
+            });
             
-            // Check if device has this exact number
-            const hasExactNumber = device.tokens.numbers.some(num => num === queryNumber);
-            
-            if (!hasExactNumber) {
-                // Device doesn't have the queried number, don't match
+            if (!allWordsMatch) {
+                // If not all words match, reject this device
                 return false;
             }
+        }
+        
+        // If query has brand + number (e.g., "pixel 5")
+        if (parsedQuery.brand && parsedQuery.modelNumber) {
+            const hasBrand = device.tokens.brand === parsedQuery.brand || 
+                            deviceName.includes(parsedQuery.brand);
             
-            // If query also has a brand, check brand match
-            if (parsedQuery.brand) {
-                const deviceBrand = device.tokens.brand;
-                const deviceName = device.tokens.fullName;
-                
-                const hasBrand = deviceBrand === parsedQuery.brand || 
-                                deviceName.includes(parsedQuery.brand);
-                
-                // Must have BOTH brand AND number
-                if (!hasBrand) {
-                    return false;
-                }
+            const hasExactNumber = device.tokens.numbers.includes(parsedQuery.modelNumber);
+            
+            // MUST have BOTH brand AND number
+            if (hasBrand && hasExactNumber) {
+                return true;
+            } else {
+                // One of them is missing, reject
+                return false;
             }
+        }
+        
+        // If query has possible brand + number (unrecognized brand)
+        if (parsedQuery.possibleBrand && parsedQuery.modelNumber) {
+            const hasPossibleBrand = deviceName.includes(parsedQuery.possibleBrand);
+            const hasExactNumber = device.tokens.numbers.includes(parsedQuery.modelNumber);
             
-            // Has the exact number (and brand if specified)
-            return true;
+            // MUST have BOTH
+            if (hasPossibleBrand && hasExactNumber) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        // Single word query with number (e.g., just "5")
+        if (!parsedQuery.isMultiWord && parsedQuery.hasNumber) {
+            // Allow single number searches to match any device with that number
+            const hasExactNumber = device.tokens.numbers.includes(parsedQuery.modelNumber);
+            return hasExactNumber;
         }
         
         // For queries without numbers, use word boundary matching
         const wordBoundaryPattern = new RegExp(`\\b${this.escapeRegex(queryLower)}\\b`, 'i');
-        if (wordBoundaryPattern.test(device.tokens.fullName)) {
+        if (wordBoundaryPattern.test(deviceName)) {
             return true;
         }
         
@@ -185,7 +218,7 @@ class DeviceSearchEngine {
         if (!parsedQuery.isMultiWord && !parsedQuery.hasNumber) {
             // Check if query matches brand
             if (device.tokens.brand === queryLower || 
-                device.tokens.fullName.includes(queryLower) ||
+                deviceName.includes(queryLower) ||
                 device.tokens.manufacturer === queryLower) {
                 return true;
             }
