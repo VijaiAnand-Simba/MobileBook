@@ -26,9 +26,12 @@ class DeviceSearchEngine {
             products: device.products.map(p => p.toLowerCase())
         };
         
-        // Extract numeric model from name (e.g., "5" from "Pixel 5")
-        const numericModel = device.name.match(/\b(\d+[\w]*)\b/);
-        tokens.numericModel = numericModel ? numericModel[1].toLowerCase() : '';
+        // Extract all numbers from name (e.g., ["5"] from "Pixel 5", ["13", "pro"] from "iPhone 13 Pro")
+        const numbers = device.name.match(/\b(\d+[\w]*)\b/g);
+        tokens.numbers = numbers ? numbers.map(n => n.toLowerCase()) : [];
+        
+        // Main model identifier (usually the first number)
+        tokens.mainModel = tokens.numbers.length > 0 ? tokens.numbers[0] : '';
         
         return tokens;
     }
@@ -83,18 +86,29 @@ class DeviceSearchEngine {
             isMultiWord: parts.length > 1
         };
         
+        // Extract numbers from query
+        const numbers = queryLower.match(/\b(\d+[\w]*)\b/g);
+        parsed.numbers = numbers ? numbers.map(n => n.toLowerCase()) : [];
+        
         // Try to identify brand + model pattern
-        if (parsed.isMultiWord) {
-            const brand = this.extractBrand(query);
-            if (brand) {
-                parsed.brand = brand.toLowerCase();
-                // Extract everything after the brand as potential model
-                const brandIndex = queryLower.indexOf(brand.toLowerCase());
-                const afterBrand = queryLower.substring(brandIndex + brand.length).trim();
-                if (afterBrand) {
-                    parsed.model = afterBrand;
+        const brand = this.extractBrand(query);
+        if (brand) {
+            parsed.brand = brand.toLowerCase();
+            // Extract everything after the brand as potential model
+            const brandIndex = queryLower.indexOf(brand.toLowerCase());
+            const afterBrand = queryLower.substring(brandIndex + brand.length).trim();
+            if (afterBrand) {
+                parsed.model = afterBrand;
+                
+                // Extract specific model number if present
+                if (parsed.numbers.length > 0) {
+                    parsed.modelNumber = parsed.numbers[0];
                 }
             }
+        } else if (parsed.numbers.length > 0) {
+            // Query has a number but no recognized brand
+            // e.g., "galaxy s21" -> number is "21"
+            parsed.modelNumber = parsed.numbers[0];
         }
         
         return parsed;
@@ -104,7 +118,6 @@ class DeviceSearchEngine {
         if (!query) return this.index;
         
         const parsedQuery = this.parseQuery(query);
-        const queryLower = parsedQuery.full;
         
         const results = this.index.filter(device => 
             this.matchesDevice(device, parsedQuery)
@@ -126,48 +139,75 @@ class DeviceSearchEngine {
             return true;
         }
         
-        // If query has brand + model (e.g., "pixel 5")
-        if (parsedQuery.brand && parsedQuery.model) {
-            const deviceBrand = device.tokens.brand;
-            const deviceName = device.tokens.fullName;
+        // STRICT: If query has a number, device MUST have that exact number
+        if (parsedQuery.hasNumber && parsedQuery.numbers.length > 0) {
+            // Get the main number from query (e.g., "5" from "pixel 5")
+            const queryNumber = parsedQuery.numbers[0];
             
-            // Check if device has the same brand
-            if (deviceBrand === parsedQuery.brand || deviceName.includes(parsedQuery.brand)) {
-                // Check if the model matches with word boundaries
-                // This prevents "pixel 5" from matching "pixel 50" or "pixel 5a"
-                const modelPattern = new RegExp(`\\b${this.escapeRegex(parsedQuery.model)}\\b`, 'i');
+            // Check if device has this exact number
+            const hasExactNumber = device.tokens.numbers.some(num => num === queryNumber);
+            
+            if (!hasExactNumber) {
+                // Device doesn't have the queried number, don't match
+                return false;
+            }
+            
+            // If query also has a brand, check brand match
+            if (parsedQuery.brand) {
+                const deviceBrand = device.tokens.brand;
+                const deviceName = device.tokens.fullName;
                 
-                if (modelPattern.test(deviceName) || 
-                    modelPattern.test(device.tokens.model) ||
-                    modelPattern.test(device.tokens.numericModel)) {
-                    return true;
+                const hasBrand = deviceBrand === parsedQuery.brand || 
+                                deviceName.includes(parsedQuery.brand);
+                
+                // Must have BOTH brand AND number
+                if (!hasBrand) {
+                    return false;
                 }
             }
+            
+            // Has the exact number (and brand if specified)
+            return true;
         }
         
-        // Check for word boundary matches (prevents partial matches)
+        // For queries without numbers, use word boundary matching
         const wordBoundaryPattern = new RegExp(`\\b${this.escapeRegex(queryLower)}\\b`, 'i');
         if (wordBoundaryPattern.test(device.tokens.fullName)) {
             return true;
         }
         
-        // Fallback to general matching
-        const hasMatch = device.searchTerms.some(term => {
-            // For single word queries, use word boundaries
-            if (!parsedQuery.isMultiWord) {
-                const pattern = new RegExp(`\\b${this.escapeRegex(queryLower)}`, 'i');
-                return pattern.test(term);
-            }
-            // For multi-word, use contains
-            return term.includes(queryLower);
-        });
-        
-        if (hasMatch) {
+        // Check model number
+        if (device.tokens.modelNumber && device.tokens.modelNumber.includes(queryLower)) {
             return true;
         }
         
-        // Fuzzy match only if query is long enough and no exact matches found
-        if (queryLower.length >= 4) {
+        // For single-word brand queries (e.g., just "pixel" or "samsung")
+        if (!parsedQuery.isMultiWord && !parsedQuery.hasNumber) {
+            // Check if query matches brand
+            if (device.tokens.brand === queryLower || 
+                device.tokens.fullName.includes(queryLower) ||
+                device.tokens.manufacturer === queryLower) {
+                return true;
+            }
+        }
+        
+        // Fallback to general matching only for queries without numbers
+        if (!parsedQuery.hasNumber) {
+            const hasMatch = device.searchTerms.some(term => {
+                if (!parsedQuery.isMultiWord) {
+                    const pattern = new RegExp(`\\b${this.escapeRegex(queryLower)}`, 'i');
+                    return pattern.test(term);
+                }
+                return term.includes(queryLower);
+            });
+            
+            if (hasMatch) {
+                return true;
+            }
+        }
+        
+        // Fuzzy match only for longer queries without numbers
+        if (queryLower.length >= 4 && !parsedQuery.hasNumber) {
             return device.searchTerms.some(term => this.fuzzyMatch(term, queryLower));
         }
         
@@ -225,95 +265,90 @@ class DeviceSearchEngine {
         
         // Exact full match (highest priority)
         if (nameLower === query) {
-            score += 10000;
+            score += 100000;
         }
         
         // Exact match with word boundaries
         const wordBoundaryPattern = new RegExp(`\\b${this.escapeRegex(query)}\\b`, 'i');
         if (wordBoundaryPattern.test(nameLower)) {
-            score += 5000;
+            score += 50000;
         }
         
-        // Brand + Model exact match (e.g., "pixel 5" matches "Google Pixel 5")
-        if (parsedQuery.brand && parsedQuery.model) {
+        // Brand + Model number exact match (e.g., "pixel 5" matches "Google Pixel 5")
+        if (parsedQuery.brand && parsedQuery.modelNumber) {
             const hasBrand = nameLower.includes(parsedQuery.brand);
-            const modelPattern = new RegExp(`\\b${this.escapeRegex(parsedQuery.model)}\\b`, 'i');
-            const hasExactModel = modelPattern.test(nameLower);
+            const hasExactNumber = device.tokens.numbers.includes(parsedQuery.modelNumber);
             
-            if (hasBrand && hasExactModel) {
-                score += 8000;
-            } else if (hasBrand) {
-                score += 50; // Has brand but not exact model
+            if (hasBrand && hasExactNumber) {
+                // Check if it's the exact model (not a variant like "5a" when searching "5")
+                const modelPattern = new RegExp(`\\b${this.escapeRegex(parsedQuery.modelNumber)}\\b`, 'i');
+                if (modelPattern.test(nameLower)) {
+                    score += 80000; // Exact model
+                } else {
+                    score += 40000; // Model variant (e.g., 5a when searching 5)
+                }
             }
+        }
+        
+        // Exact number match in main model
+        if (parsedQuery.numbers.length > 0 && device.tokens.mainModel === parsedQuery.numbers[0]) {
+            score += 30000;
         }
         
         // Name starts with query
         if (nameLower.startsWith(query)) {
-            score += 3000;
+            score += 20000;
         }
         
-        // Name contains query (but not as substring of another word)
-        if (nameLower.includes(query)) {
-            score += 100;
+        // Model number exact match
+        if (device.model_number?.toLowerCase() === query) {
+            score += 40000;
+        }
+        
+        if (device.model_number?.toLowerCase().includes(query)) {
+            score += 500;
         }
         
         // Manufacturer exact match
         if (manufacturerLower === query) {
-            score += 2000;
-        }
-        
-        if (manufacturerLower.includes(query)) {
-            score += 40;
+            score += 15000;
         }
         
         // Model exact match
         if (modelLower === query) {
-            score += 1500;
+            score += 10000;
         }
         
-        if (modelLower.includes(query)) {
-            score += 30;
-        }
-        
-        // Model number match (high priority)
-        if (device.model_number?.toLowerCase() === query) {
-            score += 4000;
-        }
-        
-        if (device.model_number?.toLowerCase().includes(query)) {
-            score += 60;
-        }
-        
-        // Numeric model match (e.g., "5" in "Pixel 5")
-        if (device.tokens.numericModel === query) {
+        // Name contains query
+        if (nameLower.includes(query)) {
             score += 1000;
-        }
-        
-        // Region match
-        if (device.region?.toLowerCase() === query) {
-            score += 20;
         }
         
         // Product match
         if (device.products.some(p => p.toLowerCase() === query)) {
-            score += 500;
+            score += 5000;
         }
         
         if (device.products.some(p => p.toLowerCase().includes(query))) {
-            score += 15;
+            score += 100;
         }
         
         // OS match
         if (device.os.toLowerCase() === query) {
-            score += 200;
-        }
-        
-        if (device.os.toLowerCase().includes(query)) {
-            score += 10;
+            score += 2000;
         }
         
         // Penalty for longer names (prefer shorter, more specific matches)
-        score -= nameLower.length;
+        score -= nameLower.length * 10;
+        
+        // Penalty for variant models when searching for base model
+        // E.g., penalize "Pixel 5a" when searching "pixel 5"
+        if (parsedQuery.modelNumber) {
+            const exactPattern = new RegExp(`\\b${this.escapeRegex(parsedQuery.modelNumber)}\\b`, 'i');
+            if (!exactPattern.test(nameLower)) {
+                score -= 10000; // It's a variant, lower priority
+            }
+        }
         
         return score;
     }
