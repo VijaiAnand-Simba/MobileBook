@@ -1,161 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGM Device Compatibility Checker</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGM Device Compatibility Checker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0f; --ink-soft: #3b3b4f; --ink-muted: #7b7b9a;
+  --surface: #f5f4f0; --white: #ffffff;
+  --accent: #4f46e5; --accent-warm: #e8521a;
+  --accent-yellow: #f0b429; --border: rgba(10,10,15,0.1);
+  --rq-bg: #fff8ed; --rq-border: #f0b429;
+  --us-color: #0369a1; --us-bg: #e0f2fe;
+  --ous-color: #7e22ce; --ous-bg: #fdf4ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--surface); color:var(--ink); min-height:100vh; overflow-x:hidden; }
+
+/* HEADER */
+.header { background:var(--ink); color:var(--white); padding:2.5rem 0 2rem; position:relative; overflow:hidden; }
+.header::after { content:'CGM'; position:absolute; right:-2rem; top:-1rem; font-family:'Syne',sans-serif; font-size:14rem; font-weight:800; opacity:0.04; letter-spacing:-1rem; line-height:1; pointer-events:none; user-select:none; }
+.container { max-width:1100px; margin:0 auto; padding:0 2rem; }
+.logo-row { display:flex; align-items:center; gap:1rem; margin-bottom:.6rem; }
+.logo-pill { background:var(--accent); color:white; font-family:'Syne',sans-serif; font-weight:700; font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; padding:.35rem .85rem; border-radius:99px; }
+.header-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3.5vw,2.5rem); font-weight:800; letter-spacing:-.03em; line-height:1; }
+.header-title span { color:#7c78ff; }
+.header-sub { color:rgba(255,255,255,.45); font-size:.9rem; font-weight:300; margin-top:.4rem; }
+.header-meta { display:flex; gap:1.5rem; margin-top:1.75rem; flex-wrap:wrap; }
+.meta-chip { display:flex; align-items:center; gap:.5rem; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:.4rem .85rem; font-size:.8rem; font-weight:500; color:rgba(255,255,255,.6); }
+.meta-chip strong { color:white; font-weight:600; }
+
+/* CONTROLS */
+.controls-bar { background:var(--white); border-bottom:1px solid var(--border); padding:1rem 0; position:sticky; top:0; z-index:100; box-shadow:0 1px 0 rgba(0,0,0,.05); }
+.controls-inner { display:flex; align-items:center; gap:.85rem; flex-wrap:wrap; }
+.search-wrap { flex:1; min-width:200px; position:relative; }
+.search-wrap svg { position:absolute; left:.85rem; top:50%; transform:translateY(-50%); opacity:.35; width:15px; height:15px; pointer-events:none; }
+#deviceSearch { width:100%; padding:.6rem 2.4rem; font-family:'DM Sans',sans-serif; font-size:.88rem; background:var(--surface); border:1.5px solid var(--border); border-radius:8px; outline:none; transition:border-color .2s; color:var(--ink); }
+#deviceSearch:focus { border-color:var(--accent); background:white; }
+#deviceSearch::placeholder { color:var(--ink-muted); }
+.clear-btn { position:absolute; right:.7rem; top:50%; transform:translateY(-50%); width:19px; height:19px; background:var(--ink-muted); border:none; border-radius:50%; cursor:pointer; color:white; font-size:.6rem; display:none; align-items:center; justify-content:center; transition:background .15s; }
+.clear-btn:hover { background:var(--accent-warm); }
+.clear-btn.visible { display:flex; }
+.filter-group { display:flex; align-items:center; gap:.35rem; }
+.filter-label { font-size:.7rem; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:.1em; white-space:nowrap; padding-right:.2rem; }
+.pill-btn { padding:.4rem .8rem; font-family:'DM Sans',sans-serif; font-size:.79rem; font-weight:500; border:1.5px solid var(--border); background:transparent; border-radius:99px; cursor:pointer; color:var(--ink-soft); transition:all .15s; white-space:nowrap; }
+.pill-btn:hover { border-color:var(--accent); color:var(--accent); }
+.pill-btn.active { background:var(--accent); border-color:var(--accent); color:white; font-weight:600; }
+.pill-btn.region-us.active { background:var(--us-color); border-color:var(--us-color); }
+.pill-btn.region-ous.active { background:var(--ous-color); border-color:var(--ous-color); }
+.filter-divider { width:1px; height:26px; background:var(--border); flex-shrink:0; }
+
+/* TABS */
+.tabs-bar { display:flex; border-bottom:2px solid var(--border); background:var(--white); }
+.tab-btn { padding:.85rem 1.4rem; font-family:'DM Sans',sans-serif; font-size:.86rem; font-weight:500; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; cursor:pointer; color:var(--ink-muted); display:flex; align-items:center; gap:.55rem; transition:all .15s; }
+.tab-btn:hover { color:var(--ink); }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+.tab-count { font-size:.7rem; font-weight:700; padding:.15rem .45rem; border-radius:99px; background:var(--surface); color:var(--ink-soft); }
+.tab-btn.active .tab-count { background:var(--accent); color:white; }
+.tab-count.warn { background:var(--accent-yellow); color:white; }
+
+/* MAIN */
+.main { padding:1.5rem 0 4rem; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.results-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; gap:1rem; flex-wrap:wrap; }
+.results-title { font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; letter-spacing:-.02em; }
+.results-count { font-size:.8rem; color:var(--ink-muted); }
+
+/* DEVICE GRID */
+.devices-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(295px,1fr)); gap:.85rem; }
+
+/* DEVICE CARD */
+.device-card { background:var(--white); border:1px solid var(--border); border-left:3px solid var(--border); border-radius:10px; padding:1rem 1.1rem .9rem; transition:box-shadow .2s,transform .2s; }
+.device-card:hover { box-shadow:0 6px 20px rgba(79,70,229,.1); transform:translateY(-2px); }
+.device-card.rq { background:var(--rq-bg); }
+.device-card.region-US { border-left-color:var(--us-color); }
+.device-card.region-OUS { border-left-color:var(--ous-color); }
+.device-card.region-BOTH { border-left:3px solid; border-image:linear-gradient(180deg,var(--us-color),var(--ous-color)) 1; }
+
+.card-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:.4rem; gap:.5rem; }
+.card-top-left { display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; }
+.mfr-tag { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); }
+.region-badge { display:inline-flex; align-items:center; gap:.25rem; font-size:.64rem; font-weight:700; letter-spacing:.06em; padding:.14rem .48rem; border-radius:99px; text-transform:uppercase; }
+.region-badge.US { background:var(--us-bg); color:var(--us-color); }
+.region-badge.OUS { background:var(--ous-bg); color:var(--ous-color); }
+.region-badge.BOTH { background:linear-gradient(90deg,var(--us-bg),var(--ous-bg)); color:var(--ink-soft); border:1px solid var(--border); }
+.os-tag { display:inline-flex; align-items:center; gap:.3rem; font-size:.67rem; font-weight:600; padding:.17rem .52rem; border-radius:99px; }
+.os-tag.android { background:#e8f5e9; color:#2e7d32; }
+.os-tag.ios { background:#f3f0ff; color:#4f46e5; }
+.card-name { font-family:'Syne',sans-serif; font-size:.92rem; font-weight:700; line-height:1.25; letter-spacing:-.01em; margin-bottom:.28rem; color:var(--ink); }
+.card-model { font-size:.67rem; color:var(--ink-muted); font-family:'Courier New',monospace; background:var(--surface); display:inline-block; padding:.1rem .38rem; border-radius:4px; margin-bottom:.5rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.card-products { display:flex; gap:.32rem; flex-wrap:wrap; margin-top:.45rem; }
+.prod-badge { font-size:.67rem; font-weight:700; padding:.17rem .55rem; border-radius:5px; letter-spacing:.04em; }
+.prod-badge.E3 { background:#e0f2fe; color:#0369a1; }
+.prod-badge._365 { background:#f0fdf4; color:#166534; }
+.prod-badge.NOW { background:#fdf4ff; color:#7e22ce; }
+.rq-label { display:inline-flex; align-items:center; gap:.3rem; font-size:.66rem; font-weight:700; color:#92400e; background:#fef3c7; border:1px solid #fcd34d; padding:.17rem .48rem; border-radius:5px; margin-top:.45rem; }
+
+/* NEW DEVICES */
+.new-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); gap:.85rem; }
+.new-card { background:var(--white); border:1px solid var(--border); border-top:3px solid var(--accent-yellow); border-radius:10px; padding:1rem 1.1rem; transition:box-shadow .2s,transform .2s; }
+.new-card:hover { box-shadow:0 5px 18px rgba(0,0,0,.08); transform:translateY(-2px); }
+.new-card-brand { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); margin-bottom:.3rem; }
+.new-card-name { font-family:'Syne',sans-serif; font-size:.91rem; font-weight:700; letter-spacing:-.01em; margin-bottom:.5rem; }
+.new-card-meta { display:flex; flex-direction:column; gap:.28rem; }
+.new-card-row { display:flex; align-items:center; gap:.4rem; font-size:.75rem; color:var(--ink-soft); }
+.not-listed { display:inline-flex; align-items:center; gap:.3rem; font-size:.67rem; font-weight:700; color:#92400e; background:#fff7ed; border:1px solid #fed7aa; padding:.2rem .52rem; border-radius:6px; margin-top:.42rem; }
+
+/* EMPTY / LOADING */
+.empty-state { text-align:center; padding:3.5rem 2rem; display:none; }
+.empty-state svg { opacity:.2; margin-bottom:.85rem; }
+.empty-state h3 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:.4rem; }
+.empty-state p { color:var(--ink-muted); font-size:.88rem; }
+.loading-state { text-align:center; padding:3rem 2rem; }
+.spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto .85rem; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* FOOTER */
+.footer { background:var(--ink); color:rgba(255,255,255,.35); text-align:center; padding:1.4rem; font-size:.8rem; }
+.footer strong { color:rgba(255,255,255,.65); }
+
+@media(max-width:640px) {
+  .controls-inner { flex-direction:column; align-items:stretch; }
+  .filter-group { flex-wrap:wrap; }
+  .filter-divider { display:none; }
+  .devices-grid,.new-grid { grid-template-columns:1fr; }
+}
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <h1 class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                    CGM Compatibility Checker
-                </h1>
-                <p class="tagline">Find compatible devices for your CGM system</p>
-            </div>
-        </div>
-    </header>
 
-    <!-- Search Section -->
-    <section class="search-section">
-        <div class="container">
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input 
-                    type="text" 
-                    id="deviceSearch" 
-                    placeholder="Search for your device (e.g., iPhone 14, Samsung Galaxy S23...)"
-                    autocomplete="off"
-                >
-                <button id="clearSearch" class="clear-btn" style="display: none;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-<div class="filters">
-    <div class="filter-group">
-        <label>Operating System:</label>
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="android">
-                <i class="fab fa-android"></i> Android
-            </button>
-            <button class="filter-btn" data-filter="ios">
-                <i class="fab fa-apple"></i> iOS
-            </button>
-        </div>
+<header class="header">
+  <div class="container">
+    <div class="logo-row"><span class="logo-pill">CGM</span></div>
+    <h1 class="header-title">Compatibility<br><span>Checker</span></h1>
+    <p class="header-sub">Find compatible devices for your continuous glucose monitoring system</p>
+    <div class="header-meta">
+      <div class="meta-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <strong id="hdrCompat">—</strong> devices
+      </div>
+      <div class="meta-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Updated <strong id="hdrDate">—</strong>
+      </div>
+      <div class="meta-chip" style="gap:.5rem;">
+        <span style="background:var(--us-bg);color:var(--us-color);font-weight:700;font-size:.65rem;padding:.1rem .4rem;border-radius:4px;">US</span>
+        <span style="color:rgba(255,255,255,.3);">&amp;</span>
+        <span style="background:var(--ous-bg);color:var(--ous-color);font-weight:700;font-size:.65rem;padding:.1rem .4rem;border-radius:4px;">OUS</span>
+        <span>region coverage</span>
+      </div>
     </div>
-    
-    <div class="filter-group">
-        <label>Product Line:</label>
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-product="all">All</button>
-            <button class="filter-btn" data-product="E3">E3</button>
-            <button class="filter-btn" data-product="365">365</button>
-            <button class="filter-btn" data-product="NOW">NOW</button>
-        </div>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <div class="container">
+    <div class="controls-inner">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="deviceSearch" placeholder="Search device, brand, model number…" autocomplete="off">
+        <button id="clearSearch" class="clear-btn" title="Clear">✕</button>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-group">
+        <span class="filter-label">Region</span>
+        <button class="pill-btn active" data-region="all">All</button>
+        <button class="pill-btn region-us" data-region="US">🇺🇸 US</button>
+        <button class="pill-btn region-ous" data-region="OUS">🌍 OUS</button>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-group">
+        <span class="filter-label">OS</span>
+        <button class="pill-btn active" data-filter="all">All</button>
+        <button class="pill-btn" data-filter="android">Android</button>
+        <button class="pill-btn" data-filter="ios">iOS</button>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-group">
+        <span class="filter-label">Product</span>
+        <button class="pill-btn active" data-product="all">All</button>
+        <button class="pill-btn" data-product="E3">E3</button>
+        <button class="pill-btn" data-product="365">365</button>
+        <button class="pill-btn" data-product="NOW">NOW</button>
+      </div>
     </div>
-    
-    <div class="filter-group region-filter">
-        <label>Region:</label>
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-region="all">All</button>
-            <button class="filter-btn" data-region="US">
-                <i class="fas fa-flag-usa"></i> US
-            </button>
-            <button class="filter-btn" data-region="OUS">
-                <i class="fas fa-globe"></i> OUS
-            </button>
-        </div>
-    </div>
+  </div>
 </div>
 
-    <!-- Tabs -->
-    <section class="tabs-section">
-        <div class="container">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="compatible">
-                    <i class="fas fa-check-circle"></i>
-                    Compatible Devices
-                    <span class="badge" id="compatibleCount">0</span>
-                </button>
-                <button class="tab-btn" data-tab="new-devices">
-                    <i class="fas fa-mobile-alt"></i>
-                    New Market Devices
-                    <span class="badge badge-warning" id="newDevicesCount">0</span>
-                </button>
-            </div>
-        </div>
-    </section>
+<div class="tabs-bar container" style="padding-left:2rem;padding-right:2rem;">
+  <button class="tab-btn active" data-tab="compatible">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    Compatible Devices <span class="tab-count" id="compatTab">0</span>
+  </button>
+  <button class="tab-btn" data-tab="new">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+    New Devices <span class="tab-count warn" id="newTab">0</span>
+  </button>
+</div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Compatible Devices Tab -->
-            <div id="compatibleTab" class="tab-content active">
-                <div class="results-header">
-                    <h2>Compatible Devices</h2>
-                    <p class="last-updated">Last updated: <span id="lastUpdated">Loading...</span></p>
-                </div>
-                
-                <div id="searchResults" class="search-results">
-                    <!-- Results will be inserted here -->
-                </div>
-                
-                <div id="noResults" class="no-results" style="display: none;">
-                    <i class="fas fa-search"></i>
-                    <h3>No devices found</h3>
-                    <p>Try adjusting your search or filters</p>
-                </div>
-                
-                <div id="loading" class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading compatibility data...</p>
-                </div>
-            </div>
+<main class="main">
+  <div class="container">
+    <div id="compatiblePanel" class="tab-panel active">
+      <div class="results-row">
+        <span class="results-title">Supported Devices</span>
+        <span class="results-count" id="resultsCount">Loading…</span>
+      </div>
+      <div class="loading-state" id="loading"><div class="spinner"></div><p style="color:var(--ink-muted);font-size:.85rem;">Loading…</p></div>
+      <div class="devices-grid" id="devicesGrid"></div>
+      <div class="empty-state" id="emptyState">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <h3>No devices found</h3><p>Try a different search or adjust filters.</p>
+      </div>
+    </div>
+    <div id="newPanel" class="tab-panel">
+      <div class="results-row">
+        <span class="results-title">Recently Launched</span>
+        <span class="results-count">Not yet in compatibility list</span>
+      </div>
+      <div class="new-grid" id="newGrid"></div>
+    </div>
+  </div>
+</main>
 
-            <!-- New Devices Tab -->
-            <div id="newDevicesTab" class="tab-content">
-                <div class="results-header">
-                    <h2>Recently Launched Devices</h2>
-                    <p class="info-text">
-                        <i class="fas fa-info-circle"></i>
-                        These devices are newly available in the market but not yet listed in the official compatibility list.
-                    </p>
-                </div>
-                
-                <div id="newDevicesResults" class="new-devices-grid">
-                    <!-- New devices will be inserted here -->
-                </div>
-                
-                <div id="noNewDevices" class="no-results" style="display: none;">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>All caught up!</h3>
-                    <p>All recent devices are already in the compatibility list</p>
-                </div>
-            </div>
-        </div>
-    </main>
+<footer class="footer">
+  <p>CGM Compatibility Checker &nbsp;·&nbsp; US &amp; OUS regions &nbsp;·&nbsp; <strong>Always confirm with your healthcare provider.</strong></p>
+</footer>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 CGM Compatibility Checker. Data updated automatically.</p>
-            <p class="disclaimer">
-                <i class="fas fa-exclamation-triangle"></i>
-                Always verify compatibility with your healthcare provider before use.
-            </p>
-        </div>
-    </footer>
+<script>
+// ── DATA embedded from provided JSON (representative sample) ──
+const RAW = {"last_updated":"2026-03-19T06:16:04.912500","products":{"E3":{"android":[{"name":"Google Pixel 2 XL","manufacturer":"Google","model_number":"Pixel 2 XL","os_version":"10.0","rationally_qualified":false,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 4","manufacturer":"Google","model_number":"Pixel 4","os_version":"12.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 5","manufacturer":"Google","model_number":"GD1YQ","os_version":"13.0","rationally_qualified":false,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 6","manufacturer":"Google","model_number":"Pixel 6","os_version":"13.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 7","manufacturer":"Google","model_number":"Pixel 7","os_version":"13.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 8","manufacturer":"Google","model_number":"Pixel 8","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 8a","manufacturer":"Google","model_number":"Pixel 8a","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 9","manufacturer":"Google","model_number":"Pixel 9","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 9a","manufacturer":"Google","model_number":"Pixel 9a","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 10","manufacturer":"Google","model_number":"Pixel 10","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 10 Pro","manufacturer":"Google","model_number":"Pixel 10 Pro","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"HMD Global Nokia G300","manufacturer":"HMD Global","model_number":"N1374DL","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"LG G6","manufacturer":"LG","model_number":"LG-AS993, LG-H87, LGUS997","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Lively Jitterbug Smart 3","manufacturer":"Lively","model_number":"5007S","os_version":"10.0","rationally_qualified":false,"os":"android","region":"US","product":"E3"},{"name":"Lively Jitterbug Smart 4","manufacturer":"Lively","model_number":"T608G","os_version":"10.0","rationally_qualified":false,"os":"android","region":"US","product":"E3"},{"name":"Motorola Edge 2025","manufacturer":"Motorola","model_number":"edge 2025","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Motorola G Power 2025","manufacturer":"Motorola","model_number":"g power - 2025","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Motorola G Stylus 5G 2024","manufacturer":"Motorola","model_number":"g stylus 5G - 2024","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"OnePlus 13","manufacturer":"OnePlus","model_number":"PJZ110, CPH26","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"OnePlus 13R","manufacturer":"OnePlus","model_number":"CPH264, CPH2691","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy S22","manufacturer":"Samsung","model_number":"SM-S901, SC-51C, SCG13","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy S23","manufacturer":"Samsung","model_number":"SM-S911, SC-51D, SCG19","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy S24","manufacturer":"Samsung","model_number":"SM-S921, SC-51E, SCG25","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy S25","manufacturer":"Samsung","model_number":"SM-S931, SCG31, SC-51","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy S25 Ultra","manufacturer":"Samsung","model_number":"SM-S938, SC-52F, SCG32","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy A55","manufacturer":"Samsung","model_number":"SC-53E, SCG27, SM-A556","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Samsung Galaxy A56 5G","manufacturer":"Samsung","model_number":"SM-A566","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Sony Xperia 1 VII","manufacturer":"Sony","model_number":"SO-51F, A501SO, SOG15, XQ-FS","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Xiaomi Redmi Note 14 Pro","manufacturer":"Xiaomi","model_number":"24090RA29, 24116RACCG","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"E3"},{"name":"Google Pixel 2","manufacturer":"Google","model_number":"Pixel 2","os_version":"10.0","rationally_qualified":false,"os":"android","region":"OUS","product":"E3"},{"name":"Google Pixel 3a","manufacturer":"Google","model_number":"Pixel 3a","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Google Pixel 3a XL","manufacturer":"Google","model_number":"Pixel 3a XL","os_version":"10.0","rationally_qualified":false,"os":"android","region":"OUS","product":"E3"},{"name":"Google Pixel 6","manufacturer":"Google","model_number":"Pixel 6","os_version":"13.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Google Pixel 8","manufacturer":"Google","model_number":"Pixel 8","os_version":"14.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Google Pixel 9","manufacturer":"Google","model_number":"Pixel 9","os_version":"14.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Google Pixel 10","manufacturer":"Google","model_number":"Pixel 10","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Huawei P30","manufacturer":"Huawei","model_number":"ELE-AL00, ELE-L, ELE-TL00","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Huawei P30 Pro","manufacturer":"Huawei","model_number":"HW-02L, VOG-AL, VOG-L","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Huawei Mate 20 X","manufacturer":"Huawei","model_number":"EVR-L29, EVR-TL00","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Huawei Mate 20 Pro","manufacturer":"Huawei","model_number":"LYA-L","os_version":"10.0","rationally_qualified":false,"os":"android","region":"OUS","product":"E3"},{"name":"LG G5","manufacturer":"LG","model_number":"LG-F700, RS988, VS987","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Motorola Edge 2025","manufacturer":"Motorola","model_number":"edge 2025","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"OnePlus 13","manufacturer":"OnePlus","model_number":"PJZ110, CPH26","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Samsung Galaxy S22 5G","manufacturer":"Samsung","model_number":"SC-51C, SCG13, SM-S901","os_version":"14.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Samsung Galaxy S23","manufacturer":"Samsung","model_number":"SM-S911, SC-51D, SCG19","os_version":"14.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Samsung Galaxy S24","manufacturer":"Samsung","model_number":"SM-S921, SC-51E, SCG25","os_version":"15.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Samsung Galaxy S25","manufacturer":"Samsung","model_number":"SM-S931, SCG31, SC-51","os_version":"15.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Samsung Galaxy A55","manufacturer":"Samsung","model_number":"SC-53E, SCG27, SM-A556","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Samsung Galaxy S7 Edge","manufacturer":"Samsung","model_number":"SC-02H, SCV33, SM-G935","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Sony Xperia 1 VII","manufacturer":"Sony","model_number":"SO-51F, A501SO, SOG15, XQ-FS","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Xiaomi Poco X6 Neo 5G","manufacturer":"Xiaomi","model_number":"23122PCD1","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"},{"name":"Xiaomi Redmi Note 14 Pro","manufacturer":"Xiaomi","model_number":"24090RA29, 24116RACCG","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"E3"}],"ios":[{"name":"Apple iPhone 6","manufacturer":"Apple","model_number":"A1688","os_version":"12.0","rationally_qualified":false,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 8","manufacturer":"Apple","model_number":"A1863","os_version":"11.0","rationally_qualified":false,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 11","manufacturer":"Apple","model_number":"A2111","os_version":"13.0","rationally_qualified":false,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 11 Pro","manufacturer":"Apple","model_number":"","os_version":"13.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 12 Pro","manufacturer":"Apple","model_number":"","os_version":"14.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 13","manufacturer":"Apple","model_number":"MLML3LL/A","os_version":"15.0","rationally_qualified":false,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 14","manufacturer":"Apple","model_number":"","os_version":"16.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 15","manufacturer":"Apple","model_number":"","os_version":"17.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 16","manufacturer":"Apple","model_number":"","os_version":"18.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 16 Pro","manufacturer":"Apple","model_number":"","os_version":"18.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 17 Pro","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone Air","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple Watch Series 6","manufacturer":"Apple","model_number":"","os_version":"9.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple Watch Series 11","manufacturer":"Apple","model_number":"","os_version":"9.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple Watch Ultra 3","manufacturer":"Apple","model_number":"","os_version":"9.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPod Touch Gen 7","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"E3"},{"name":"Apple iPhone 6 Plus","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone 7","manufacturer":"Apple","model_number":"A1660","os_version":"12.0","rationally_qualified":false,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone 8","manufacturer":"Apple","model_number":"A1863","os_version":"11.0","rationally_qualified":false,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone XS","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone 11 Pro","manufacturer":"Apple","model_number":"","os_version":"13.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone 14","manufacturer":"Apple","model_number":"","os_version":"16.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone 15","manufacturer":"Apple","model_number":"","os_version":"17.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPhone 16","manufacturer":"Apple","model_number":"","os_version":"18.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple Watch Series 2","manufacturer":"Apple","model_number":"A1802","os_version":"9.0","rationally_qualified":false,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple Watch Series 11","manufacturer":"Apple","model_number":"","os_version":"9.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPod Touch Gen 6","manufacturer":"Apple","model_number":"A1574","os_version":"12.0","rationally_qualified":false,"os":"ios","region":"OUS","product":"E3"},{"name":"Apple iPod Touch Gen 7","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"E3"}]},"365":{"android":[{"name":"Google Pixel 6","manufacturer":"Google","model_number":"Pixel 6","os_version":"13.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Google Pixel 7","manufacturer":"Google","model_number":"Pixel 7","os_version":"13.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Google Pixel 8","manufacturer":"Google","model_number":"Pixel 8","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Google Pixel 9","manufacturer":"Google","model_number":"Pixel 9","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Samsung Galaxy S24","manufacturer":"Samsung","model_number":"SM-S921, SC-51E, SCG25","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Samsung Galaxy S25","manufacturer":"Samsung","model_number":"SM-S931, SC-51F, SCG31","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"OnePlus 13","manufacturer":"OnePlus","model_number":"PJZ110, CPH26","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Sony Xperia 1 VII","manufacturer":"Sony","model_number":"SO-51F, A501SO, SOG15, XQ-FS","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Lively Jitterbug Smart 3","manufacturer":"Lively","model_number":"5007S","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"365"},{"name":"Google Pixel 3a","manufacturer":"Google","model_number":"Pixel 3a","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"},{"name":"Google Pixel 6","manufacturer":"Google","model_number":"Pixel 6","os_version":"13.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"},{"name":"Google Pixel 8","manufacturer":"Google","model_number":"Pixel 8","os_version":"14.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"},{"name":"Samsung Galaxy S24","manufacturer":"Samsung","model_number":"SC-51E, SCG25, SM-S921","os_version":"15.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"},{"name":"Samsung Galaxy S25","manufacturer":"Samsung","model_number":"SM-S931, SC-51F, SCG31","os_version":"15.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"},{"name":"OnePlus 13","manufacturer":"OnePlus","model_number":"PJZ110, CPH26","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"},{"name":"Sony Xperia 1 VII","manufacturer":"Sony","model_number":"SO-51F, A501SO, SOG15, XQ-FS","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"365"}],"ios":[{"name":"Apple iPhone 12","manufacturer":"Apple","model_number":"","os_version":"14.0","rationally_qualified":true,"os":"ios","region":"US","product":"365"},{"name":"Apple iPhone 14","manufacturer":"Apple","model_number":"","os_version":"16.0","rationally_qualified":true,"os":"ios","region":"US","product":"365"},{"name":"Apple iPhone 16","manufacturer":"Apple","model_number":"","os_version":"18.0","rationally_qualified":true,"os":"ios","region":"US","product":"365"},{"name":"Apple iPhone 17","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"365"},{"name":"Apple Watch Series 11","manufacturer":"Apple","model_number":"","os_version":"9.0","rationally_qualified":true,"os":"ios","region":"US","product":"365"},{"name":"Apple iPhone 12","manufacturer":"Apple","model_number":"","os_version":"14.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"365"},{"name":"Apple iPhone 14","manufacturer":"Apple","model_number":"","os_version":"16.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"365"},{"name":"Apple iPhone 16","manufacturer":"Apple","model_number":"","os_version":"18.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"365"},{"name":"Apple Watch Series 11","manufacturer":"Apple","model_number":"","os_version":"9.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"365"}]},"NOW":{"android":[{"name":"Google Pixel 6","manufacturer":"Google","model_number":"Pixel 6","os_version":"13.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"Google Pixel 8","manufacturer":"Google","model_number":"Pixel 8","os_version":"14.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"Samsung Galaxy S24","manufacturer":"Samsung","model_number":"SM-S921, SC-51E, SCG25","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"Samsung Galaxy S25","manufacturer":"Samsung","model_number":"SM-S931, SC-51F, SCG31","os_version":"15.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"OnePlus 13","manufacturer":"OnePlus","model_number":"PJZ110, CPH2649, CPH2653","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"Motorola G 2025","manufacturer":"Motorola","model_number":"g - 2025","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"Sony Xperia 1 VII","manufacturer":"Sony","model_number":"SO-51F, A501SO, SOG15, XQ-FS","os_version":"10.0","rationally_qualified":true,"os":"android","region":"US","product":"NOW"},{"name":"Lively Jitterbug Smart 4","manufacturer":"Lively","model_number":"T608G","os_version":"10.0","rationally_qualified":false,"os":"android","region":"US","product":"NOW"},{"name":"Google Pixel 3a","manufacturer":"Google","model_number":"Pixel 3a","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"},{"name":"Google Pixel 6","manufacturer":"Google","model_number":"Pixel 6","os_version":"13.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"},{"name":"Google Pixel 9","manufacturer":"Google","model_number":"Pixel 9","os_version":"14.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"},{"name":"Samsung Galaxy S24","manufacturer":"Samsung","model_number":"SM-S921, SC-51E, SCG25","os_version":"15.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"},{"name":"Samsung Galaxy S25","manufacturer":"Samsung","model_number":"SM-S931, SC-51F, SCG31","os_version":"15.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"},{"name":"Samsung Galaxy XCover 4S","manufacturer":"Samsung","model_number":"SM-G398FN","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"},{"name":"Sony Xperia 1 VII","manufacturer":"Sony","model_number":"SO-51F, A501SO, SOG15, XQ-FS","os_version":"10.0","rationally_qualified":true,"os":"android","region":"OUS","product":"NOW"}],"ios":[{"name":"Apple iPhone X","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"NOW"},{"name":"Apple iPhone SE","manufacturer":"Apple","model_number":"iPhone SE 2nd Generation","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"NOW"},{"name":"Apple iPod Touch Gen 7","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"US","product":"NOW"},{"name":"Apple iPhone X","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"NOW"},{"name":"Apple iPhone 11","manufacturer":"Apple","model_number":"A2111","os_version":"13.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"NOW"},{"name":"Apple iPhone 15","manufacturer":"Apple","model_number":"","os_version":"17.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"NOW"},{"name":"Apple iPhone 16","manufacturer":"Apple","model_number":"","os_version":"18.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"NOW"},{"name":"Apple iPod Touch Gen 7","manufacturer":"Apple","model_number":"","os_version":"12.0","rationally_qualified":true,"os":"ios","region":"OUS","product":"NOW"}]}}};
 
-    <script src="js/app.js"></script>
-    <script src="js/search.js"></script>
+const RAW_NEW = {devices:[{name:"Galaxy S26 Ultra",brand:"Samsung",os:"Android",release_date:"2026-03-16"},{name:"Galaxy S26+",brand:"Samsung",os:"Android",release_date:"2026-03-16"},{name:"Galaxy S26",brand:"Samsung",os:"Android",release_date:"2026-03-16"},{name:"iPhone 17e",brand:"Apple",os:"iOS",release_date:"2026-03-16"},{name:"Pixel 10a",brand:"Google",os:"Android",release_date:"2026-03-16"},{name:"Pixel 10 Pro Fold",brand:"Google",os:"Android",release_date:"2026-03-16"},{name:"Redmi Turbo 5",brand:"Xiaomi",os:"Android",release_date:"2026-03-16"},{name:"Redmi Note 15 Pro+",brand:"Xiaomi",os:"Android",release_date:"2026-03-16"},{name:"OnePlus 15R",brand:"OnePlus",os:"Android",release_date:"2026-03-16"},{name:"Moto G Power (2026)",brand:"Motorola",os:"Android",release_date:"2026-03-16"},{name:"Xperia 10 VII",brand:"Sony",os:"Android",release_date:"2026-03-16"},{name:"Poco M8 Pro",brand:"Xiaomi",os:"Android",release_date:"2026-03-16"}]};
+
+let filters = { os:'all', product:'all', region:'all', search:'' };
+
+document.addEventListener('DOMContentLoaded', () => {
+  const d = new Date(RAW.last_updated);
+  document.getElementById('hdrDate').textContent = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('loading').style.display = 'none';
+  updateCounts(); renderDevices(); renderNew(); bindEvents();
+});
+
+function updateCounts() {
+  const all = new Set();
+  for (const pd of Object.values(RAW.products))
+    for (const dl of Object.values(pd))
+      dl.forEach(d => all.add(d.name+'|'+d.os+'|'+d.region));
+  document.getElementById('hdrCompat').textContent = all.size;
+  document.getElementById('compatTab').textContent = all.size;
+  document.getElementById('newTab').textContent = RAW_NEW.devices.length;
+}
+
+function bindEvents() {
+  const inp = document.getElementById('deviceSearch');
+  const clr = document.getElementById('clearSearch');
+  inp.addEventListener('input', debounce(e => {
+    filters.search = e.target.value.toLowerCase();
+    clr.classList.toggle('visible', !!e.target.value);
+    renderDevices();
+  }, 250));
+  clr.addEventListener('click', () => { inp.value=''; filters.search=''; clr.classList.remove('visible'); renderDevices(); });
+  document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', e => {
+    filters.os = e.currentTarget.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
+    e.currentTarget.classList.add('active'); renderDevices();
+  }));
+  document.querySelectorAll('[data-product]').forEach(b => b.addEventListener('click', e => {
+    filters.product = e.currentTarget.dataset.product;
+    document.querySelectorAll('[data-product]').forEach(x => x.classList.remove('active'));
+    e.currentTarget.classList.add('active'); renderDevices();
+  }));
+  document.querySelectorAll('[data-region]').forEach(b => b.addEventListener('click', e => {
+    filters.region = e.currentTarget.dataset.region;
+    document.querySelectorAll('[data-region]').forEach(x => x.classList.remove('active'));
+    e.currentTarget.classList.add('active'); renderDevices();
+  }));
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.addEventListener('click', e => {
+    const t = e.currentTarget.dataset.tab;
+    document.querySelectorAll('.tab-btn[data-tab]').forEach(x => x.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    document.getElementById(t==='compatible'?'compatiblePanel':'newPanel').classList.add('active');
+  }));
+}
+
+function getDevices() {
+  const map = {};
+  for (const [prod, pd] of Object.entries(RAW.products)) {
+    if (filters.product !== 'all' && filters.product !== prod) continue;
+    for (const [os, dl] of Object.entries(pd)) {
+      if (filters.os !== 'all' && filters.os !== os) continue;
+      dl.forEach(dev => {
+        if (filters.region !== 'all' && filters.region !== dev.region) return;
+        const k = dev.name+'|'+os;
+        if (!map[k]) map[k] = { name:dev.name, manufacturer:dev.manufacturer, model_number:dev.model_number||'', os, rq:false, products:new Set(), regions:new Set() };
+        map[k].products.add(prod);
+        map[k].regions.add(dev.region);
+        if (dev.rationally_qualified) map[k].rq = true;
+      });
+    }
+  }
+  let arr = Object.values(map).map(d => ({...d, products:[...d.products], regions:[...d.regions]}));
+  if (filters.search) arr = arr.filter(d =>
+    d.name.toLowerCase().includes(filters.search) ||
+    d.manufacturer.toLowerCase().includes(filters.search) ||
+    d.model_number.toLowerCase().includes(filters.search)
+  );
+  return arr.sort((a,b) => a.manufacturer.localeCompare(b.manufacturer) || a.name.localeCompare(b.name));
+}
+
+function renderDevices() {
+  const grid = document.getElementById('devicesGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('resultsCount');
+  const devs = getDevices();
+  if (!devs.length) { grid.innerHTML=''; empty.style.display='block'; count.textContent='0 results'; return; }
+  empty.style.display = 'none';
+  count.textContent = `${devs.length} device${devs.length!==1?'s':''}`;
+  grid.innerHTML = devs.map(cardHTML).join('');
+}
+
+const ANDROID_ICON = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zm-2.5-1C2.67 17 2 16.33 2 15.5v-6C2 8.67 2.67 8 3.5 8S5 8.67 5 9.5v6c0 .83-.67 1.5-1.5 1.5zm17 0c-.83 0-1.5-.67-1.5-1.5v-6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v6c0 .83-.67 1.5-1.5 1.5zM15.53 2.16l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>`;
+const IOS_ICON = `<svg width="10" height="10" viewBox="0 0 814 1000" fill="currentColor"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 405.6 0 303.6 0 207.7c0-124.7 81.5-190.5 161.1-190.5 61.6 0 110.9 40.8 148.4 40.8 35.9 0 92.3-43.3 161.1-43.3 25.9 0 108.2 2.6 168.1 79.6z"/></svg>`;
+
+function cardHTML(d) {
+  const isAndroid = d.os === 'android';
+  const hasUS = d.regions.includes('US'), hasOUS = d.regions.includes('OUS');
+  const both = hasUS && hasOUS;
+
+  // region badge
+  let regionHTML, regionClass;
+  if (both) {
+    regionHTML = `<span class="region-badge BOTH">🌐 US + OUS</span>`;
+    regionClass = 'region-BOTH';
+  } else if (hasUS) {
+    regionHTML = `<span class="region-badge US">🇺🇸 US</span>`;
+    regionClass = 'region-US';
+  } else {
+    regionHTML = `<span class="region-badge OUS">🌍 OUS</span>`;
+    regionClass = 'region-OUS';
+  }
+
+  const prods = d.products.map(p=>`<span class="prod-badge ${p==='365'?'_365':p}">${p}</span>`).join('');
+
+  return `<div class="device-card ${d.rq?'rq':''} ${regionClass}">
+    <div class="card-top">
+      <div class="card-top-left">
+        <span class="mfr-tag">${d.manufacturer}</span>
+        ${regionHTML}
+      </div>
+      <span class="os-tag ${isAndroid?'android':'ios'}">${isAndroid?ANDROID_ICON:IOS_ICON} ${isAndroid?'Android':'iOS'}</span>
+    </div>
+    <div class="card-name">${d.name}</div>
+    ${d.model_number?`<div class="card-model" title="${d.model_number}">${d.model_number}</div>`:''}
+    <div class="card-products">${prods}</div>
+    ${d.rq?`<div class="rq-label"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Rationally Qualified</div>`:''}
+  </div>`;
+}
+
+function renderNew() {
+  const grid = document.getElementById('newGrid');
+  if (!RAW_NEW.devices.length) return;
+  grid.innerHTML = RAW_NEW.devices.map(d => {
+    const rel = new Date(d.release_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const ico = d.os==='iOS' ? IOS_ICON : ANDROID_ICON;
+    return `<div class="new-card">
+      <div class="new-card-brand">${d.brand}</div>
+      <div class="new-card-name">${ico} ${d.name}</div>
+      <div class="new-card-meta">
+        <div class="new-card-row"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${rel}</div>
+        <div class="new-card-row"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>${d.os}</div>
+        <span class="not-listed"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Compatibility pending</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(()=>fn(...a), ms); }; }
+</script>
 </body>
 </html>
