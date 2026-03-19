@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from typing import List, Dict, Set
 import sys
+import time
+import re
 
 
 BRANDS = [
@@ -130,7 +132,106 @@ def load_compatibility() -> Set[str]:
     return compatible
 
 
-def fetch_brand_devices(brand_name: str, url: str) -> List[Dict]:
+def parse_date_from_text(text: str) -> str:
+    """
+    Parse date from text like 'Released 2024, March' or 'Exp. release 2025, Q1'.
+    Returns YYYY-MM-DD format or empty string.
+    """
+    if not text:
+        return ""
+    
+    # Pattern: "2024, March" or "2024, Q1" or "March 2024"
+    # Try format: "2024, March" or "2024 March"
+    match = re.search(r'(\d{4})[,\s]+(\w+)', text)
+    if match:
+        year = match.group(1)
+        month_str = match.group(2).lower()
+        
+        month_map = {
+            'january': '01', 'february': '02', 'march': '03', 'april': '04',
+            'may': '05', 'june': '06', 'july': '07', 'august': '08',
+            'september': '09', 'october': '10', 'november': '11', 'december': '12',
+            'jan': '01', 'feb': '02', 'mar': '03', 'apr': '04',
+            'jun': '06', 'jul': '07', 'aug': '08', 'sep': '09', 
+            'oct': '10', 'nov': '11', 'dec': '12',
+            'q1': '03', 'q2': '06', 'q3': '09', 'q4': '12'
+        }
+        
+        month = month_map.get(month_str, '01')
+        return f"{year}-{month}-01"
+    
+    # Try format: "March 2024" or "March, 2024"
+    match = re.search(r'(\w+)[,\s]+(\d{4})', text)
+    if match:
+        month_str = match.group(1).lower()
+        year = match.group(2)
+        
+        month_map = {
+            'january': '01', 'february': '02', 'march': '03', 'april': '04',
+            'may': '05', 'june': '06', 'july': '07', 'august': '08',
+            'september': '09', 'october': '10', 'november': '11', 'december': '12',
+            'jan': '01', 'feb': '02', 'mar': '03', 'apr': '04',
+            'jun': '06', 'jul': '07', 'aug': '08', 'sep': '09', 
+            'oct': '10', 'nov': '11', 'dec': '12',
+            'q1': '03', 'q2': '06', 'q3': '09', 'q4': '12'
+        }
+        
+        month = month_map.get(month_str, '01')
+        return f"{year}-{month}-01"
+    
+    # Just year
+    match = re.search(r'(\d{4})', text)
+    if match:
+        return f"{match.group(1)}-01-01"
+    
+    return ""
+
+
+def fetch_device_release_date(device_url: str) -> str:
+    """Fetch actual release date from device detail page."""
+    try:
+        r = requests.get(device_url, headers=HEADERS, timeout=15)
+        r.raise_for_status()
+        
+        soup = BeautifulSoup(r.text, "lxml")
+        
+        # Method 1: Check quick specs (top section)
+        for span in soup.select(".quickspec-brief span"):
+            text = span.get_text(strip=True)
+            if "release" in text.lower() or any(month in text.lower() for month in 
+                ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
+                date = parse_date_from_text(text)
+                if date:
+                    return date
+        
+        # Method 2: Check specs table - most reliable
+        for row in soup.select("table tr, #specs-list tr"):
+            header = row.find("td", class_="ttl")
+            if header:
+                header_text = header.get_text(strip=True).lower()
+                if "status" in header_text or "released" in header_text:
+                    value_td = row.find("td", class_="nfo")
+                    if value_td:
+                        date_text = value_td.get_text(strip=True)
+                        date = parse_date_from_text(date_text)
+                        if date:
+                            return date
+        
+        # Method 3: Check any element with data-spec="released"
+        release_elem = soup.find(attrs={"data-spec": "released"})
+        if release_elem:
+            date_text = release_elem.get_text(strip=True)
+            date = parse_date_from_text(date_text)
+            if date:
+                return date
+                
+    except Exception as e:
+        pass  # Silent fail, will use fallback
+    
+    return ""
+
+
+def fetch_brand_devices(brand_name: str, url: str, fetch_dates: bool = True) -> List[Dict]:
     """Fetch latest devices for a single brand from GSMArena."""
 
     devices = []
@@ -148,6 +249,8 @@ def fetch_brand_devices(brand_name: str, url: str) -> List[Dict]:
 
         for item in items[:15]:
             span = item.find("span")
+            link = item.find("a")
+            
             if not span:
                 continue
 
@@ -170,13 +273,32 @@ def fetch_brand_devices(brand_name: str, url: str) -> List[Dict]:
 
             os_type = "iOS" if ("iPhone" in name or "iPad" in name or "Watch" in name) else "Android"
 
+            # Extract release date
+            release_date = ""
+            
+            if fetch_dates and link and link.get("href"):
+                device_url = f"https://www.gsmarena.com/{link.get('href')}"
+                release_date = fetch_device_release_date(device_url)
+                
+                if release_date:
+                    print(f"      📅 {name}: {release_date}")
+                else:
+                    print(f"      ⚠️ {name}: date not found, using current date")
+                
+                # Small delay to avoid overwhelming the server
+                time.sleep(0.5)
+            
+            # Fallback to current date if not found
+            if not release_date:
+                release_date = datetime.now().strftime("%Y-%m-%d")
+
             devices.append({
-                "name":         full_name,  # ← Changed: Now includes brand
+                "name":         full_name,
                 "brand":        brand_name,
-                "model":        name,       # ← Keep original name as model
+                "model":        name,
                 "os":           os_type,
                 "os_version":   "",
-                "release_date": datetime.now().strftime("%Y-%m-%d"),
+                "release_date": release_date,
                 "source":       "gsmarena"
             })
 
@@ -192,14 +314,19 @@ def fetch_brand_devices(brand_name: str, url: str) -> List[Dict]:
     return devices
 
 
-def fetch_market_devices() -> List[Dict]:
+def fetch_market_devices(fetch_dates: bool = True) -> List[Dict]:
     """Fetch devices from all configured brands."""
 
     print("\n🌍 Fetching devices from GSMArena...")
+    if fetch_dates:
+        print("   📅 Fetching actual release dates (this will take longer)...\n")
+    else:
+        print("   ⚡ Using current date for all devices (faster mode)\n")
+    
     all_devices = []
 
     for brand_name, url in BRANDS:
-        devices = fetch_brand_devices(brand_name, url)
+        devices = fetch_brand_devices(brand_name, url, fetch_dates=fetch_dates)
         all_devices.extend(devices)
 
     print(f"\n🌐 Collected {len(all_devices)} devices total")
@@ -250,11 +377,11 @@ def save_results(data: Dict):
     print("💾 Saved → data/new_devices.json & docs/new_devices.json")
 
 
-def fetch_new_devices():
+def fetch_new_devices(fetch_dates: bool = True):
     print("🔍 Starting device fetch...\n")
 
     compatible    = load_compatibility()
-    market_devices = fetch_market_devices()
+    market_devices = fetch_market_devices(fetch_dates=fetch_dates)
 
     new_list = [d for d in market_devices if is_new_device(d, compatible)]
     new_list  = remove_duplicates(new_list)
@@ -273,7 +400,7 @@ def fetch_new_devices():
     if new_list:
         print("\n📱 New devices (first 10):")
         for d in new_list[:10]:
-            print(f"   • {d['name']} [{d['brand']}] ({d['os']})")
+            print(f"   • {d['name']} [{d['brand']}] ({d['os']}) - Released: {d['release_date']}")
     else:
         print("💡 All market devices already exist in the compatibility list.")
 
@@ -282,7 +409,10 @@ def fetch_new_devices():
 
 if __name__ == "__main__":
     try:
-        fetch_new_devices()
+        # Check if --no-dates flag is passed for faster execution
+        fetch_dates = "--no-dates" not in sys.argv
+        
+        fetch_new_devices(fetch_dates=fetch_dates)
         print("\n✅ Done")
         sys.exit(0)
 
