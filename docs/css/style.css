@@ -412,18 +412,9 @@ body {
     transform: scaleY(1);
 }
 
+/* Hide RQ badge overlay */
 .device-card.rationally-qualified::after {
-    content: 'RQ';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--warning-color);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    display: none !important;
 }
 
 .model-number {
@@ -490,10 +481,12 @@ body {
     color: white;
 }
 
+/* Horizontal layout for compatibility badges */
 .compatibility-badges {
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
     gap: 0.5rem !important;
+    flex-wrap: wrap !important;
     align-items: flex-start !important;
     margin-top: auto;
 }
