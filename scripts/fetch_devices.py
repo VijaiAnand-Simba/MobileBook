@@ -286,7 +286,7 @@ def fetch_brand_devices(brand_name: str, url: str, fetch_dates: bool = True) -> 
                     print(f"      ⚠️ {name}: date not found, using current date")
                 
                 # Small delay to avoid overwhelming the server
-                time.sleep(0.5)
+                time.sleep(5)
             
             # Fallback to current date if not found
             if not release_date:
