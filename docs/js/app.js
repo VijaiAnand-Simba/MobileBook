@@ -382,6 +382,29 @@ function getManufacturerIcon(manufacturer) {
     return icons[manufacturer] || 'fas fa-mobile-alt';
 }
 
+// Filter out iPad devices from new devices
+function filterOutIPads(devices) {
+    const filtered = devices.filter(device => {
+        const deviceName = (device.name || '').toLowerCase();
+        const deviceModel = (device.model || '').toLowerCase();
+        const deviceOS = (device.os || '').toLowerCase();
+        
+        // Exclude if name, model, or OS contains "ipad"
+        const isIPad = deviceName.includes('ipad') || 
+                       deviceModel.includes('ipad') || 
+                       deviceOS.includes('ipados');
+        
+        if (isIPad) {
+            console.log(`🚫 Filtering out iPad: ${device.name}`);
+        }
+        
+        return !isIPad;
+    });
+    
+    console.log(`📱 Filtered ${devices.length - filtered.length} iPad device(s) from new devices`);
+    return filtered;
+}
+
 function renderNewDevices() {
     if (!newDevicesData) {
         console.warn('⚠️ No new devices data');
@@ -396,8 +419,11 @@ function renderNewDevices() {
         return;
     }
     
-    const devices = newDevicesData.devices || [];
-    console.log(`📱 Rendering ${devices.length} new devices`);
+    // Filter out iPad devices
+    const allDevices = newDevicesData.devices || [];
+    const devices = filterOutIPads(allDevices);
+    
+    console.log(`📱 Rendering ${devices.length} new devices (${allDevices.length} total, ${allDevices.length - devices.length} iPad(s) filtered)`);
     
     if (devices.length === 0) {
         container.innerHTML = '';
@@ -484,8 +510,10 @@ function updateCounts() {
     }
     
     if (newDevicesCountEl && newDevicesData) {
-        newDevicesCountEl.textContent = newDevicesData.devices.length;
-        console.log(`📊 New devices count: ${newDevicesData.devices.length}`);
+        // Filter iPads before counting
+        const filteredDevices = filterOutIPads(newDevicesData.devices);
+        newDevicesCountEl.textContent = filteredDevices.length;
+        console.log(`📊 New devices count: ${filteredDevices.length} (${newDevicesData.devices.length} total, ${newDevicesData.devices.length - filteredDevices.length} iPad(s) filtered)`);
     }
 }
 
