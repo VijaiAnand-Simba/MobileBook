@@ -3,15 +3,6 @@
   "total": 96,
   "devices": [
     {
-      "name": "Motorola Razr Fold",
-      "brand": "motorola",
-      "model": "Razr Fold",
-      "os": "Android",
-      "os_version": "",
-      "release_date": "2026-04-01",
-      "source": "gsmarena"
-    },
-    {
       "name": "Samsung Galaxy M17e",
       "brand": "samsung",
       "model": "Galaxy M17e",
