@@ -1,5 +1,879 @@
 {
-  "last_updated": "2026-06-01T17:24:10.618823",
-  "total": 0,
-  "devices": []
+  "last_updated": "2026-06-08T15:36:23.601706",
+  "total": 97,
+  "devices": [
+    {
+      "name": "Galaxy A57",
+      "brand": "samsung",
+      "model": "galaxy-a57",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy A37",
+      "brand": "samsung",
+      "model": "galaxy-a37",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy M17e",
+      "brand": "samsung",
+      "model": "galaxy-m17e",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy S26 Ultra",
+      "brand": "samsung",
+      "model": "galaxy-s26-ultra",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy S26+",
+      "brand": "samsung",
+      "model": "galaxy-s26+",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy S26",
+      "brand": "samsung",
+      "model": "galaxy-s26",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy F70e",
+      "brand": "samsung",
+      "model": "galaxy-f70e",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy A07",
+      "brand": "samsung",
+      "model": "galaxy-a07",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy Z TriFold",
+      "brand": "samsung",
+      "model": "galaxy-z-trifold",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy M17",
+      "brand": "samsung",
+      "model": "galaxy-m17",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy F07",
+      "brand": "samsung",
+      "model": "galaxy-f07",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy M07",
+      "brand": "samsung",
+      "model": "galaxy-m07",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy A17 4G",
+      "brand": "samsung",
+      "model": "galaxy-a17-4g",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy Tab A11+",
+      "brand": "samsung",
+      "model": "galaxy-tab-a11+",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Galaxy Tab A11",
+      "brand": "samsung",
+      "model": "galaxy-tab-a11",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPhone 17e",
+      "brand": "apple",
+      "model": "iphone-17e",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPad Air 13 (2026)",
+      "brand": "apple",
+      "model": "ipad-air-13-(2026)",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPad Air 11 (2026)",
+      "brand": "apple",
+      "model": "ipad-air-11-(2026)",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPad Pro 13 (2025)",
+      "brand": "apple",
+      "model": "ipad-pro-13-(2025)",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPad Pro 11 (2025)",
+      "brand": "apple",
+      "model": "ipad-pro-11-(2025)",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Watch Series 11 Aluminum",
+      "brand": "apple",
+      "model": "watch-series-11-aluminum",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Watch SE 3",
+      "brand": "apple",
+      "model": "watch-se-3",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPad Air 13 (2025)",
+      "brand": "apple",
+      "model": "ipad-air-13-(2025)",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "iPad Air 11 (2025)",
+      "brand": "apple",
+      "model": "ipad-air-11-(2025)",
+      "os": "iOS",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "17T Pro",
+      "brand": "xiaomi",
+      "model": "17t-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "17T",
+      "brand": "xiaomi",
+      "model": "17t",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Watch S5 46mm",
+      "brand": "xiaomi",
+      "model": "watch-s5-46mm",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "17 Max",
+      "brand": "xiaomi",
+      "model": "17-max",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Poco Pad C1",
+      "brand": "xiaomi",
+      "model": "poco-pad-c1",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Poco C81 Pro",
+      "brand": "xiaomi",
+      "model": "poco-c81-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Poco C81",
+      "brand": "xiaomi",
+      "model": "poco-c81",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Poco C81x",
+      "brand": "xiaomi",
+      "model": "poco-c81x",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Redmi K90 Max",
+      "brand": "xiaomi",
+      "model": "redmi-k90-max",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Redmi K Pad 2",
+      "brand": "xiaomi",
+      "model": "redmi-k-pad-2",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Redmi Pad 2 9.7",
+      "brand": "xiaomi",
+      "model": "redmi-pad-2-9.7",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Redmi A7 Pro",
+      "brand": "xiaomi",
+      "model": "redmi-a7-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Redmi A7",
+      "brand": "xiaomi",
+      "model": "redmi-a7",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Poco M8s",
+      "brand": "xiaomi",
+      "model": "poco-m8s",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Redmi R70m",
+      "brand": "xiaomi",
+      "model": "redmi-r70m",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Nord CE6",
+      "brand": "oneplus",
+      "model": "nord-ce6",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Nord CE6 Lite",
+      "brand": "oneplus",
+      "model": "nord-ce6-lite",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Ace 6 Ultra",
+      "brand": "oneplus",
+      "model": "ace-6-ultra",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "15T",
+      "brand": "oneplus",
+      "model": "15t",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Turbo 6V",
+      "brand": "oneplus",
+      "model": "turbo-6v",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "15R",
+      "brand": "oneplus",
+      "model": "15r",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pad Go 2",
+      "brand": "oneplus",
+      "model": "pad-go-2",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Watch Lite",
+      "brand": "oneplus",
+      "model": "watch-lite",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Ace 6T",
+      "brand": "oneplus",
+      "model": "ace-6t",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pixel 10a",
+      "brand": "google",
+      "model": "pixel-10a",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pixel 10 Pro Fold",
+      "brand": "google",
+      "model": "pixel-10-pro-fold",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pixel Watch 4",
+      "brand": "google",
+      "model": "pixel-watch-4",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pixel 9 Pro Fold",
+      "brand": "google",
+      "model": "pixel-9-pro-fold",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pixel Watch 3",
+      "brand": "google",
+      "model": "pixel-watch-3",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Edge (2026)",
+      "brand": "motorola",
+      "model": "edge-(2026)",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Edge 70 Pro+",
+      "brand": "motorola",
+      "model": "edge-70-pro+",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto G87",
+      "brand": "motorola",
+      "model": "moto-g87",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto G47",
+      "brand": "motorola",
+      "model": "moto-g47",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto G37 Power",
+      "brand": "motorola",
+      "model": "moto-g37-power",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto G37",
+      "brand": "motorola",
+      "model": "moto-g37",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Razr Ultra 2026",
+      "brand": "motorola",
+      "model": "razr-ultra-2026",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Razr 70 Ultra",
+      "brand": "motorola",
+      "model": "razr-70-ultra",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Razr+ 2026",
+      "brand": "motorola",
+      "model": "razr+-2026",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Razr 70+",
+      "brand": "motorola",
+      "model": "razr-70+",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Razr 2026",
+      "brand": "motorola",
+      "model": "razr-2026",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Razr 70",
+      "brand": "motorola",
+      "model": "razr-70",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Edge 70 Pro",
+      "brand": "motorola",
+      "model": "edge-70-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto Pad (2026)",
+      "brand": "motorola",
+      "model": "moto-pad-(2026)",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto G Stylus (2026)",
+      "brand": "motorola",
+      "model": "moto-g-stylus-(2026)",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 1 VIII",
+      "brand": "sony",
+      "model": "xperia-1-viii",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 10 VII",
+      "brand": "sony",
+      "model": "xperia-10-vii",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 1 VII",
+      "brand": "sony",
+      "model": "xperia-1-vii",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 1 VI",
+      "brand": "sony",
+      "model": "xperia-1-vi",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 10 VI",
+      "brand": "sony",
+      "model": "xperia-10-vi",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 5 V",
+      "brand": "sony",
+      "model": "xperia-5-v",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 1 V",
+      "brand": "sony",
+      "model": "xperia-1-v",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 10 V",
+      "brand": "sony",
+      "model": "xperia-10-v",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 5 IV",
+      "brand": "sony",
+      "model": "xperia-5-iv",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 1 IV",
+      "brand": "sony",
+      "model": "xperia-1-iv",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 10 IV",
+      "brand": "sony",
+      "model": "xperia-10-iv",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia Pro-I",
+      "brand": "sony",
+      "model": "xperia-pro-i",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 10 III Lite",
+      "brand": "sony",
+      "model": "xperia-10-iii-lite",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 1 III",
+      "brand": "sony",
+      "model": "xperia-1-iii",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Xperia 5 III",
+      "brand": "sony",
+      "model": "xperia-5-iii",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Reno16 Pro (China)",
+      "brand": "oppo",
+      "model": "reno16-pro-(china)",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Reno16 (China)",
+      "brand": "oppo",
+      "model": "reno16-(china)",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Find X9 Ultra",
+      "brand": "oppo",
+      "model": "find-x9-ultra",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Find X9s Pro",
+      "brand": "oppo",
+      "model": "find-x9s-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Find X9s",
+      "brand": "oppo",
+      "model": "find-x9s",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pad 5 Pro",
+      "brand": "oppo",
+      "model": "pad-5-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Pad Mini",
+      "brand": "oppo",
+      "model": "pad-mini",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Watch X3 Mini",
+      "brand": "oppo",
+      "model": "watch-x3-mini",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "F33 Pro",
+      "brand": "oppo",
+      "model": "f33-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "F33",
+      "brand": "oppo",
+      "model": "f33",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "A6s Pro (China)",
+      "brand": "oppo",
+      "model": "a6s-pro-(china)",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "A6c",
+      "brand": "oppo",
+      "model": "a6c",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "A6k",
+      "brand": "oppo",
+      "model": "a6k",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    },
+    {
+      "name": "K15 Pro+",
+      "brand": "oppo",
+      "model": "k15-pro+",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-08",
+      "source": "gsmarena"
+    }
+  ]
 }
