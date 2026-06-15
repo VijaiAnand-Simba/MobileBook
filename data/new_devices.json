@@ -1,14 +1,23 @@
 {
-  "last_updated": "2026-06-08T15:36:23.601706",
-  "total": 97,
+  "last_updated": "2026-06-15T17:04:49.313006",
+  "total": 99,
   "devices": [
+    {
+      "name": "Galaxy A27",
+      "brand": "samsung",
+      "model": "galaxy-a27",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-15",
+      "source": "gsmarena"
+    },
     {
       "name": "Galaxy A57",
       "brand": "samsung",
       "model": "galaxy-a57",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -17,7 +26,7 @@
       "model": "galaxy-a37",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -26,7 +35,7 @@
       "model": "galaxy-m17e",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -35,7 +44,7 @@
       "model": "galaxy-s26-ultra",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -44,7 +53,7 @@
       "model": "galaxy-s26+",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -53,7 +62,7 @@
       "model": "galaxy-s26",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -62,7 +71,7 @@
       "model": "galaxy-f70e",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -71,7 +80,7 @@
       "model": "galaxy-a07",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -80,7 +89,7 @@
       "model": "galaxy-z-trifold",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -89,7 +98,7 @@
       "model": "galaxy-m17",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -98,7 +107,7 @@
       "model": "galaxy-f07",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -107,7 +116,7 @@
       "model": "galaxy-m07",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -116,7 +125,7 @@
       "model": "galaxy-a17-4g",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -125,16 +134,7 @@
       "model": "galaxy-tab-a11+",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
-      "source": "gsmarena"
-    },
-    {
-      "name": "Galaxy Tab A11",
-      "brand": "samsung",
-      "model": "galaxy-tab-a11",
-      "os": "Android",
-      "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -143,7 +143,7 @@
       "model": "iphone-17e",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -152,7 +152,7 @@
       "model": "ipad-air-13-(2026)",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -161,7 +161,7 @@
       "model": "ipad-air-11-(2026)",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -170,7 +170,7 @@
       "model": "ipad-pro-13-(2025)",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -179,7 +179,7 @@
       "model": "ipad-pro-11-(2025)",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -188,7 +188,7 @@
       "model": "watch-series-11-aluminum",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -197,7 +197,7 @@
       "model": "watch-se-3",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -206,7 +206,7 @@
       "model": "ipad-air-13-(2025)",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -215,7 +215,7 @@
       "model": "ipad-air-11-(2025)",
       "os": "iOS",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -224,7 +224,7 @@
       "model": "17t-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -233,7 +233,7 @@
       "model": "17t",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -242,7 +242,7 @@
       "model": "watch-s5-46mm",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -251,7 +251,7 @@
       "model": "17-max",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -260,7 +260,7 @@
       "model": "poco-pad-c1",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -269,7 +269,7 @@
       "model": "poco-c81-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -278,7 +278,7 @@
       "model": "poco-c81",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -287,7 +287,7 @@
       "model": "poco-c81x",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -296,7 +296,7 @@
       "model": "redmi-k90-max",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -305,7 +305,7 @@
       "model": "redmi-k-pad-2",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -314,7 +314,7 @@
       "model": "redmi-pad-2-9.7",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -323,7 +323,7 @@
       "model": "redmi-a7-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -332,7 +332,7 @@
       "model": "redmi-a7",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -341,7 +341,7 @@
       "model": "poco-m8s",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -350,7 +350,25 @@
       "model": "redmi-r70m",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Turbo 6X Pro",
+      "brand": "oneplus",
+      "model": "turbo-6x-pro",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-15",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Turbo 6X",
+      "brand": "oneplus",
+      "model": "turbo-6x",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -359,7 +377,7 @@
       "model": "nord-ce6",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -368,7 +386,7 @@
       "model": "nord-ce6-lite",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -377,7 +395,7 @@
       "model": "ace-6-ultra",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -386,7 +404,7 @@
       "model": "15t",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -395,7 +413,7 @@
       "model": "turbo-6v",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -404,7 +422,7 @@
       "model": "15r",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -413,7 +431,7 @@
       "model": "pad-go-2",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -422,7 +440,7 @@
       "model": "watch-lite",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -431,7 +449,7 @@
       "model": "ace-6t",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -440,7 +458,7 @@
       "model": "pixel-10a",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -449,7 +467,7 @@
       "model": "pixel-10-pro-fold",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -458,7 +476,7 @@
       "model": "pixel-watch-4",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -467,7 +485,7 @@
       "model": "pixel-9-pro-fold",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -476,7 +494,16 @@
       "model": "pixel-watch-3",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
+      "source": "gsmarena"
+    },
+    {
+      "name": "Moto G Max",
+      "brand": "motorola",
+      "model": "moto-g-max",
+      "os": "Android",
+      "os_version": "",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -485,7 +512,7 @@
       "model": "edge-(2026)",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -494,7 +521,7 @@
       "model": "edge-70-pro+",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -503,7 +530,7 @@
       "model": "moto-g87",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -512,7 +539,7 @@
       "model": "moto-g47",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -521,7 +548,7 @@
       "model": "moto-g37-power",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -530,7 +557,7 @@
       "model": "moto-g37",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -539,7 +566,7 @@
       "model": "razr-ultra-2026",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -548,7 +575,7 @@
       "model": "razr-70-ultra",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -557,7 +584,7 @@
       "model": "razr+-2026",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -566,7 +593,7 @@
       "model": "razr-70+",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -575,7 +602,7 @@
       "model": "razr-2026",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -584,7 +611,7 @@
       "model": "razr-70",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -593,7 +620,7 @@
       "model": "edge-70-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -602,16 +629,7 @@
       "model": "moto-pad-(2026)",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
-      "source": "gsmarena"
-    },
-    {
-      "name": "Moto G Stylus (2026)",
-      "brand": "motorola",
-      "model": "moto-g-stylus-(2026)",
-      "os": "Android",
-      "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -620,7 +638,7 @@
       "model": "xperia-1-viii",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -629,7 +647,7 @@
       "model": "xperia-10-vii",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -638,7 +656,7 @@
       "model": "xperia-1-vii",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -647,7 +665,7 @@
       "model": "xperia-1-vi",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -656,7 +674,7 @@
       "model": "xperia-10-vi",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -665,7 +683,7 @@
       "model": "xperia-5-v",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -674,7 +692,7 @@
       "model": "xperia-1-v",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -683,7 +701,7 @@
       "model": "xperia-10-v",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -692,7 +710,7 @@
       "model": "xperia-5-iv",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -701,7 +719,7 @@
       "model": "xperia-1-iv",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -710,7 +728,7 @@
       "model": "xperia-10-iv",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -719,7 +737,7 @@
       "model": "xperia-pro-i",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -728,7 +746,7 @@
       "model": "xperia-10-iii-lite",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -737,7 +755,7 @@
       "model": "xperia-1-iii",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -746,7 +764,7 @@
       "model": "xperia-5-iii",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -755,7 +773,7 @@
       "model": "reno16-pro-(china)",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -764,7 +782,7 @@
       "model": "reno16-(china)",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -773,7 +791,7 @@
       "model": "find-x9-ultra",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -782,7 +800,7 @@
       "model": "find-x9s-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -791,7 +809,7 @@
       "model": "find-x9s",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -800,7 +818,7 @@
       "model": "pad-5-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -809,7 +827,7 @@
       "model": "pad-mini",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -818,7 +836,7 @@
       "model": "watch-x3-mini",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -827,7 +845,7 @@
       "model": "f33-pro",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -836,7 +854,7 @@
       "model": "f33",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -845,7 +863,7 @@
       "model": "a6s-pro-(china)",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -854,7 +872,7 @@
       "model": "a6c",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -863,7 +881,7 @@
       "model": "a6k",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     },
     {
@@ -872,7 +890,7 @@
       "model": "k15-pro+",
       "os": "Android",
       "os_version": "",
-      "release_date": "2026-06-08",
+      "release_date": "2026-06-15",
       "source": "gsmarena"
     }
   ]
